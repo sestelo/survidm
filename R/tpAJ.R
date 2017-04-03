@@ -1,26 +1,13 @@
-#FUNCTION FOR IMPLEMENTING AALEN-JOHANSEN ESTIMATOR IN THE ILLNESS-DEATH MODEL
-#ONLY SHOW FUNCTION tpAJ
-
-tpAJ <- function(object, s, t, conf = FALSE, conf.level = 0.95,
-                 conf.type = "log") {
+tpAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log")
+{
   if (missing(object))
     stop("Argument 'object' is missing, with no default")
-
  # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
-  if (missing(s)) s <- 0
+  if (missing(s))
+    s <- 0
   data <- object[[1]]
-  if (missing(t))
-    t <- max(data$Stime)
-  if(length(t) > 1) t <- max(t)
+  t <- max(data$Stime)
   n <- length(data[, 1])
-
-  #ALL ABOUT survIDM
-  #data <- data[,c("time1", "event1", "Stime", "event")]
-  #if(length(names(data)) != 4) stop("'data' must have 4 variables")
-  #if(sum(c("time1", "event1", "Stime", "event") == names(data)) != 4) stop("'data' must contain the rigth variables")
-  #if(!is.numeric(data$time1)) {stop ("'time1' must be a numeric vector, which describes the time to the first event")}
-  #if(!is.numeric(data$Stime)) {stop ("'Stime' must be a numeric vector, which describes the survival or censoring time")}
-  #for (i in 1:n){ if(data$event1[i] == 0 & data$event[i] == 1) {stop("Argument 'event' must be 0 or argument 'event1' must be 1")}}
 
   mint <- min(data$time1[data$event1 == 1])
 
@@ -78,6 +65,28 @@ tpAJ <- function(object, s, t, conf = FALSE, conf.level = 0.95,
       probs = ci$CI, all.probs = ci$all.CI,
       # posible transitions:
       p.trans = AJ.est$p.trans, conf = conf)
+
+
+    #est
+    aux <- matrix(res$all.probs[,1,], ncol = 5, nrow = length(res$times))
+    aux <- data.frame(t = res$times, aux)
+    names(aux) <- c("t", "p00", "p01", "p02", "p11", "p12")
+
+    #ci
+    auxci <- res$all.probs[,2:3,]
+    auxci <- data.frame(matrix(auxci, ncol = 10, nrow = length(res$times)))
+    names(auxci) <- c("p00.li.ci", "p00.ls.ci", "p01.li.ci", "p01.ls.ci",
+                      "p02.li.ci", "p02.ls.ci", "p11.li.ci", "p11.ls.ci",
+                      "p12.li.ci", "p12.ls.ci")
+
+
+
+
+
+    res <- list(est = aux,  CI = auxci, conf.level = conf.level,
+                s = res$s, t = res$times, conf = conf, conf.type = res$conf.type)
+
+
   } #end if
   else{
     # results:
@@ -91,7 +100,16 @@ tpAJ <- function(object, s, t, conf = FALSE, conf.level = 0.95,
       probs = round(AJ.est$probs, 7), all.probs = round(AJ.est$all.est, 7),
       #posible transitions:
       p.trans = AJ.est$p.trans, conf = conf)
+
+
+    aux <- matrix(res$all.probs, ncol = 5, nrow = length(res$times))
+    aux <- data.frame(t = res$times, aux)
+    names(aux) <- c("t", "p00", "p01", "p02", "p11", "p12")
+
+    res <- list(est = aux,  s = res$s, t = res$times, conf = conf,
+                   conf.type = res$conf.type)
   }
+
 
   res$call <- match.call()
   class(res) = "tpAJ"
@@ -521,10 +539,3 @@ ci.AJ <- function(s, t, conf.level, conf.type = "linear", dNs.id_tr, TP.AJs, cov
 
   return(list(CI = CI.t, all.CI = CI.tp))
 }
-
-
-
-
-
-
-

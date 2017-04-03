@@ -1,4 +1,4 @@
-tprob <- function(formula, s, t, method = "AJ", conf = TRUE, conf.level = 0.95,
+tprob <- function(formula, s, method = "AJ", conf = TRUE, conf.level = 0.95,
                   conf.type = "log", n.boot = 200, data, z.value, bw = "dpik",
                   window = "gaussian", method.weights = "NW", cluster = FALSE,
                   ncores = NULL, na.rm = TRUE){
@@ -47,7 +47,7 @@ tprob <- function(formula, s, t, method = "AJ", conf = TRUE, conf.level = 0.95,
 
     # AJ method  (no bootstrap)
     if (method == "AJ"){
-      res <- tpAJ(object = object, s = s, t = t, conf = conf,
+      res <- tpAJ(object = object, s = s, conf = conf,
                   conf.level = conf.level, conf.type = conf.type)
       class(res) <- c("AJ", "survIDM")
     }
@@ -55,7 +55,7 @@ tprob <- function(formula, s, t, method = "AJ", conf = TRUE, conf.level = 0.95,
 
     # LIDA method
     if (method == "LIDA"){
-      res <- tpLIDA(object = object, s = s, t = t, conf = conf,
+      res <- tpLIDA(object = object, s = s, conf = conf,
                     conf.level = conf.level, n.boot = n.boot,
                     cluster = cluster, ncores = ncores)
       class(res) <- c("LIDA", "survIDM")
@@ -64,7 +64,7 @@ tprob <- function(formula, s, t, method = "AJ", conf = TRUE, conf.level = 0.95,
 
     # LDM method
     if (method == "LDM"){
-      res <- tpLDM(object = object, s = s, t = t, conf = conf,
+      res <- tpLDM(object = object, s = s, conf = conf,
                    conf.level = conf.level, conf.type = conf.type,
                    n.boot = n.boot, cluster = cluster, ncores = ncores)
       class(res) <- c("LDM", "survIDM")
@@ -73,7 +73,7 @@ tprob <- function(formula, s, t, method = "AJ", conf = TRUE, conf.level = 0.95,
 
     # PLDM method
     if (method == "PLDM"){
-      res <- tpPLDM(object = object, s = s, t = t, conf = conf,
+      res <- tpPLDM(object = object, s = s, conf = conf,
                     conf.level = conf.level, n.boot = n.boot,
                     cluster = cluster, ncores = ncores)
       class(res) <- c("PLDM", "survIDM")
