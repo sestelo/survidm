@@ -5,7 +5,7 @@ tpIPCW <-
   {
     if (missing(object))
       stop("Argument 'object' is missing, with no default")
-    if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
+   # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
     if (missing(s)) s <- 0
     obj <- object[[1]]
 

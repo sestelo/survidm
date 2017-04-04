@@ -111,7 +111,7 @@ tpAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log")
   }
 
 
-  res$call <- match.call()
+  #res$call <- match.call()
   class(res) = "tpAJ"
   res
 }
