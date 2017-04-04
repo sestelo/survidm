@@ -106,6 +106,7 @@ tpAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log")
     aux <- data.frame(t = res$times, aux)
     names(aux) <- c("t", "p00", "p01", "p02", "p11", "p12")
 
+
     res <- list(est = aux,  s = res$s, t = res$times, conf = conf,
                    conf.type = res$conf.type)
   }

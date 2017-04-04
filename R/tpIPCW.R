@@ -200,7 +200,8 @@ tpIPCW <-
 				   }
         }
 
-    callp <- paste("pij(s,t|", z.name, "=", z.value, ")", sep = "")
+   # callp <- paste("pij(s,t|", z.name, "=", z.value, ")", sep = "")
+
 
     if(conf == TRUE){
 	ci <- cbind(p00.ci, p01.ci, p02.ci, p11.ci, p12.ci)
@@ -212,14 +213,13 @@ tpIPCW <-
     if (conf == FALSE) {
       result <- list(est = resu, z.name = z.name, z.value = z.value, s = s,
                      t = t, bw = bw, window = window,
-                     method.weights = method.weights, conf = conf, lbd = c(lbd2_0,lbd2_1),
-                     callp = callp)
+                     method.weights = method.weights, conf = conf, lbd = c(lbd2_0,lbd2_1))
     }
 
     if (conf == TRUE) {
       result <- list(est = resu, CI = ci, conf.level = conf.level, z.name = z.name,
                      z.value = z.value, bw = bw, window = window, method.weights = method.weights,
-                     s = s, t = t, conf = conf, lbd = c(lbd2_0,lbd2_1), callp = callp)
+                     s = s, t = t, conf = conf, lbd = c(lbd2_0,lbd2_1))
 
     }
 

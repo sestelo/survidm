@@ -56,6 +56,7 @@ tpLIDA <-
     resu <- data.frame(cbind(t, p00, p01, p02, p11, p12))
     names(resu) <- c("t", "p00", "p01", "p02", "p11", "p12")
 
+
     p00.ci <- matrix(NA, length(t), 2)
     p01.ci <- matrix(NA, length(t), 2)
     p02.ci <- matrix(NA, length(t), 2)

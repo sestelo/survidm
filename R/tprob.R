@@ -104,7 +104,7 @@ tprob <- function(formula, s, method = "AJ", conf = TRUE, conf.level = 0.95,
 
 
     class(res) <- c("IPCW", "survIDM")
-
+    callp <- paste("pij(s=",s,",t|", attr(terms(formula),"term.labels"), "=", z.value, ")", sep = "")
 
   } # end method with numeric or integer covariate
 
@@ -195,8 +195,13 @@ tprob <- function(formula, s, method = "AJ", conf = TRUE, conf.level = 0.95,
     levels = NULL
   } # end method with factor covariate
 
+
+  #callp <- paste("P(T>y|", text3, ")", sep = "")
+  callp <- paste("pij(s=",s,",t)", sep = "")
+  res$callp <- callp
   res$Nlevels <- x.nlevels
   res$levels <- levels
+  res$formula <- formula
   res$call <- match.call()
 
   return(invisible(res))
