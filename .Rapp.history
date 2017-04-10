@@ -1,0 +1,2 @@
+load("/Users/Sestelo/Dropbox/github/idmsurv/res_logrank_compare_ties.Rda")
+out
