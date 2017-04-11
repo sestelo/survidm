@@ -227,26 +227,3 @@ tpIPCW <-
     return(invisible(result))
   }
 
-#
-# library(survival)
-# library(condSURV)
-# library(latex2exp)
-# library(KernSmooth)
-# colonIDM <- with(colonCS, survIDM(time1,event1,Stime, event, age=age))
-# times <- sort(colonIDM[[1]]$Stime)
-#
-# res <- tpIPCW(colonIDM, s = 365, t = times,  z.name = "age", z.value = 48, conf = FALSE)
-# Y <- res$est[,2:6]
-# matplot(y=Y, x=res$t, type="s",  lty=c(rep(1,5), rep(2,10)), col=c(1:5, 1,1, 2,2, 3,3, 4,4,5,5), xlab="Time (years)", ylab=TeX('p_{ij}(365,t)'))
-#
-# res <- tpIPCW(colonIDM, s = 365, t = times,  z.name = "age", z.value = 53, conf = TRUE)
-# Y <- cbind(res$est[,2:6], res$CI[,1:10])
-# matplot(y=Y, x=res$t, type="s",  lty=c(rep(1,5), rep(2,10)), col=c(1:5, 1,1, 2,2, 3,3, 4,4,5,5), xlab="Time (years)", ylab=TeX('p_{ij}(365,t)'))
-#
-# res <- tpIPCW(colonIDM, s = 0, t = times,  z.name = "age", z.value = 53, conf = TRUE, n.boot=99)
-# Y <- cbind(res$est[,2:6], res$CI[,1:10])
-# matplot(y=Y, x=res$t, type="s",  lty=c(rep(1,5), rep(2,10)), col=c(1:5, 1,1, 2,2, 3,3, 4,4,5,5), xlab="Time (years)", ylab=TeX('p_{ij}(0,t)'))
-#
-#
-#
-#
