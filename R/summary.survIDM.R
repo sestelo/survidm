@@ -163,7 +163,7 @@ summary.survIDM <- function(object, times = NULL, ...){
             cat("\n")
             cat((1-(1-object$conf.level)/2)*100,"%", "\n", sep="")
             cat("\n")
-            print(res$est, row.names = FALSE)
+            print(res$UCI, row.names = FALSE)
             cat("\n")
           }
 

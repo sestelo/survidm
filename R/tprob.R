@@ -52,6 +52,19 @@ tprob <- function(formula, s, method = "AJ", conf = TRUE, conf.level = 0.95,
       res <- tpAJ(object = object, s = s, conf = conf,
                   conf.level = conf.level, conf.type = conf.type)
       class(res) <- c("AJ", "survIDM")
+
+      add2t <- s
+      add2est <- c(s, 1, 0, 0, 1, 0)
+      add2CI <- c(1, 1, 0, 0, 0, 0, 1, 1, 0, 0)
+      res$t <- c(add2t, res$t)
+      res$est <- rbind(add2est, res$est)
+      res$CI <- rbind(add2CI, res$CI)
+
+       if (s == 0){
+       res$est[, 5:6] <- NA
+       res$CI[, 7:10] <- NA
+       }
+
     }
 
 
@@ -143,6 +156,19 @@ tprob <- function(formula, s, method = "AJ", conf = TRUE, conf.level = 0.95,
         res <- tpAJ(object = obj, s = s, conf = conf,
                     conf.level = conf.level, conf.type = conf.type)
         class(res) <- c("AJ", "survIDM")
+
+        add2t <- s
+        add2est <- c(s, 1, 0, 0, 1, 0)
+        add2CI <- c(1, 1, 0, 0, 0, 0, 1, 1, 0, 0)
+        res$t <- c(add2t, res$t)
+        res$est <- rbind(add2est, res$est)
+        res$CI <- rbind(add2CI, res$CI)
+
+        if (s == 0){
+          res$est[, 5:6] <- NA
+          res$CI[, 7:10] <- NA
+        }
+
       }
 
 

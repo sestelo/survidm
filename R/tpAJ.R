@@ -68,17 +68,16 @@ tpAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log")
 
 
     #est
-    aux <- matrix(res$all.probs[,1,], ncol = 5, nrow = length(res$times))
+    suppressWarnings(aux <- matrix(res$all.probs[,1,], ncol = 5, nrow = length(res$times)))
     aux <- data.frame(t = res$times, aux)
     names(aux) <- c("t", "p00", "p01", "p02", "p11", "p12")
 
     #ci
     auxci <- res$all.probs[,2:3,]
-    auxci <- data.frame(matrix(auxci, ncol = 10, nrow = length(res$times)))
+    suppressWarnings(auxci <- data.frame(matrix(auxci, ncol = 10, nrow = length(res$times))))
     names(auxci) <- c("p00.li.ci", "p00.ls.ci", "p01.li.ci", "p01.ls.ci",
                       "p02.li.ci", "p02.ls.ci", "p11.li.ci", "p11.ls.ci",
                       "p12.li.ci", "p12.ls.ci")
-
 
 
 
