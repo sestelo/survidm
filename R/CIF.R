@@ -1,83 +1,117 @@
-CIF <- function(object, t, s, conf = FALSE, n.boot = 199, conf.level = 0.95,
-                cluster = FALSE, ncores = NULL)
-{
+cif <- function(formula, t, s, data, conf = FALSE, n.boot = 199,
+                conf.level = 0.95, z.value, bw = "dpik", window = "gaussian",
+                method.weights = "NW", cluster = FALSE, ncores = NULL){
 
-	if (missing(object))
-		stop("Argument 'object' is missing, with no default")
-	if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
-  object <- list(object)
-	if (missing(t)) {
-		t <- object[[1]]$time1
-		ptimes <- which(object[[1]]$event1 == 1)
-		t <- t[ptimes]
-		           }
-	if (missing(s)) s <- mean(object[[1]]$time1)
 
-	if (any(t <= 0)) stop("The values of 't' must be positive")
-	t <- sort(unique(t))
-	n <- length(t)
-	if(length(t) == 0) stop("Invalid values for 't'.")
+  if (missing(formula)) stop("A formula argument is required")
+  if (missing(s)) stop("argument 's' is missing, with no default")
 
-	cif <- rep(NA, length(t))
-	condcif <- rep(NA, length(t))
 
-	kmw <- KMW(object[[1]]$time1, object[[1]]$event1)
-	p0 <- which(object[[1]]$time1 > s)
-	kmw1 <- KMW(object[[1]]$time1[p0], object[[1]]$event1[p0])
+  # formula
+  fmla <- eval(formula, parent.frame())
+  Terms <- terms(fmla)
+  mf <- Terms[[2]]
+  object <- with(data = data, eval(mf))
+  if (!inherits(object, "survIDM")) stop("Response must be a survIDM object")
+  object <- list(data = object) # new since survCS doesn't return a list
+  obj_data <- object[[1]]
 
-	for (k in 1: length(t)) {
-		p <- which(object[[1]]$time1 < object[[1]]$Stime & object[[1]]$time1 < t[k])
-		q <- which(object[[1]]$time1[p0] < object[[1]]$Stime[p0] & object[[1]]$time1[p0] < t[k])
-		cif[k] <- sum(kmw[p])
-		condcif[k] <- sum(kmw1[q])
-                                     }
+  X <- Terms[[3]] #covariate
+  if(length(attr(terms(formula),"term.labels")) > 1)
+    stop("only one covariate is supported")
+  Class <- class(with(data = data, eval(Terms[[3]])))
+  if (Class != "numeric" & Class != "integer" & Class != "factor")
+    stop("covariate must be one of the following classes 'numeric', 'integer' or 'factor'")
+  xval <- with(data = data, eval(X))
+  lencov <- length(xval)
+  lencov2 <- length(attr(terms(formula),"term.labels"))
+  if(lencov2 != 0) Xval <- with(data = data, eval(Terms[[3]]))
+  if(lencov != dim(obj_data)[1] & lencov2 != 0) stop("length of the covariate does not match")
 
-	resu <- data.frame(cbind(t, cif, condcif))
-	names(resu) <- c("t", "CIF", "CIF(t|Y(s)=0)")
 
-	cif.ci <- matrix(NA, length(t), 2)
-	condcif.ci <- matrix(NA, length(t), 2)
 
-    if (conf == TRUE) {
-        cif.ci0 <- matrix(NA, nrow= length(t), ncol = n.boot)
-	condcif.ci0 <- matrix(NA, nrow= length(t), ncol = n.boot)
-        n <- dim(object[[1]])[1]
+  # without covariates
+  if (length(attr(terms(formula), "term.labels")) == 0) {  #cif without covariate
 
-	for (j in 1:n.boot){
-	xx <- sample.int(n, size = n, replace = TRUE)
-        ndata <- object[[1]][xx,]
-        p0 <- which(ndata$time1 > s)
+      res <- CIF_ini(object = object, t = t, s = s, conf = conf,
+                    conf.level = conf.level, n.boot = n.boot,
+                    cluster = cluster, ncores = ncores)
+      class(res) <- c("CIF", "survIDM")
 
-	kmw <- KMW(ndata$time1, ndata$event1)
-	kmw1 <- KMW(ndata$time1[p0], ndata$event1[p0])
+  } # end methods without covariate
 
-	for (k in 1: length(t)) {
-		p <- which(ndata$time1 < ndata$Stime & ndata$time1 < t[k])
-		q <- which(ndata$time1[p0] < ndata$Stime[p0] & ndata$time1[p0] < t[k])
-		cif.ci0[k,j] <- sum(kmw[p])
-		condcif.ci0[k,j] <- sum(kmw1[q])
-                                     }
-        }
 
-      for (k in 1: length(t)) {
-        cif.ci[k,1] <- quantile(cif.ci0[k,], (1 - conf.level) / 2)
-        cif.ci[k,2] <- quantile(cif.ci0[k,], 1 - (1 - conf.level) / 2)
-        condcif.ci[k,1] <- quantile(condcif.ci0[k,], (1 - conf.level) / 2)
-        condcif.ci[k,2] <- quantile(condcif.ci0[k,], 1 - (1 - conf.level) / 2)
-				   }
-        }
 
-	   if(conf == TRUE){
-	ci <- cbind(cif.ci, condcif.ci)
-	ci <- data.frame(ci)
-        names(ci) <- c("cif.li.ci", "cif.ls.ci", "condcif.li.ci", "condcif.ls.ci")
-	                         }
+  # numeric or integer covariate
+  if(length(attr(terms(formula),"term.labels")) != 0 & (Class == "numeric" | Class == "integer")) {#IPCW
 
-	if(conf==TRUE)  result <- list(est=resu, CI=ci, conf.level=conf.level, s=s, t=t, conf=conf)
-	else  result <- list(est=resu,  s=s, t=t, conf=conf)
+    obj1 <- object
+    obj1[[1]] <- cbind(obj1[[1]], xval)
+    obj1[[1]] <- na.omit(obj1[[1]])
+    colnames(obj1[[1]]) <- c(colnames(object[[1]]), attr(terms(formula),"term.labels"))
 
-    class(result) <- c("CIF")
-    return(invisible(result))
+    res <- cifIPCW(object = obj1, t = t,
+                  z.name = attr(terms(formula),"term.labels"),
+                  z.value = z.value, bw = bw, window = window,
+                  method.weights = method.weights, conf = conf, n.boot = n.boot,
+                  conf.level = conf.level, cluster = cluster, ncores = ncores)
+
+
+    class(res) <- c("cifIPCW", "survIDM")
+    #callp <- paste("CIF(s=",s,",t|", attr(terms(formula),"term.labels"), "=", z.value, ")", sep = "")
+
+  } # end method with numeric or integer covariate
+
+
+  # factor covariate
+  if (length(attr(terms(formula),"term.labels")) > 0 & Class == "factor") {  #CIF by levels of the covariate
+
+    x.nlevels <- nlevels(with(data=data, eval(formula[[3]])))
+    levels <- levels(with(data=data, eval(formula[[3]])))
+
+    estim <- list()
+    ci <- list()
+
+
+    for (k in 1:x.nlevels) {
+      v.level <- levels(with(data=data, eval(formula[[3]])))[k]
+      p<- which(Xval == v.level)
+      obj<- object
+      obj$data <- object$data[p,]
+
+
+      #------------------------------
+
+
+
+      res <- CIF_ini(object = obj, t = t, s = s, conf = conf,
+                 conf.level = conf.level, n.boot = n.boot,
+                 cluster = cluster, ncores = ncores)
+      class(res) <- c("CIF", "survIDM")
+
+
+
+      estim[[paste(levels[k])]] <- res$est
+      ci[[paste(levels[k])]] <- res$CI
+
+    } # ends the level's loop
+    res$est <- estim
+    res$CI <- ci
+  }else{
+    x.nlevels = 1
+    levels = NULL
+  } # end method with factor covariate
+
+
+  #callp <- paste("P(T>y|", text3, ")", sep = "")
+  callp <- paste("CIF(s=",s,",t)", sep = "")
+  res$callp <- callp
+  res$Nlevels <- x.nlevels
+  res$levels <- levels
+  res$formula <- formula
+  res$call <- match.call()
+
+  return(invisible(res))
+
 
 }
-

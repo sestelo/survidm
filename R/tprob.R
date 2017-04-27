@@ -116,7 +116,7 @@ tprob <- function(formula, s, method = "AJ", conf = TRUE, conf.level = 0.95,
       conf.level = conf.level, cluster = cluster, ncores = ncores)
 
 
-    class(res) <- c("IPCW", "survIDM")
+    class(res) <- c("tpIPCW", "survIDM")
     callp <- paste("pij(s=",s,",t|", attr(terms(formula),"term.labels"), "=", z.value, ")", sep = "")
 
   } # end method with numeric or integer covariate

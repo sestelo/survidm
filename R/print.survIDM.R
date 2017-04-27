@@ -17,8 +17,11 @@ print.survIDM <- function(x, ...){
       if(class(x)[1] == "LIDA") method <- "LIDA estimator"
       if(class(x)[1] == "LDM") method <- "Landmark approach estimator"
       if(class(x)[1] == "PLDM") method <- "Presmoothed Landmark approach estimator"
-      if(class(x)[1] == "IPCW") method <- "Inverse Probability of Censoring Weighting"
-
+      if(class(x)[1] == "tpIPCW") method <- "Inverse Probability of Censoring Weighting for Transition Probabilities"
+      if(class(x)[1] == "CIF") method <- "Cumulative Incidence Function"
+      if(class(x)[1] == "cifIPCW") method <- "Inverse Probability of Censoring Weighting for the Cumulative Incidence Function"
+      if(class(x)[1] == "soj") method <- "Sojourn Time Distribution"
+      if(class(x)[1] == "sojIPCW") method <- "Inverse Probability of Censoring Weighting for the Sojourn Time Distribution"
       print(method)
     }
 
