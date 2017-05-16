@@ -146,7 +146,7 @@ CIF <- function(formula, s, data, conf = FALSE, n.boot = 199,
     obj1[[1]] <- na.omit(obj1[[1]])
     colnames(obj1[[1]]) <- c(colnames(object[[1]]), attr(terms(formula),"term.labels"))
 
-    res <- cifIPCW(object = obj1, t = t,
+    res <- cifIPCW(object = obj1,
                   z.name = attr(terms(formula),"term.labels"),
                   z.value = z.value, bw = bw, window = window,
                   method.weights = method.weights, conf = conf, n.boot = n.boot,
@@ -180,7 +180,7 @@ CIF <- function(formula, s, data, conf = FALSE, n.boot = 199,
 
 
 
-      res <- CIF_ini(object = obj, t = t, s = s, conf = conf,
+      res <- CIF_ini(object = obj, s = s, conf = conf,
                  conf.level = conf.level, n.boot = n.boot,
                  cluster = cluster, ncores = ncores)
       class(res) <- c("CIF", "survIDM")
