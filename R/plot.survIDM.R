@@ -131,6 +131,9 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", conf = NULL, type 
         }
       } #end plot for tp
 
+
+
+    #cif
       #---------------------
 
       if (class(object)[1] %in%  c("CIF", "cifIPCW")) {
@@ -185,13 +188,63 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", conf = NULL, type 
       } #ends for CIF
 
 
+
+    # soj
       #--------------------------------
 
       if (class(object)[1] %in%  c("soj", "sojIPCW")) {
-        if (is.null(ylab) &  class(object)[1] == "soj") ylab <- "Sojourn"
+        if (is.null(ylab) &  class(object)[1] == "soj") ylab <- "Sojourn(t)"
 
         if (is.null(ylab) &  class(object)[1] == "sojIPCW")
           ylab <- bquote(paste("Sojourn(t|", .(x$z.name), ")"))
+
+
+
+
+
+        if (object$Nlevels == 1) {
+
+
+       #   if(class(object)[1] == "cifIPCW") obCI <- ob[, 3:4] # in order to corerct the out of cifIPCW
+
+
+          matplot(ob[, 1], ob[, 2], type = type, col = col, xlab = xlab,
+                  ylab = ylab, lty = lty, ylim = ylim, xlim = xlim, ...)
+
+          if (ci == TRUE) {
+            matlines(x = ob[, 1], y = obCI[, 1], type = conftype,
+                     lty = conflty, col = confcol, ...)
+            matlines(x = ob[, 1], y = obCI[, 2], type = conftype,
+                     lty = conflty, col = confcol, ...)
+          }
+
+        }else{ # more than 1 level
+
+
+          plot(ob[[1]][, 1], ob[[1]][, 2], type = "n", xlab = xlab,
+               ylab = ylab, ylim = ylim, xlim = xlim, ...)
+
+          for (i in 1:object$Nlevels) {
+
+            lines(ob[[i]][, 1], ob[[i]][, 2], type = type, col = col[i],
+                  lty = lty, ...)
+            if (ci == TRUE) {
+              lines(x = ob[[i]][, 1], y = obCI[[i]][, 1], type = conftype,
+                    lty = conflty, col = confcol[i], ...)
+              lines(x = ob[[i]][, 1], y = obCI[[i]][, 2], type = conftype,
+                    lty = conflty, col = confcol[i], ...)
+            }
+          }
+          legend("bottomright", object$levels, col = col, lty = lty)
+
+
+
+        }
+
+
+
+
+
 
 
 
