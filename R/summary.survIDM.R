@@ -8,13 +8,171 @@ summary.survIDM <- function(object, times = NULL, ...){
     }else{
 
 
+
+
+
+
       # para sojourn
       #------------------
-      if (class(object)[1] %in%  c("CIF", "cifIPCW")) {
+      if (class(object)[1] %in%  c("soj", "sojIPCW")) {
+
+        if (object$Nlevels > 1) {
+
+          if(!is.null(times)){
+            # to control the times argument
+            # -----------------------------
+            pp <- list()
+            for (i in 1:object$Nlevels) {
+              pp[[i]] <- sapply(times, function(x)ifelse(x >= min(object$est[[i]][,1]) & x <= max(object$est[[i]][,1]), 1, NA))
+            }
+
+            if (all(is.na(unlist(pp)))) {
+              stop(paste("At least one element of the 'times' vector has to be in the range of 't' "))
+            }
+
+            if (any(is.na(unlist(pp)))) {
+              warning(paste("'times' must be in the range of 't' (for each level)" ))
+            }
+            #  -----
+          }
+
+
+          cat("\n")
+          cat("Estimation of", object$callp, "\n")
+          cat("\n")
+
+
+          res <- list()
+          for (i in 1:object$Nlevels) {
+            v.level <- object$levels[i]
+            cat("   ", attr(terms(object$formula),"term.labels"), "=", v.level, "\n")
+
+            if(is.null(times)) {times <- object$est[[v.level]][,1]}
+
+            ii <- sapply(times, function(x)ifelse( x >= min(object$est[[v.level]][,1]) & x <= max(object$est[[v.level]][,1]),which.max(object$est[[v.level]][,1][object$est[[i]][,1] <= x]), NA))
+
+
+
+            if (all(is.na(ii))) {
+              aux <- data.frame(times, matrix(NA, nrow = length(times), ncol = dim(object$est[[v.level]])[2] - 1))
+            }else{
+              aux <- data.frame(times, object$est[[v.level]][ii, -1])
+            }
+            names(aux) <- c("t", "sojourn")
+            print(aux, row.names = FALSE)
+            res$est[[v.level]] <- aux
+            if(object$conf == TRUE){
+              if (all(is.na(ii))) {
+                lci <- data.frame(times, matrix(NA, nrow = length(times), ncol = dim(object$est[[v.level]])[2] - 1))
+                uci <- data.frame(times, matrix(NA, nrow = length(times), ncol = dim(object$est[[v.level]])[2] - 1))
+              }else{
+                lci <- data.frame(t = times, object$CI[[v.level]][ii, c(1)])
+                uci <- data.frame(t = times, object$CI[[v.level]][ii, c(2)])
+              }
+              names(lci) <- c("t", "sojourn")
+              names(uci) <- c("t", "sojourn")
+              cat("\n")
+              cat((1-object$conf.level)/2*100,"%", "\n", sep="")
+              cat("\n")
+              print(lci, row.names = FALSE)
+              cat("\n")
+              cat((1-(1-object$conf.level)/2)*100,"%", "\n", sep="")
+              cat("\n")
+              print(uci, row.names = FALSE)
+              res$LCI[[v.level]] <- lci
+              res$UCI[[v.level]] <- uci
+              cat("\n")
+            }
+            #--
+
+          }
+        }else{ # starts with no levels
+
+          if(is.null(times)) {times <- object$est[,1]}
+
+
+          ii <- sapply(times, function(x)ifelse( x >= min(object$est[,1]) & x <= max(object$est[,1]),
+                                                 which.max(object$est[,1][object$est[,1] <= x]), NA))
+          if (all(is.na(ii))) {
+            stop(paste("At least one element of the 'times' vector has to be between",min(object$est[,1]), "and", max(object$est[,1])))
+          }
+
+          if (any(is.na(ii))) {
+            warning(paste("'times' must be between",min(object$t), "and", max(object$t)))
+          }
+
+
+
+
+
+          cat("\n")
+          cat("Estimation of", object$callp, "\n")
+          cat("\n")
+
+          if(object$conf == FALSE){
+
+            if(class(object)[1] == "cifIPCW") {
+
+              res <- list(est = data.frame(times, object$est[ii, 2]))
+              names(res$est) <- c("t", "CIF")
+
+
+            }else{
+              res <- list(est = data.frame(times, object$est[ii, -1]))
+              names(res$est) <- c("t", "sojourn")
+
+            }
+            print(res$est, row.names = FALSE)
+          }else{
+
+
+
+            if(class(object)[1] == "cifIPCW") {
+              res <- list(est = data.frame(times, object$est[ii, 2]),
+                          LCI = data.frame(t = times, object$LCI[ii]),
+                          UCI = data.frame(t = times, object$UCI[ii]))
+
+              names(res$est) <- c("t", "sojourn")
+              names(res$LCI) <- c("t", "sojourn")
+              names(res$UCI) <- c("t", "sojourn")
+
+            }else{
+
+              res <- list(est = data.frame(times, object$est[ii, -1]),
+                          LCI = data.frame(t = times, object$CI[ii, c(1)]),
+                          UCI = data.frame(t = times, object$CI[ii, c(2)]))
+
+              names(res$est) <- c("t", "sojourn")
+              names(res$LCI) <- c("t", "sojourn")
+              names(res$UCI) <- c("t", "sojourn")
+            }
+
+
+            print(res$est, row.names = FALSE)
+            cat("\n")
+            cat((1-object$conf.level)/2*100,"%", "\n", sep="")
+            cat("\n")
+            print(res$LCI, row.names = FALSE)
+            cat("\n")
+            cat((1-(1-object$conf.level)/2)*100,"%", "\n", sep="")
+            cat("\n")
+            print(res$UCI, row.names = FALSE)
+            cat("\n")
+          }
+
+
+        }
 
 
 
       } # ends sojourn
+
+
+
+
+
+
+
 
 
 

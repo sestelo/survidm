@@ -1,5 +1,138 @@
-tprob <- function(formula, s, method = "AJ", conf = TRUE, conf.level = 0.95,
-                  conf.type = "log", n.boot = 200, data, z.value, bw = "dpik",
+#' Nonparametric estimation of transition probabilities in
+#' the illness-death model
+#'
+#' @description This function is used to obtain nonparametric estimates of
+#' the transition probabilities in the illness-death model.
+#'
+#' @param formula A \code{formula} object, which must have a \code{survIDM}
+#' object as the response on the left of the \code{~} operator and, if desired,
+#' a term on the right. The term may be a qualitative or quantitative variable.
+#' For a single survival curve the right hand side should be \code{~ 1}.
+#' @param s The first time for obtaining estimates for the transition
+#' probabilities. If missing, 0 will be used.
+#' @param method The method used to compute the transition probabilities.
+#' Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LDM"}, and \code{"PLDM"}.
+#' Defaults to \code{"AJ"}.
+#' @param conf Provides pointwise confidence bands. Defaults to \code{FALSE}.
+#' @param conf.level Level of confidence. Defaults to 0.95 (corresponding to 95\%).
+#' @param conf.type Method to compute the confidence intervals.
+#' Transformation applied to compute confidence intervals. Possible choices
+#' are \code{"linear"}, \code{"log"}, \code{"log-log"} and \code{"bootstrap"}.
+#' Default is \code{"linear"}.
+#' @param n.boot The number of bootstrap replicates to compute the variance
+#' of the non-Markovian estimator. Default is 199.
+#' @param data A data.frame including at least four columns named.
+#' \code{time1}, \code{event1}, \code{Stime} and \code{event}, which correspond
+#' to disease free survival time, disease free survival indicator, time to death
+#' or censoring, and death indicator, respectively.
+#' @param z.value The value of the covariate on the right hand side of formula
+#' at which the transition probabilities are computed. For quantitative
+#' covariates, i.e. of class integer and numeric.
+#' @param bw A single numeric value to compute a kernel density bandwidth.
+#' Use \code{"dpik"} for the \pkg{KernSmooth} package based selector or \code{"np"}
+#' for the \code{'npudensbw'} function of the \pkg{np} package.
+#' @param window A character string specifying the desired kernel.
+#' See details below for possible options. Defaults to \code{"gaussian"}
+#' where the gaussian density kernel will be used.
+#' @param method.weights A character string specifying the desired weights method.
+#' Possible options are \code{"NW"} for the Nadaraya-Watson weights and \code{"LL"}
+#' for local linear weights. Defaults to \code{"NW"}.
+#' @param cluster A logical value. If \code{TRUE} (default), the bootstrap procedure
+#' for the confidence intervals is parallelized. Note that there are
+#' cases (e.g., a low number of bootstrap repetitions) that \R will gain in
+#' performance through serial computation. \R takes time to distribute tasks
+#' across the processors also it will need time for binding them all together
+#' later on. Therefore, if the time for distributing and gathering pieces
+#' together is greater than the time need for single-thread computing,
+#' it does not worth parallelize.
+#' @param ncores An integer value specifying the number of cores to be used in
+#' the parallelized procedure. If \code{NULL} (default), the number of cores
+#' to be used is equal to the number of cores of the machine - 1.
+#' @param na.rm A logical value indicating whether NA values should
+#' be stripped in the computation.
+#
+#'
+#' @details Possible options for argument window are \code{"gaussian"},
+#' \code{"epanechnikov"}, \code{"tricube"}, \code{"boxcar"},
+#' \code{"triangular"}, \code{"quartic"} or \code{"cosine"}.
+#'
+#'
+#'
+#' @return An object of class \code{"survIDM"} and one of the following
+#' five classes: \code{"AJ"}, \code{"LIDA"}, \code{"LMD"}, \code{"PLDM"} and
+#' \code{"tpIPCW"}. Objects are implemented as a list with elements:
+#'
+#' \item{est}{data.frame with estimates of the transition probabilities.}
+#' \item{CI}{data.frame with the confidence intervals of the transition probabilities.}
+#' \item{conf.level}{Level of confidence.}
+#' \item{s}{The first time for obtaining estimates for the transition probabilities.}
+#' \item{t}{The time for obtaining the estimates of transition probabilities.}
+#' \item{conf}{logical; if \code{FALSE} (default) the pointwise confidence
+#' bands are not given.}
+#' \item{conf.type}{Type of the confidence interval.}
+#' \item{callp}{The expression of the estimated probability.}
+#' \item{Nlevels}{The number of levels of the covariate. Provides important
+#' information when the covariate at the right hand side of formula
+#' is of class factor.}
+#' \item{formula}{A formula object}
+#' \item{call}{A call object}
+#'
+#'
+#' @author Luis Meira-Machado and Marta Sestelo.
+#'
+#' @references
+#' Aalen O. O., Johansen S. (1978) An Empirical Transition Matrix for
+#' Nonhomogeneous Markov Chains Based on Censored Observations. Scandinavian
+#' Journal of Statistics 5(3), 141--150.
+#'
+#' Meira-Machado L. F., de Una-Alvarez J. and Cadarso-Suarez C. (2006).
+#' Nonparametric estimation of transition probabilities in a non-Markov
+#' illness-death model. Lifetime Data Anal 12(3), 325--344.
+#'
+#' de Una-Alvarez J. and Meira-Machado L. (2015). Nonparametric estimation
+#' of transition probabilities in a non-Markov illness-death model:
+#' a comparative study. Biometrics 71, 364--375.
+#'
+#'
+#' @examples
+#' res <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 365,
+#' method = "AJ", conf = TRUE, conf.level = 0.95,
+#' conf.type = "linear", n.boot = 100, data = colonCS)
+#'
+#' res1 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 0,
+#' method = "LIDA", conf = TRUE, conf.level = 0.95,
+#' conf.type = "linear", n.boot = 10, data = colonCS)
+#'
+#' res2 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 0,
+#' method = "LDM", conf = TRUE, conf.level = 0.95,
+#' conf.type = "log", n.boot = 200, data = colonCS)
+#'
+#' res3 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 0,
+#' method = "PLDM", conf = FALSE, conf.level = 0.95,
+#' conf.type = "linear", n.boot = 200, data = colonCS)
+#'
+#'
+#' # with factor
+#'
+#' res4 <- tprob(survIDM(time1,event1,Stime, event) ~ factor(sex), s = 365,
+#' method = "AJ", conf = TRUE, conf.level = 0.95,
+#' conf.type = "linear", n.boot = 100, data = colonCS)
+#'
+#'
+#' # with continuous covariate (ipcw)
+#'
+#' res5 <- tprob(survIDM(time1,event1,Stime, event) ~ age, s = 365,
+#' method = "AJ", z.value = 48, conf = TRUE, conf.level = 0.95,
+#' n.boot = 50, data = colonCS, bw = "dpik",
+#' window = "gaussian", method.weights = "NW")
+#'
+#'
+
+
+
+
+tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
+                  conf.type = "linear", n.boot = 199, data, z.value, bw = "dpik",
                   window = "gaussian", method.weights = "NW", cluster = FALSE,
                   ncores = NULL, na.rm = TRUE){
 

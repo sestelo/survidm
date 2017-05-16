@@ -13,6 +13,4 @@ Imports:
     KernSmooth,
     np,
     survival
-  
-
-
+RoxygenNote: 6.0.1

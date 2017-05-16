@@ -1,3 +1,31 @@
+#' @title Create a survIDM object
+#'
+#' @description Creates a "survIDM" object, usually used as a response
+#' variable in a model formula.
+#'
+#' @param time1 First time or censoring time.
+#' @param event1 Indicator of the first time; 0 if the first time is censored
+#' and 1 otherwise.
+#' @param Stime The total time of the process.
+#' @param event Censoring indicator of the survival time of the process; 0 if
+#' the total time is censored and 1 otherwise.
+#' @param ... Other options.
+#'
+#'
+#' @details Arguments in this function must be introduced in the following
+#' order: \code{time1}, \code{event1}, \code{Stime} and \code{event}, where
+#' \code{time1} and \code{Stime} are ordered event times and
+#' \code{event1} and \code{event} their corresponding indicator statuses.
+#'
+#' @return An object of class "survIDM". "survIDM" objects are implemented
+#' as a single dataframe.
+#'
+#' @author Luis Meira-Machado and Marta Sestelo.
+#'
+#' @examples
+#' with(colonCS, survCS(time1, event1, Stime, event))
+
+
 survIDM <- function(time1, event1, Stime, event, ...)
 {
   if (missing(time1))
