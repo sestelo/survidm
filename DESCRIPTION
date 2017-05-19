@@ -6,7 +6,7 @@ Date: 2017-05-19
 Author: Luis Meira-Machado and Marta Sestelo
 Maintainer: Marta Sestelo <sestelo@uvigo.es>
 Description: Method to implement some newly developed methods for the
-    estimation of probabilities in the illnes-death model.
+    estimation of probabilities in the illness-death model.
 Depends:
     R (>= 3.3.0)
 Encoding: UTF-8
