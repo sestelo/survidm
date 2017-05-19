@@ -27,7 +27,7 @@ California, Berkeley, 1981.
 \author{Luis Meira-Machado and Marta Sestelo}
 
 \examples{
-obj <- with(colonCS, survCS(time1, event1, Stime, event))
+obj <- with(colonCS, survIDM(time1, event1, Stime, event))
 obj0 <- obj$data
 
 #P(T>y|age=45)

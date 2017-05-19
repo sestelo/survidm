@@ -143,8 +143,15 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", conf = NULL, type 
           ylab <- bquote(paste("CIF(t|", .(x$z.name), ")"))
 
 
+        if(class(object)[1] == "cifIPCW") object$s <- 0
+
 
         if (object$Nlevels == 1) {
+
+          if(object$s != 0){
+            ob <- ob[, -2]
+            obCI <- obCI[, -c(1:2)]
+          }
 
 
           if(class(object)[1] == "cifIPCW") obCI <- ob[, 3:4] # in order to corerct the out of cifIPCW
@@ -167,6 +174,11 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", conf = NULL, type 
                ylab = ylab, ylim = ylim, xlim = xlim, ...)
 
           for (i in 1:object$Nlevels) {
+
+            if(object$s != 0){
+              ob [[i]]<- ob[[i]][, -2]
+              obCI[[i]] <- obCI[[i]][, -c(1:2)]
+            }
 
             lines(ob[[i]][, 1], ob[[i]][, 2], type = type, col = col[i],
                   lty = lty, ...)

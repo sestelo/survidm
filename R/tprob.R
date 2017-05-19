@@ -21,7 +21,7 @@
 #' Default is \code{"linear"}.
 #' @param n.boot The number of bootstrap replicates to compute the variance
 #' of the non-Markovian estimator. Default is 199.
-#' @param data A data.frame including at least four columns named.
+#' @param data A data.frame including at least four columns named
 #' \code{time1}, \code{event1}, \code{Stime} and \code{event}, which correspond
 #' to disease free survival time, disease free survival indicator, time to death
 #' or censoring, and death indicator, respectively.
@@ -74,8 +74,10 @@
 #' \item{Nlevels}{The number of levels of the covariate. Provides important
 #' information when the covariate at the right hand side of formula
 #' is of class factor.}
-#' \item{formula}{A formula object}
-#' \item{call}{A call object}
+#' \item{levels}{The levels of the qualitative covariate
+#' (if it is of class factor) on the right hand side of formula.}
+#' \item{formula}{A formula object.}
+#' \item{call}{A call object.}
 #'
 #'
 #' @author Luis Meira-Machado and Marta Sestelo.
@@ -96,33 +98,33 @@
 #'
 #' @examples
 #' res <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 365,
-#' method = "AJ", conf = TRUE, conf.level = 0.95,
+#' method = "AJ", conf = FALSE, conf.level = 0.95,
 #' conf.type = "linear", n.boot = 100, data = colonCS)
 #'
 #' res1 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 0,
-#' method = "LIDA", conf = TRUE, conf.level = 0.95,
-#' conf.type = "linear", n.boot = 10, data = colonCS)
+#' method = "LIDA", conf = FALSE, conf.level = 0.95,
+#' conf.type = "linear", n.boot = 100, data = colonCS)
 #'
-#' res2 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 0,
-#' method = "LDM", conf = TRUE, conf.level = 0.95,
-#' conf.type = "log", n.boot = 200, data = colonCS)
+#' res2 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 365,
+#' method = "LDM", conf = FALSE, conf.level = 0.95,
+#' conf.type = "log", n.boot = 100, data = colonCS)
 #'
-#' res3 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 0,
+#' res3 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 365,
 #' method = "PLDM", conf = FALSE, conf.level = 0.95,
-#' conf.type = "linear", n.boot = 200, data = colonCS)
+#' conf.type = "bootstrap", n.boot = 100, data = colonCS)
 #'
 #'
 #' # with factor
 #'
 #' res4 <- tprob(survIDM(time1,event1,Stime, event) ~ factor(sex), s = 365,
-#' method = "AJ", conf = TRUE, conf.level = 0.95,
+#' method = "AJ", conf = FALSE, conf.level = 0.95,
 #' conf.type = "linear", n.boot = 100, data = colonCS)
 #'
 #'
 #' # with continuous covariate (ipcw)
 #'
 #' res5 <- tprob(survIDM(time1,event1,Stime, event) ~ age, s = 365,
-#' method = "AJ", z.value = 48, conf = TRUE, conf.level = 0.95,
+#' method = "AJ", z.value = 48, conf = FALSE, conf.level = 0.95,
 #' n.boot = 50, data = colonCS, bw = "dpik",
 #' window = "gaussian", method.weights = "NW")
 #'
@@ -226,6 +228,11 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
                     cluster = cluster, ncores = ncores)
       class(res) <- c("PLDM", "survIDM")
     }
+
+    # in order to have the same output
+    x.nlevels <- 1
+    levels <- NULL
+
   } # end methods without covariate
 
 
@@ -252,12 +259,12 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
     class(res) <- c("tpIPCW", "survIDM")
     callp <- paste("pij(s=",s,",t|", attr(terms(formula),"term.labels"), "=", z.value, ")", sep = "")
 
+    # in order to have the same output
+    x.nlevels <- 1
+    levels <- NULL
+
+
   } # end method with numeric or integer covariate
-
-
-
-
-
 
 
 
@@ -349,10 +356,12 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
     } # ends the level's loop
     res$est <- estim
     res$CI <- ci
-  }else{
-    x.nlevels = 1
-    levels = NULL
+
   } # end method with factor covariate
+
+
+
+
 
 
   #callp <- paste("P(T>y|", text3, ")", sep = "")

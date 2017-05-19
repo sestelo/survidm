@@ -28,7 +28,7 @@ American Statistical Association, 53:457-481, 1958.
 
 \examples{
 require(survival)
-obj <- with(colonCS, survCS(time1, event1, Stime, event))
+obj <- with(colonCS, survIDM(time1, event1, Stime, event))
 KM(time = obj$Stime, status = obj$event, t = 1095)
 
 fit <- survfit(Surv(obj$Stime, obj$event) ~ 1, data = obj)

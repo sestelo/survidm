@@ -12,13 +12,16 @@
 #' For a single survival curve the right hand side should be \code{~ 1}.
 #' @param s The first time for obtaining estimates for the cumulative
 #' incidence functions. If missing, 0 will be used.
-#' @param data A data.frame including at least four columns named.
+#' @param data A data.frame including at least four columns named
+#' \code{time1}, \code{event1}, \code{Stime} and \code{event}, which correspond
+#' to disease free survival time, disease free survival indicator, time to death
+#' or censoring, and death indicator, respectively.
 #' @param conf Provides pointwise confidence bands. Defaults to \code{FALSE}.
 #' @param n.boot The number of bootstrap replicates to compute the variance
 #' of the non-Markovian estimator. Default is 199.
 #' @param conf.level Level of confidence. Defaults to 0.95 (corresponding to 95\%).
 #' @param z.value The value of the covariate on the right hand side of formula
-#' at which the transition probabilities are computed. For quantitative
+#' at which the cumulative incidence probabilities are computed. For quantitative
 #' covariates, i.e. of class integer and numeric.
 #' @param bw A single numeric value to compute a kernel density bandwidth.
 #' Use \code{"dpik"} for the \pkg{KernSmooth} package based selector or \code{"np"}
@@ -64,8 +67,10 @@
 #' \item{Nlevels}{The number of levels of the covariate. Provides important
 #' information when the covariate at the right hand side of formula
 #' is of class factor.}
-#' \item{formula}{A formula object}
-#' \item{call}{A call object}
+#' \item{levels}{The levels of the qualitative covariate
+#' (if it is of class factor) on the right hand side of formula.}
+#' \item{formula}{A formula object.}
+#' \item{call}{A call object.}
 #'
 #' @author Luis Meira-Machado and Marta Sestelo.
 #'
@@ -78,17 +83,21 @@
 #' failure time data. John Wiley & Sons, New York.
 #'
 #' @examples
-#' res <- cif(survIDM(time1,event1,Stime, event) ~ 1, data = colonCS, s = 365,
-#' conf = TRUE, conf.level = 0.95)
+#' res <- CIF(survIDM(time1,event1,Stime, event) ~ 1, data = colonCS,
+#' conf = FALSE, conf.level = 0.95)
 #' res
 #'
-#' res1 <- cif(survIDM(time1,event1,Stime, event) ~ factor(sex), data = colonCS,
-#' s = 365, conf = TRUE, conf.level = 0.95)
+#' res1 <- CIF(survIDM(time1,event1,Stime, event) ~ 1, data = colonCS, s = 365,
+#' conf = FALSE, conf.level = 0.95)
 #' res1
 #'
-#' res2 <- cif(survIDM(time1,event1,Stime, event) ~ age, data = colonCS,
-#' z.value = 56, s = 365, conf = TRUE, conf.level = 0.95)
+#' res2 <- CIF(survIDM(time1,event1,Stime, event) ~ factor(sex), data = colonCS,
+#' s = 365, conf = FALSE, conf.level = 0.95)
 #' res2
+#'
+#' res3 <- CIF(survIDM(time1,event1,Stime, event) ~ age, data = colonCS,
+#' z.value = 56, conf = FALSE, conf.level = 0.95)
+#' res3
 #'
 #'
 
@@ -100,7 +109,7 @@ CIF <- function(formula, s, data, conf = FALSE, n.boot = 199,
 
 
   if (missing(formula)) stop("A formula argument is required")
-  if (missing(s)) stop("argument 's' is missing, with no default")
+  if (missing(s))  s <- 0  #stop("argument 's' is missing, with no default")
 
 
   # formula
@@ -138,8 +147,11 @@ CIF <- function(formula, s, data, conf = FALSE, n.boot = 199,
 
 
 
-  # numeric or integer covariate
+  # numeric or integer covariate (no argumento s)
   if(length(attr(terms(formula),"term.labels")) != 0 & (Class == "numeric" | Class == "integer")) {#IPCW
+
+    if(s != 0) {warning(paste("If the formula includes a continuous covariate,
+                             's' argument will not be used "))}
 
     obj1 <- object
     obj1[[1]] <- cbind(obj1[[1]], xval)

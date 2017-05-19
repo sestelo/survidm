@@ -38,7 +38,7 @@ sojourn_ini <- function(object, t, conf = FALSE, n.boot = 199, conf.level = 0.95
                                      }
 				     }  #method LDM
 
-	if (method == "Datta-Satten"){
+	if (method == "Satten-Datta"){
 		for (k in 1: length(t)) { soj[k] <- cond(object[[1]]$time1, object[[1]]$Stime, object[[1]]$event1, object[[1]]$event, t[k])}
 				                }
 
@@ -52,7 +52,9 @@ sojourn_ini <- function(object, t, conf = FALSE, n.boot = 199, conf.level = 0.95
         n <- dim(object[[1]])[1]
 
 	for (j in 1:n.boot){
-	cat(" Bootstrap sample number: ", j, "\r")
+	  cat("", "\r")
+
+	  cat(" Bootstrap sample number: ", j, "\r")
 
 	xx <- sample.int(n, size = n, replace = TRUE)
         ndata <- object[[1]][xx,]
@@ -66,16 +68,16 @@ sojourn_ini <- function(object, t, conf = FALSE, n.boot = 199, conf.level = 0.95
 		soj.ci0[k,j] <- sum(kmw[p])
                                      }
 				     } #method LDM
-	if (method == "Datta-Satten"){
+	if (method == "Satten-Datta"){
 		for (k in 1: length(t)) { soj.ci0[k,j] <- cond(ndata$time1, ndata$Stime, ndata$event1, ndata$event, t[k])}
 				                }
         }
 
-	cat("", "\r")
+cat("", "\r")
 
       for (k in 1: length(t)) {
-        soj.ci[k,1] <- quantile(soj.ci0[k,], (1 - conf.level) / 2)
-        soj.ci[k,2] <- quantile(soj.ci0[k,], 1 - (1 - conf.level) / 2)
+        soj.ci[k,1] <- quantile(soj.ci0[k,], (1 - conf.level) / 2, na.rm = TRUE)
+        soj.ci[k,2] <- quantile(soj.ci0[k,], 1 - (1 - conf.level) / 2, na.rm = TRUE)
 				   }
         }
 

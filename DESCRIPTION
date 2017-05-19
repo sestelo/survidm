@@ -2,15 +2,22 @@ Package: idmsurv
 Type: Package
 Title: Illness-Death Model for Analysing Survival Data
 Version: 0.1.0
+Date: 2017-05-19
 Author: Luis Meira-Machado and Marta Sestelo
 Maintainer: Marta Sestelo <sestelo@uvigo.es>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: Method to implement some newly developed methods for the
+    estimation of probabilities in the illnes-death model.
+Depends:
+    R (>= 3.3.0)
 Encoding: UTF-8
+License: GPL-3
 LazyData: true
 Imports:
     KernSmooth,
     np,
-    survival
+    survival,
+    doParallel,
+    parallel,
+    doRNG,
+    foreach
 RoxygenNote: 6.0.1

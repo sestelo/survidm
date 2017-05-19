@@ -71,7 +71,8 @@ CIF_ini <- function(object, t, s, conf = FALSE, n.boot = 199, conf.level = 0.95,
 	ci <- cbind(cif.ci, condcif.ci)
 	ci <- data.frame(ci)
         names(ci) <- c("cif.li.ci", "cif.ls.ci", "condcif.li.ci", "condcif.ls.ci")
-	                         }
+
+}
 
 	if(conf==TRUE)  result <- list(est=resu, CI=ci, conf.level=conf.level, s=s, t=t, conf=conf)
 	else  result <- list(est=resu,  s=s, t=t, conf=conf)
@@ -79,5 +80,5 @@ CIF_ini <- function(object, t, s, conf = FALSE, n.boot = 199, conf.level = 0.95,
     class(result) <- c("CIF")
     return(invisible(result))
 
-}
 
+}

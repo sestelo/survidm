@@ -1,3 +1,7 @@
+
+
+
+
 summary.survIDM <- function(object, times = NULL, ...){
 
 
@@ -181,6 +185,9 @@ summary.survIDM <- function(object, times = NULL, ...){
       #------------------
       if (class(object)[1] %in%  c("CIF", "cifIPCW")) {
 
+
+        if (class(object)[1] == "cifIPCW") object$s <- 0
+
         if (object$Nlevels > 1) {
 
           if(!is.null(times)){
@@ -203,7 +210,12 @@ summary.survIDM <- function(object, times = NULL, ...){
 
 
           cat("\n")
-          cat("Estimation of", object$callp, "\n")
+          #cat("Estimation of", object$callp, "\n")
+          if (object$s == 0) {
+            cat("Estimation of CIF(t)")
+          }else{
+            cat("Estimation of CIF(t|Y(s)=0)")
+          }
           cat("\n")
 
 
@@ -224,6 +236,14 @@ summary.survIDM <- function(object, times = NULL, ...){
               aux <- data.frame(times, object$est[[v.level]][ii, -1])
             }
             names(aux) <- c("t", "CIF", "CIF(t|Y(s)=0)")
+
+
+            if(object$s == 0) {
+              aux <- aux[, -3]
+            }else{
+              aux <- aux[, -2]
+            }
+
             print(aux, row.names = FALSE)
             res$est[[v.level]] <- aux
             if(object$conf == TRUE){
@@ -236,6 +256,13 @@ summary.survIDM <- function(object, times = NULL, ...){
               }
               names(lci) <- c("t", "CIF", "CIF(t|Y(s)=0)")
               names(uci) <- c("t", "CIF", "CIF(t|Y(s)=0)")
+              if(object$s == 0) {
+                lci <- lci[, -3]
+                uci <- uci[, -3]
+              }else{
+                lci <- lci[, -2]
+                uci <- uci[, -2]
+              }
               cat("\n")
               cat((1-object$conf.level)/2*100,"%", "\n", sep="")
               cat("\n")
@@ -273,7 +300,13 @@ summary.survIDM <- function(object, times = NULL, ...){
 
 
           cat("\n")
-          cat("Estimation of", object$callp, "\n")
+
+          if (object$s == 0) {
+            cat("Estimation of CIF(t)")
+          }else{
+            cat("Estimation of CIF(t|Y(s)=0)")
+          }
+
           cat("\n")
 
           if(object$conf == FALSE){
@@ -287,6 +320,12 @@ summary.survIDM <- function(object, times = NULL, ...){
             }else{
               res <- list(est = data.frame(times, object$est[ii, -1]))
               names(res$est) <- c("t", "CIF", "CIF(t|Y(s)=0)")
+
+              if(object$s == 0) {
+                res$est <- res$est[, -3]
+              }else{
+                res$est <- res$est[, -2]
+              }
 
             }
             print(res$est, row.names = FALSE)
@@ -312,6 +351,18 @@ summary.survIDM <- function(object, times = NULL, ...){
               names(res$est) <- c("t", "CIF", "CIF(t|Y(s)=0)")
               names(res$LCI) <- c("t", "CIF", "CIF(t|Y(s)=0)")
               names(res$UCI) <- c("t", "CIF", "CIF(t|Y(s)=0)")
+
+              if(object$s == 0) {
+                res$est <- res$est[, -3]
+                res$LCI <- res$LCI[, -3]
+                res$UCI <- res$UCI[, -3]
+              }else{
+                res$est <- res$est[, -2]
+                res$LCI <- res$LCI[, -2]
+                res$UCI <- res$UCI[, -2]
+              }
+
+
             }
 
 

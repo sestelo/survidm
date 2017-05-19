@@ -1,6 +1,5 @@
 \name{PKMW}
 \alias{PKMW}
-
 \title{Presmoothed Kaplan-Meier weights}
 \description{This function returns a vector with the presmoothed Kaplan-Meier weights.}
 \usage{
@@ -32,7 +31,7 @@ American Statistical Association, 53:457-481, 1958.
 \seealso{\code{\link{KMW}}}
 
 \examples{
-obj <- with(colonCS, survCS(time1, event1, Stime, event))
+obj <- with(colonCS, survIDM(time1, event1, Stime, event))
 PKMW(time = obj$Stime, status = obj$event)
 }
 

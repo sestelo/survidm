@@ -25,7 +25,7 @@ American Statistical Association, 53:457-481, 1958.
 \seealso{\code{\link{PKMW}}}
 
 \examples{
-obj <- with(colonCS, survCS(time1, event1, Stime, event))
+obj <- with(colonCS, survIDM(time1, event1, Stime, event))
 kmw <- KMW(time = obj$Stime, status = obj$event)
 
 require(survival)
