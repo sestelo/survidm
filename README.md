@@ -1,2 +1,2 @@
 # idmsurv
-Illness-death model in survival analysis
+Inference and Prediction in an Illness-Death Model

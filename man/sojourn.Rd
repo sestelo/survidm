@@ -13,7 +13,7 @@ sojourn(formula, data, conf = FALSE, n.boot = 199, conf.level = 0.95,
 \item{formula}{A \code{formula} object, which must have a \code{survIDM}
 object as the response on the left of the \code{~} operator and, if desired,
 a term on the right. The term may be a qualitative or quantitative variable.
-For a single survival curve the right hand side should be \code{~ 1}.}
+Without covariates, the right hand side should be \code{~ 1}.}
 
 \item{data}{A data.frame including at least four columns named
 \code{time1}, \code{event1}, \code{Stime} and \code{event}, which correspond
@@ -94,27 +94,40 @@ Possible options for argument window are \code{"gaussian"},
 \code{"triangular"}, \code{"quartic"} or \code{"cosine"}.
 }
 \examples{
-res <- sojourn(survIDM(time1,event1,Stime, event) ~ 1,
+
+res <- sojourn(survIDM(time1, event1, Stime, event) ~ 1,
 data = colonCS, conf = FALSE, conf.level = 0.95)
 res
+summary(res, time=365*1:6)
+plot(res)
 
-res1 <- sojourn(survIDM(time1,event1,Stime, event) ~ 1,
+res1 <- sojourn(survIDM(time1, event1, Stime, event) ~ 1,
 data = colonCS, conf = FALSE, conf.level = 0.95, method = "LDM",
 presmooth = TRUE)
 res1
+summary(res1, time=365*1:6)
+plot(res1)
+
 
 # not run:
-#res2 <- sojourn(survIDM(time1,event1,Stime, event) ~ 1,
+#res2 <- sojourn(survIDM(time1, event1, Stime, event) ~ 1,
 #data = colonCS, conf = FALSE, conf.level = 0.95, method = "Satten-Datta")
 #res2
 
-res3 <- sojourn(survIDM(time1,event1,Stime, event) ~ factor(sex),
+
+# with a factor
+res3 <- sojourn(survIDM(time1, event1, Stime, event) ~ factor(sex),
 data = colonCS, conf = FALSE, conf.level = 0.95)
 res3
+summary(res3, time=365*1:6)
+plot(res3)
 
-res4 <- sojourn(survIDM(time1,event1,Stime, event) ~ age, data = colonCS,
+# with a qualitative covariate
+res4 <- sojourn(survIDM(time1, event1, Stime, event) ~ age, data = colonCS,
 z.value = 56, conf = FALSE, conf.level = 0.95)
 res4
+summary(res4, time=365*1:6)
+plot(res4)
 
 }
 \references{

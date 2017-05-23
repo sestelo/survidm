@@ -14,14 +14,16 @@ tprob(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
 \item{formula}{A \code{formula} object, which must have a \code{survIDM}
 object as the response on the left of the \code{~} operator and, if desired,
 a term on the right. The term may be a qualitative or quantitative variable.
-For a single survival curve the right hand side should be \code{~ 1}.}
+Without covariates, the right hand side should be \code{~ 1}.}
 
 \item{s}{The first time for obtaining estimates for the transition
 probabilities. If missing, 0 will be used.}
 
 \item{method}{The method used to compute the transition probabilities.
-Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LDM"}, and \code{"PLDM"}.
-Defaults to \code{"AJ"}.}
+Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LDM"}, \code{"PLDM"} and
+\code{"IPCW"}. Defaults to \code{"AJ"}. The \code{"IPCW"} method
+is recommended to obtain conditional transition probabilities (i.e., with a
+quantitative term on the right hand side of formula).}
 
 \item{conf}{Provides pointwise confidence bands. Defaults to \code{FALSE}.}
 
@@ -104,38 +106,67 @@ Possible options for argument window are \code{"gaussian"},
 \code{"triangular"}, \code{"quartic"} or \code{"cosine"}.
 }
 \examples{
-res <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 365,
-method = "AJ", conf = FALSE, conf.level = 0.95,
-conf.type = "linear", n.boot = 100, data = colonCS)
+# Aalen-Johansen
+# Occupation Probabilities Pj(t)=Pij(0,t)
 
-res1 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 0,
-method = "LIDA", conf = FALSE, conf.level = 0.95,
-conf.type = "linear", n.boot = 100, data = colonCS)
+res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0,
+method = "AJ", conf = FALSE, data = colonCS)
 
-res2 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 365,
-method = "LDM", conf = FALSE, conf.level = 0.95,
-conf.type = "log", n.boot = 100, data = colonCS)
-
-res3 <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 365,
-method = "PLDM", conf = FALSE, conf.level = 0.95,
-conf.type = "bootstrap", n.boot = 100, data = colonCS)
+summary(res, time=365*1:6)
+plot(res)
 
 
-# with factor
+# Transition Probabilities Pij(t)=Pij(365,t)
 
-res4 <- tprob(survIDM(time1,event1,Stime, event) ~ factor(sex), s = 365,
-method = "AJ", conf = FALSE, conf.level = 0.95,
-conf.type = "linear", n.boot = 100, data = colonCS)
+# LIDA
+res1 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
+method = "LIDA", conf = FALSE, data = colonCS)
+
+summary(res1, time=365*1:6)
+plot(res1)
+plot(res1, trans="01", ylim=c(0,0.15))
+
+# Landmark (LDM)
+res2 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
+method = "LDM", conf = FALSE, data = colonCS)
+
+summary(res2, time=365*1:6)
+plot(res2)
+
+# Presmoothed LDM
+res3 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
+method = "PLDM", conf = FALSE, data = colonCS)
+
+summary(res3, time=365*1:6)
+plot(res3)
 
 
-# with continuous covariate (ipcw)
 
-res5 <- tprob(survIDM(time1,event1,Stime, event) ~ age, s = 365,
-method = "AJ", z.value = 48, conf = FALSE, conf.level = 0.95,
-n.boot = 50, data = colonCS, bw = "dpik",
-window = "gaussian", method.weights = "NW")
+# Conditional transition probabilities
+
+#with factor
+res4 <- tprob(survIDM(time1, event1, Stime, event) ~ factor(sex), s = 365,
+method = "AJ", conf = FALSE, data = colonCS)
+
+summary(res4, time=365*1:6)
+plot(res4, trans="02", ylim=c(0,0.5))
+
+# with continuous covariate (IPCW)
+res5 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s = 365,
+method = "IPCW", z.value = 48, conf = FALSE, data = colonCS,
+bw = "dpik", window = "gaussian", method.weights = "NW")
+
+summary(res5, time=365*1:6)
+plot(res5)
 
 
+# Confidence intervals
+res6 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
+method = "AJ", conf = TRUE, conf.level = 0.95,
+conf.type = "log", data = colonCS)
+
+summary(res6, time=365*1:7)
+plot(res6)
 }
 \references{
 Aalen O. O., Johansen S. (1978) An Empirical Transition Matrix for

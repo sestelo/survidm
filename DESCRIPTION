@@ -1,6 +1,6 @@
 Package: idmsurv
 Type: Package
-Title: Illness-Death Model for Analysing Survival Data
+Title: Inference and Prediction in an Illness-Death Model
 Version: 0.1.0
 Date: 2017-05-19
 Author: Luis Meira-Machado and Marta Sestelo

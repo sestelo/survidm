@@ -11,7 +11,9 @@ xlab = "Time (years)", ylab = NULL, ylim = NULL, xlim = NULL, ...)
 \arguments{
   \item{x}{An object of class "survIDM".}
   \item{y}{\code{NULL}}
-  \item{trans}{The transition probabilities plotted. It is used only when the object is of class "AJ", "LIDA", "LDM" or "PLDM". Possible options are \code{"all"} (default), \code{"00"}, \code{"01"}, \code{"02"}, \code{"11"} or \code{"12"}.}
+  \item{trans}{The transition probabilities plotted. It is used only when
+  the object is of class "AJ", "LIDA", "LDM",  "PLDM" or "tpIPCW". Possible options
+  are \code{"all"} (default), \code{"00"}, \code{"01"}, \code{"02"}, \code{"11"} or \code{"12"}.}
   \item{conf}{Draw the confidence intervals into the plot. By default it is
   \code{NULL}, they are drawn if the "surv" object contains them.}
   \item{type}{The type of plot that should be drawn. See details \code{\link{par}}
@@ -41,19 +43,29 @@ xlab = "Time (years)", ylab = NULL, ylim = NULL, xlim = NULL, ...)
 
 
 \examples{
-fit <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 365,
-             method = "AJ", conf = TRUE, conf.level = 0.95,
-             conf.type = "linear", n.boot = 50, data = colonCS)
+res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0,
+method = "AJ", conf = FALSE, data = colonCS)
 
-plot(fit)
-plot(fit, trans = "11")
+plot(res)
+plot(res, trans = "02")
 
 
-fit2 <- CIF(survIDM(time1,event1,Stime, event) ~ factor(sex), data = colonCS,
-            conf = FALSE, conf.level = 0.95)
+res1 <- tprob(survIDM(time1, event1, Stime, event) ~ factor(sex), s = 365,
+method = "AJ", conf = FALSE, data = colonCS)
 
-plot(fit2)
+plot(res1, trans="02", ylim=c(0,0.5))
 
+
+res2 <- CIF(survIDM(time1, event1, Stime, event) ~ age, data = colonCS,
+z.value = 56, conf = FALSE)
+
+plot(res2)
+
+
+res3 <- sojourn(survIDM(time1, event1, Stime, event) ~ factor(sex),
+data = colonCS, conf = FALSE, conf.level = 0.95)
+
+plot(res3)
 
 }
 

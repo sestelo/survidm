@@ -9,7 +9,7 @@
 #' @param formula A \code{formula} object, which must have a \code{survIDM}
 #' object as the response on the left of the \code{~} operator and, if desired,
 #' a term on the right. The term may be a qualitative or quantitative variable.
-#' For a single survival curve the right hand side should be \code{~ 1}.
+#' Without covariates, the right hand side should be \code{~ 1}.
 #' @param s The first time for obtaining estimates for the cumulative
 #' incidence functions. If missing, 0 will be used.
 #' @param data A data.frame including at least four columns named
@@ -18,7 +18,7 @@
 #' or censoring, and death indicator, respectively.
 #' @param conf Provides pointwise confidence bands. Defaults to \code{FALSE}.
 #' @param n.boot The number of bootstrap replicates to compute the variance
-#' of the non-Markovian estimator. Default is 199.
+#' of the estimator. Default is 199.
 #' @param conf.level Level of confidence. Defaults to 0.95 (corresponding to 95\%).
 #' @param z.value The value of the covariate on the right hand side of formula
 #' at which the cumulative incidence probabilities are computed. For quantitative
@@ -83,23 +83,36 @@
 #' failure time data. John Wiley & Sons, New York.
 #'
 #' @examples
-#' res <- CIF(survIDM(time1,event1,Stime, event) ~ 1, data = colonCS,
-#' conf = FALSE, conf.level = 0.95)
+#'
+#' # Cumulative Incidence Function (CIF)
+#' res <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonCS,
+#' conf = FALSE)
 #' res
-#'
-#' res1 <- CIF(survIDM(time1,event1,Stime, event) ~ 1, data = colonCS, s = 365,
-#' conf = FALSE, conf.level = 0.95)
-#' res1
-#'
-#' res2 <- CIF(survIDM(time1,event1,Stime, event) ~ factor(sex), data = colonCS,
-#' s = 365, conf = FALSE, conf.level = 0.95)
-#' res2
-#'
-#' res3 <- CIF(survIDM(time1,event1,Stime, event) ~ age, data = colonCS,
-#' z.value = 56, conf = FALSE, conf.level = 0.95)
-#' res3
+#' summary(res, time=365*1:7)
+#' plot(res, ylim=c(0, 0.6))
 #'
 #'
+#' # CIF for those in State 1 at time s=365, Y(s)=0
+#' res1 <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonCS,
+#' s = 365, conf = FALSE)
+#' summary(res1, time=365*1:7)
+#' plot(res1, ylim=c(0, 0.6))
+#'
+#'
+#' # Conditional CIF (with a factor)
+#' res2 <- CIF(survIDM(time1, event1, Stime, event) ~ factor(sex),
+#' data = colonCS, s = 365, conf = FALSE)
+#' summary(res2, time=365*1:5)
+#' plot(res2)
+#'
+#'
+#' # Conditional CIF (with continuous covariate)
+#' res3 <- CIF(survIDM(time1, event1, Stime, event) ~ age, data = colonCS,
+#' z.value = 56, conf = FALSE)
+#' summary(res3, time=365*1:6)
+#' plot(res3)
+#'
+
 
 
 
