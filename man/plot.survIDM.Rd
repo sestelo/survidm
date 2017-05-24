@@ -3,7 +3,8 @@
 \title{Plot for an object of class "survIDM".}
 \description{It draws the estimated probabilities. }
 \usage{
-\method{plot}{survIDM}(x = object, y = NULL, trans = "all", conf = NULL,
+\method{plot}{survIDM}(x = object, y = NULL, trans = "all",
+func = "distribution", conf = NULL,
 type = NULL, conftype = NULL, col = 1:6, confcol = 1:6, lty = 1, conflty = 2,
 xlab = "Time (years)", ylab = NULL, ylim = NULL, xlim = NULL, ...)
 }
@@ -14,6 +15,7 @@ xlab = "Time (years)", ylab = NULL, ylim = NULL, xlim = NULL, ...)
   \item{trans}{The transition probabilities plotted. It is used only when
   the object is of class "AJ", "LIDA", "LDM",  "PLDM" or "tpIPCW". Possible options
   are \code{"all"} (default), \code{"00"}, \code{"01"}, \code{"02"}, \code{"11"} or \code{"12"}.}
+  \item{func}{It is used only when the object is of class "soj" or "sojIPCW". FALTAAAA}
   \item{conf}{Draw the confidence intervals into the plot. By default it is
   \code{NULL}, they are drawn if the "surv" object contains them.}
   \item{type}{The type of plot that should be drawn. See details \code{\link{par}}

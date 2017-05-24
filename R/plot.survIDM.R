@@ -1,6 +1,7 @@
-plot.survIDM <- function(x = object, y = NULL, trans = "all", conf = NULL, type = NULL,
-                         conftype = NULL, col = 1:6, confcol = 1:6, lty = 1, conflty = 2,
-                         xlab = "Time (years)", ylab = NULL, ylim = NULL, xlim = NULL, ...) {
+plot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distribution",
+                         conf = NULL, type = NULL,conftype = NULL, col = 1:6,
+                         confcol = 1:6, lty = 1, conflty = 2, xlab = "Time (years)",
+                         ylab = NULL, ylim = NULL, xlim = NULL, ...) {
 
   object <- x
 
@@ -150,17 +151,25 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", conf = NULL, type 
 
           if(object$s != 0){
             ob <- ob[, -2]
-            obCI <- obCI[, -c(1:2)]
+            #obCI <- obCI[, -c(1:2)]
           }
 
 
-          if(class(object)[1] == "cifIPCW") obCI <- ob[, 3:4] # in order to corerct the out of cifIPCW
+          if(class(object)[1] == "cifIPCW" & ci == TRUE) {
+            obCI <- ob[, 3:4] # in order to corerct the out of cifIPCW
+          }
 
 
           matplot(ob[, 1], ob[, 2], type = type, col = col, xlab = xlab,
                   ylab = ylab, lty = lty, ylim = ylim, xlim = xlim, ...)
 
           if (ci == TRUE) {
+
+            if(object$s != 0){
+              #ob <- ob[, -2]
+              obCI <- obCI[, -c(1:2)]
+            }
+
             matlines(x = ob[, 1], y = obCI[, 1], type = conftype,
                      lty = conflty, col = confcol, ...)
             matlines(x = ob[, 1], y = obCI[, 2], type = conftype,
@@ -177,12 +186,17 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", conf = NULL, type 
 
             if(object$s != 0){
               ob [[i]]<- ob[[i]][, -2]
-              obCI[[i]] <- obCI[[i]][, -c(1:2)]
+             # obCI[[i]] <- obCI[[i]][, -c(1:2)]
             }
 
             lines(ob[[i]][, 1], ob[[i]][, 2], type = type, col = col[i],
                   lty = lty, ...)
             if (ci == TRUE) {
+              if(object$s != 0){
+                #ob [[i]]<- ob[[i]][, -2]
+                obCI[[i]] <- obCI[[i]][, -c(1:2)]
+              }
+
               lines(x = ob[[i]][, 1], y = obCI[[i]][, 1], type = conftype,
                     lty = conflty, col = confcol[i], ...)
               lines(x = ob[[i]][, 1], y = obCI[[i]][, 2], type = conftype,
@@ -218,7 +232,8 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", conf = NULL, type 
 
 
        #   if(class(object)[1] == "cifIPCW") obCI <- ob[, 3:4] # in order to corerct the out of cifIPCW
-
+          if(func == "survival"){ob[, 2] <- 1 - ob[, 2]}
+          if(func == "survival" & ci == TRUE){obCI <- 1 - obCI}
 
           matplot(ob[, 1], ob[, 2], type = type, col = col, xlab = xlab,
                   ylab = ylab, lty = lty, ylim = ylim, xlim = xlim, ...)
@@ -237,6 +252,9 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", conf = NULL, type 
                ylab = ylab, ylim = ylim, xlim = xlim, ...)
 
           for (i in 1:object$Nlevels) {
+
+            if(func == "survival"){ob[[i]][, 2] <- 1 - ob[[i]][, 2]}
+            if(func == "survival" & ci == TRUE){obCI[[i]] <- 1 - obCI[[i]]}
 
             lines(ob[[i]][, 1], ob[[i]][, 2], type = type, col = col[i],
                   lty = lty, ...)

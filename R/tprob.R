@@ -174,8 +174,8 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
   if (missing(formula)) stop("A formula argument is required")
   if (missing(s)) stop("argument 's' is missing, with no default")
 
-  if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM"))){
-    stop("Possible methods are 'AJ', 'LIDA', 'LDM' and 'PLDM'." )
+  if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM", "IPCW"))){
+    stop("Possible methods are 'AJ', 'LIDA', 'LDM', 'PLDM' and 'IPCW'." )
   }
 
 
@@ -214,6 +214,12 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
   # without covariates
   if (length(attr(terms(formula), "term.labels")) == 0) {  #AJ, LIDA, LDM, PLDM without covariate
 
+    if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM"))){
+      stop("The model does not include covariates. Possible methods are 'AJ', 'LIDA', 'LDM' and 'PLDM'." )
+    }
+
+
+
     # AJ method  (no bootstrap)
     if (method == "AJ"){
       res <- tpAJ(object = object, s = s, conf = conf,
@@ -237,6 +243,11 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
 
     # LIDA method
     if (method == "LIDA"){
+
+      if(conf == TRUE & conf.type != "bootstrap") {
+        warning("This method only allows bootstrap confidence intervals.")
+      }
+
       res <- tpLIDA(object = object, s = s, conf = conf,
                     conf.level = conf.level, n.boot = n.boot,
                     cluster = cluster, ncores = ncores)
@@ -255,6 +266,11 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
 
     # PLDM method
     if (method == "PLDM"){
+
+      if(conf == TRUE & conf.type != "bootstrap") {
+        warning("This method only allows bootstrap confidence intervals.")
+      }
+
       res <- tpPLDM(object = object, s = s, conf = conf,
                     conf.level = conf.level, n.boot = n.boot,
                     cluster = cluster, ncores = ncores)
@@ -275,6 +291,15 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
 
   # numeric or integer covariate
   if(length(attr(terms(formula),"term.labels")) != 0 & (Class == "numeric" | Class == "integer")) {#IPCW
+
+   if(method != "IPCW") {
+     warning("With continuous covariates, the used method is 'IPCW'.")
+   }
+
+    if(conf == TRUE & conf.type != "bootstrap") {
+      warning("This method only allows bootstrap confidence intervals.")
+    }
+
 
     obj1 <- object
     obj1[[1]] <- cbind(obj1[[1]], xval)
@@ -306,6 +331,11 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
 
   # factor covariate
   if (length(attr(terms(formula),"term.labels")) > 0 & Class == "factor") {  #LDM/PLMD/KMW by levels of the covariate
+
+    if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM"))){
+      stop("A factor is included in the model. Possible methods are 'AJ', 'LIDA', 'LDM' and 'PLDM'." )
+    }
+
 
     x.nlevels <- nlevels(with(data=data, eval(formula[[3]])))
     levels <- levels(with(data=data, eval(formula[[3]])))
@@ -346,6 +376,11 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
 
       # LIDA method
       if (method == "LIDA"){
+
+        if(conf == TRUE & conf.type != "bootstrap") {
+          warning("This method only allows bootstrap confidence intervals.")
+        }
+
         res <- tpLIDA(object = obj, s = s, conf = conf,
                       conf.level = conf.level, n.boot = n.boot,
                       cluster = cluster, ncores = ncores)
@@ -364,6 +399,12 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
 
       # PLDM method
       if (method == "PLDM"){
+
+        if(conf == TRUE & conf.type != "bootstrap") {
+          warning("This method only allows bootstrap confidence intervals.")
+        }
+
+
         res <- tpPLDM(object = obj, s = s, conf = conf,
                       conf.level = conf.level, n.boot = n.boot,
                       cluster = cluster, ncores = ncores)

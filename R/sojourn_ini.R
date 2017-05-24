@@ -18,12 +18,18 @@ sojourn_ini <- function(object, t, conf = FALSE, n.boot = 199, conf.level = 0.95
 		ptimes <- which(object[[1]]$event == 1 & object[[1]]$time1 < object[[1]]$Stime)
 		t <- t[ptimes]
 		t <- t[t > 0]
-						}
+	}
+
+
 
 	if (any(t <= 0)) stop("The values of 't' must be positive")
 	t <- sort(unique(t))
 	n <- length(t)
 	if(length(t) == 0) stop("Invalid values for 't'.")
+
+	t <- c(0,t) # esto es lo nuevo de Luís!!! para que llegue a 0
+
+
 
 	soj <- rep(NA, length(t))
 
