@@ -10,7 +10,7 @@ Description: Newly developed methods for the estimation of several probabilities
       semiparametric estimates for: transition probabilities, occupation probabilities, 
       cumulative incidence function and the sojourn time distributions. 
       Several auxiliary functions are also provided which can be used for marginal 
-      estimation of the survival functions..
+      estimation of the survival functions.Marta
 Depends:
     R (>= 3.0.0)
 Encoding: UTF-8
