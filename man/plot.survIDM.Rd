@@ -15,7 +15,8 @@ xlab = "Time (years)", ylab = NULL, ylim = NULL, xlim = NULL, ...)
   \item{trans}{The transition probabilities plotted. It is used only when
   the object is of class "AJ", "LIDA", "LDM",  "PLDM" or "tpIPCW". Possible options
   are \code{"all"} (default), \code{"00"}, \code{"01"}, \code{"02"}, \code{"11"} or \code{"12"}.}
-  \item{func}{It is used only when the object is of class "soj" or "sojIPCW". FALTAAAA}
+  \item{func}{The type of curve to be drawn ("distribution" or "survival").
+  Default to "distribution". It is used only when the object is of class "soj" or "sojIPCW".}
   \item{conf}{Draw the confidence intervals into the plot. By default it is
   \code{NULL}, they are drawn if the "surv" object contains them.}
   \item{type}{The type of plot that should be drawn. See details \code{\link{par}}
