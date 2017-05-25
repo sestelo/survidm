@@ -1,8 +1,8 @@
-\name{idmsurv-package}
-\alias{idmsurv-package}
-\alias{idmsurv}
+\name{survidm-package}
+\alias{survidm-package}
+\alias{survidm}
 \docType{package}
-\title{idmsurv: \packageTitle{idmsurv}
+\title{survidm: \packageTitle{survidm}
 %A package for inference and prediction in an Illness-Death Model
 }
 \description{
