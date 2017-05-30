@@ -96,7 +96,7 @@ Possible options for argument window are \code{"gaussian"},
 \examples{
 
 # Cumulative Incidence Function (CIF)
-res <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonCS,
+res <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonIDM,
 conf = FALSE)
 res
 summary(res, time=365*1:7)
@@ -104,7 +104,7 @@ plot(res, ylim=c(0, 0.6))
 
 
 # CIF for those in State 1 at time s=365, Y(s)=0
-res1 <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonCS,
+res1 <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonIDM,
 s = 365, conf = FALSE)
 summary(res1, time=365*1:7)
 plot(res1, ylim=c(0, 0.6))
@@ -112,13 +112,13 @@ plot(res1, ylim=c(0, 0.6))
 
 # Conditional CIF (with a factor)
 res2 <- CIF(survIDM(time1, event1, Stime, event) ~ factor(sex),
-data = colonCS, s = 365, conf = FALSE)
+data = colonIDM, s = 365, conf = FALSE)
 summary(res2, time=365*1:5)
 plot(res2)
 
 
 # Conditional CIF (with continuous covariate)
-res3 <- CIF(survIDM(time1, event1, Stime, event) ~ age, data = colonCS,
+res3 <- CIF(survIDM(time1, event1, Stime, event) ~ age, data = colonIDM,
 z.value = 56, conf = FALSE)
 summary(res3, time=365*1:6)
 plot(res3)

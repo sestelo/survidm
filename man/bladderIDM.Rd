@@ -1,12 +1,12 @@
-\name{bladderCS}
-\alias{bladderCS}
+\name{bladderIDM}
+\alias{bladderIDM}
 \docType{data}
 \title{Bladder Cancer Recurrences.}
 \description{
-  bladderCS is a data frame with 8 variables and 85 observations.
+  bladderIDM is a data frame with 8 variables and 85 observations.
   Data on recurrences of bladder cancer, used by many people to demonstrate methodology for recurrent event modelling.}
 
-\usage{data("bladderCS")}
+\usage{data("bladderIDM")}
 
 \format{
   A data frame with 85 observations on the following 8 variables.
@@ -34,8 +34,8 @@
 }
 
 \examples{
-  data(bladderCS)
-  head(bladderCS)
+  data(bladderIDM)
+  head(bladderIDM)
 }
 
 \keyword{datasets}

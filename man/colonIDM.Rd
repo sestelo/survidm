@@ -1,9 +1,9 @@
-\name{colonCS}
-\alias{colonCS}
+\name{colonIDM}
+\alias{colonIDM}
 \docType{data}
 \title{Chemotherapy for Stage B/C colon cancer.}
 \description{These are data from one of the first successful trials of adjuvant chemotherapy for colon cancer. Levamisole is a low-toxicity compound previously used to treat worm infestations in animals; 5-FU is a moderately toxic (as these things go) chemotherapy agent. }
-\usage{data("colonCS")}
+\usage{data("colonIDM")}
 
 \format{
 A data frame with 929 observations on the following 15 variables.
@@ -45,8 +45,8 @@ CG Moertel, TR Fleming, JS MacDonald, DG Haller, JA Laurie, CM Tangen, JS Ungerl
 }
 
 \examples{
-data(colonCS)
-head(colonCS)
+data(colonIDM)
+head(colonIDM)
 }
 
 \keyword{datasets}

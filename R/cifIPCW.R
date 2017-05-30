@@ -11,6 +11,9 @@ cifIPCW <-
     if(missing(t)) t <- sort(object[[1]]$Stime)
     t <- sort(unique(t))
 
+    t <- c(0,t) # esto es lo nuevo de Luís!!! para que llegue a 0
+
+
     covar <- which(names(object[[1]]) == z.name)
     if (missing(z.value))
       z.value <- mean(object[[1]][, covar])

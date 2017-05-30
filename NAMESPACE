@@ -1,4 +1,4 @@
-useDynLib(idmsurv)
+useDynLib(survidm, .registration = TRUE)
 importFrom("foreach", "%dopar%", "%do%")
 importFrom("foreach", foreach)
 importFrom("doRNG", "%dorng%")

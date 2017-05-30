@@ -23,6 +23,6 @@ LLW(x, kernel = "gaussian", bw, t1)
 \seealso{\code{\link{NWW}}}
 
 \examples{
-LLW(x = colonCS$age, bw = 3, t1 = 60)
+LLW(x = colonIDM$age, bw = 3, t1 = 60)
 }
 

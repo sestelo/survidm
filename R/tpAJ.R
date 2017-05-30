@@ -101,7 +101,8 @@ tpAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log")
       p.trans = AJ.est$p.trans, conf = conf)
 
 
-    aux <- matrix(res$all.probs, ncol = 5, nrow = length(res$times))
+    suppressWarnings(aux <- matrix(res$all.probs, ncol = 5,
+                                   nrow = length(res$times)))
     aux <- data.frame(t = res$times, aux)
     names(aux) <- c("t", "p00", "p01", "p02", "p11", "p12")
 

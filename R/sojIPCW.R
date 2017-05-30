@@ -28,6 +28,10 @@ sojIPCW <- function(object, t, z.name, z.value, bw = "dpik", window = "gaussian"
 	m <- length(t)
 	if(length(t) == 0) stop("Invalid values for 't'.")
 
+
+	t <- c(0,t) # esto es lo nuevo de Luís!!! para que llegue a 0
+	m <- length(t) # esto es lo nuevo de Luís!!! para que llegue a 0
+
 	soj <- rep(NA, length(t))
 
 	p0 <- which(obj$time1 <  obj$Stime)

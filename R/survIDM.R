@@ -23,7 +23,7 @@
 #' @author Luis Meira-Machado and Marta Sestelo.
 #'
 #' @examples
-#' with(colonCS, survIDM(time1, event1, Stime, event))
+#' with(colonIDM, survIDM(time1, event1, Stime, event))
 
 
 survIDM <- function(time1, event1, Stime, event, ...)

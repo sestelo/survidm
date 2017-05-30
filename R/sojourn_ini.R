@@ -28,7 +28,7 @@ sojourn_ini <- function(object, t, conf = FALSE, n.boot = 199, conf.level = 0.95
 	if(length(t) == 0) stop("Invalid values for 't'.")
 
 	t <- c(0,t) # esto es lo nuevo de Luís!!! para que llegue a 0
-
+	n <- length(t)
 
 
 	soj <- rep(NA, length(t))

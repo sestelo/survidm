@@ -96,13 +96,13 @@ Possible options for argument window are \code{"gaussian"},
 \examples{
 
 res <- sojourn(survIDM(time1, event1, Stime, event) ~ 1,
-data = colonCS, conf = FALSE, conf.level = 0.95)
+data = colonIDM, conf = FALSE, conf.level = 0.95)
 res
 summary(res, time=365*1:6)
 plot(res)
 
 res1 <- sojourn(survIDM(time1, event1, Stime, event) ~ 1,
-data = colonCS, conf = FALSE, conf.level = 0.95, method = "LDM",
+data = colonIDM, conf = FALSE, conf.level = 0.95, method = "LDM",
 presmooth = TRUE)
 res1
 summary(res1, time=365*1:6)
@@ -111,19 +111,19 @@ plot(res1)
 
 # not run:
 #res2 <- sojourn(survIDM(time1, event1, Stime, event) ~ 1,
-#data = colonCS, conf = FALSE, conf.level = 0.95, method = "Satten-Datta")
+#data = colonIDM, conf = FALSE, conf.level = 0.95, method = "Satten-Datta")
 #res2
 
 
 # with a factor
 res3 <- sojourn(survIDM(time1, event1, Stime, event) ~ factor(sex),
-data = colonCS, conf = FALSE, conf.level = 0.95)
+data = colonIDM, conf = FALSE, conf.level = 0.95)
 res3
 summary(res3, time=365*1:6)
 plot(res3)
 
 # with a qualitative covariate
-res4 <- sojourn(survIDM(time1, event1, Stime, event) ~ age, data = colonCS,
+res4 <- sojourn(survIDM(time1, event1, Stime, event) ~ age, data = colonIDM,
 z.value = 56, conf = FALSE, conf.level = 0.95)
 res4
 summary(res4, time=365*1:6)

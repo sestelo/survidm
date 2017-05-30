@@ -29,6 +29,6 @@ American Statistical Association, 53:457-481, 1958.
 \seealso{\code{\link{KM}}}
 
 \examples{
-obj <- with(colonCS, survIDM(time1, event1, Stime, event))
+obj <- with(colonIDM, survIDM(time1, event1, Stime, event))
 PKM(time = obj$Stime, status = obj$event, t = 1095)
 }

@@ -34,7 +34,7 @@ order: \code{time1}, \code{event1}, \code{Stime} and \code{event}, where
 \code{event1} and \code{event} their corresponding indicator statuses.
 }
 \examples{
-with(colonCS, survIDM(time1, event1, Stime, event))
+with(colonIDM, survIDM(time1, event1, Stime, event))
 }
 \author{
 Luis Meira-Machado and Marta Sestelo.

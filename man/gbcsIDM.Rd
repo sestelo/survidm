@@ -1,12 +1,12 @@
-\name{gbcsCS}
-\alias{gbcsCS}
+\name{gbcsIDM}
+\alias{gbcsIDM}
 \docType{data}
 \title{German Breast Cancer Study Data.}
 \description{
 gbcsCS is a data frame with 16 variables and 686 observations. Cancer clinical trials are a rich source for examples of applications of methods for the analysis of time to event. Willi Sauerbrei and Patrick Royston have graciously provided us with data obtained from the German Breast Cancer Study Group, which they used to illustrate methods for building prognostic models (Sauerbrei and Royston, 1999). In the main study, a total of 720 patients with primary node positive breast cancer were recruited between July 1984, and December 1989, (see Schmoor, Olschweski and Schumacher M. 1996 and Schumacher et al. (1994)).
 }
 
-\usage{data("gbcsCS")}
+\usage{data("gbcsIDM")}
 
 \format{
 A data frame with 686 observations on the following 16 variables.
@@ -32,8 +32,8 @@ Hosmer, D.W. and Lemeshow, S. and May, S. (2008). Applied Survival Analysis: Reg
 }
 
 \examples{
-data(gbcsCS)
-head(gbcsCS)
+data(gbcsIDM)
+head(gbcsIDM)
 }
 
 \keyword{datasets}

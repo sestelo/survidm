@@ -21,5 +21,5 @@ NWW(covariate, x, kernel = "gaussian", bw)
 \seealso{\code{\link{LLW}}}
 
 \examples{
-NWW(covariate = colonCS$age, x=40, kernel = "gaussian", bw = 3)
+NWW(covariate = colonIDM$age, x=40, kernel = "gaussian", bw = 3)
 }
