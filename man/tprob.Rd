@@ -20,7 +20,8 @@ Without covariates, the right hand side should be \code{~ 1}.}
 probabilities. If missing, 0 will be used.}
 
 \item{method}{The method used to compute the transition probabilities.
-Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LDM"}, \code{"PLDM"} and
+Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LDM"}, \code{"PLDM"},
+\code{"LDMAJ"}, \code{"PLDMAJ"}, \code{"PAJ"} and
 \code{"IPCW"}. Defaults to \code{"AJ"}. The \code{"IPCW"} method
 is recommended to obtain conditional transition probabilities (i.e., with a
 quantitative term on the right hand side of formula).}
@@ -76,7 +77,8 @@ be stripped in the computation.}
 }
 \value{
 An object of class \code{"survIDM"} and one of the following
-five classes: \code{"AJ"}, \code{"LIDA"}, \code{"LMD"}, \code{"PLDM"} and
+five classes: \code{"AJ"}, \code{"LIDA"}, \code{"LMD"}, \code{"PLDM"},
+\code{"LDMAJ"}, \code{"PLDMAJ"}, \code{"PAJ"} and
 \code{"tpIPCW"}. Objects are implemented as a list with elements:
 
 \item{est}{data.frame with estimates of the transition probabilities.}
