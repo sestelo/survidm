@@ -389,7 +389,8 @@ summary.survIDM <- function(object, times = NULL, ...){
 
       # para tprob
       #------------------
-      if (class(object)[1] %in% c("AJ", "LIDA", "LDM", "PLDM", "tpIPCW")) {
+      if (class(object)[1] %in% c("AJ", "LIDA", "LDM", "PLDM", "tpIPCW",
+                                  "LDMAJ", "TPLDM", "PAJ")) {
 
         if (is.null(times)) { #the whole of the times
 

@@ -174,8 +174,8 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
   if (missing(formula)) stop("A formula argument is required")
   if (missing(s)) stop("argument 's' is missing, with no default")
 
-  if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM", "IPCW"))){
-    stop("Possible methods are 'AJ', 'LIDA', 'LDM', 'PLDM' and 'IPCW'." )
+  if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM", "IPCW", "LDMAJ", "PLDMAJ", "PAJ"))){
+    stop("Possible methods are 'AJ', 'LIDA', 'LDM', 'PLDM', 'LDMAJ', 'PAJ', 'PLDMAJ' and 'IPCW'." )
   }
 
 
@@ -214,8 +214,9 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
   # without covariates
   if (length(attr(terms(formula), "term.labels")) == 0) {  #AJ, LIDA, LDM, PLDM without covariate
 
-    if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM"))){
-      stop("The model does not include covariates. Possible methods are 'AJ', 'LIDA', 'LDM' and 'PLDM'." )
+    if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM", "LDMAJ", "PAJ", "PLDMAJ"))){
+      stop("The model does not include covariates. Possible methods are 'AJ', 'LIDA', 'LDM', 'PLDM',
+           'LDMAJ', 'PAJ' and 'PLDMAJ'." )
     }
 
 
@@ -277,6 +278,17 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
       class(res) <- c("PLDM", "survIDM")
     }
 
+
+
+    # LDMAJ method
+    if (method == "LDMAJ"){
+
+      res <- tpLDMAJ(object = object, s = s, conf = conf,
+                    conf.level = conf.level)
+      class(res) <- c("LDMAJ", "survIDM")
+    }
+
+
     # in order to have the same output
     x.nlevels <- 1
     levels <- NULL
@@ -332,9 +344,11 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
   # factor covariate
   if (length(attr(terms(formula),"term.labels")) > 0 & Class == "factor") {  #LDM/PLMD/KMW by levels of the covariate
 
-    if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM"))){
-      stop("A factor is included in the model. Possible methods are 'AJ', 'LIDA', 'LDM' and 'PLDM'." )
-    }
+
+    if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM", "LDMAJ", "PAJ", "PLDMAJ"))){
+      stop("A factor is included in the model. Possible methods are 'AJ', 'LIDA', 'LDM', 'PLDM',
+           'LDMAJ', 'PAJ' and 'PLDMAJ'." )
+      }
 
 
     x.nlevels <- nlevels(with(data=data, eval(formula[[3]])))
@@ -410,6 +424,18 @@ tprob <- function(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
                       cluster = cluster, ncores = ncores)
         class(res) <- c("PLDM", "survIDM")
       }
+
+
+
+      # LDMAJ method
+
+      if (method == "LDMAJ"){
+        res <- tpLDMAJ(object = obj, s = s, conf = conf,
+                      conf.level = conf.level)
+        class(res) <- c("LDMAJ", "survIDM")
+
+      }
+
 
       #------------------------------
 
