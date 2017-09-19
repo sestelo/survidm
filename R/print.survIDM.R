@@ -22,6 +22,9 @@ print.survIDM <- function(x, ...){
       if(class(x)[1] == "cifIPCW") method <- "Inverse Probability of Censoring Weighting for the Cumulative Incidence Function"
       if(class(x)[1] == "soj") method <- "Sojourn Time Distribution"
       if(class(x)[1] == "sojIPCW") method <- "Inverse Probability of Censoring Weighting for the Sojourn Time Distribution"
+      if(class(x)[1] == "LDMAJ") method <- "Landmark approach Aalen-Johansen estimator"
+      if(class(x)[1] == "PLDMAJ") method <- "Presmoothed Landmark approach Aalen-Johansen estimator"
+      if(class(x)[1] == "PAJ") method <- "Presmoothed Aalen-Johansen estimator"
       print(method)
     }
 
