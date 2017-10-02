@@ -106,6 +106,22 @@ the transition probabilities in the illness-death model.
 Possible options for argument window are \code{"gaussian"},
 \code{"epanechnikov"}, \code{"tricube"}, \code{"boxcar"},
 \code{"triangular"}, \code{"quartic"} or \code{"cosine"}.
+
+Possible methods are:
+\itemize{
+\item{\code{AJ} }{Aalen-Johansen estimator}
+\item{\code{PAJ} }{Presmoothed Aalen-Johansen estimator}
+\item{\code{LIDA} }{LIDA estimator}
+\item{\code{LDM} }{Landmark approach estimator}
+\item{\code{PLDM} }{Presmoothed Landmark approach estimator}
+\item{\code{LDMAJ} }{Landmark approach Aalen-Johansen estimator}
+\item{\code{PLDMAJ} }{Presmoothed Landmark approach Aalen-Johansen estimator}
+\item{\code{tpIPCW} }{Inverse Probability of Censoring Weighting for Transition Probabilities}
+\item{\code{CIF} }{Cumulative Incidence Function}
+\item{\code{cifIPCW} }{Inverse Probability of Censoring Weighting for the Cumulative Incidence Function}
+\item{\code{soj} }{Sojourn Time Distribution}
+\item{\code{sojIPCW} }{Inverse Probability of Censoring Weighting for the Sojourn Time Distribution}
+}
 }
 \examples{
 # Aalen-Johansen

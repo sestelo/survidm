@@ -1,20 +1,18 @@
+coxidm <- function (formula, data, semiMarkov = FALSE) {
 
+  object <- data
 
-
-coxidm <- function (formula, object, semiMarkov = FALSE)
-{
   if (missing(formula))
     stop("Argument 'formula' is missing with no default")
-  if (missing(object))
-    stop("Argument 'object' is missing with no default")
+  if (missing(data))
+    stop("Argument 'data' is missing with no default")
   if (class(formula) != "formula")
     stop("Argument 'formula' must be of class 'formula'")
-  if (all(class(colonIDM) != "survIDM"))
-    stop("Argument 'object' must be of class 'survIDM'")
+ # if (all(class(colonIDM) != "survIDM"))
+  #  stop("Argument 'object' must be of class 'survIDM'")
 
   ncov <- length(all.vars(formula)) - 4 #number of covariates
-  covars <-
-    all.vars(formula)[-c(1:4)] #vector with names of covariates
+  covars <- all.vars(formula)[-c(1:4)] #vector with names of covariates
 
   term2 <- formula[[3]] #right hand side of formula
   mydata <- object

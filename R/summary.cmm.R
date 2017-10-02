@@ -1,6 +1,6 @@
 
 
-summary.cmm <- function(object, conf.level = 0.95)
+summary.cmm <- function(object, conf.level = 0.95, ...)
 {
   #model <- object$coxmm01
   tab01 <- summary(object$coxmm01, conf.int = conf.level)$conf.int

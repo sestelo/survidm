@@ -4,13 +4,20 @@
 \title{Fit proportional hazards regression model in each transition of
   the Illness-Death Model.}
 \description{Fits a Cox proportional hazards regression model for each transition.}
-\usage{coxidm(object, conf.int = 0.95)
+
+\usage{coxidm(formula, data, semiMarkov = FALSE)
 }
 
 \arguments{
-  \item{object}{A fitted \code{cmm} object as produced by \code{coxidm()}.}
-  \item{conf.int}{level for computation of the confidence intervals.
-    If set to \code{FALSE} no confidence intervals are printed.}
+\item{formula}{A \code{formula} object, which must have a \code{survIDM}
+object as the response on the left of the \code{~} operator and, if desired,
+a term on the right. The term may be a qualitative or quantitative variable.
+Without covariates, the right hand side should be \code{~ 1}.}
+\item{data}{A data.frame including at least four columns named
+\code{time1}, \code{event1}, \code{Stime} and \code{event}, which correspond
+to disease free survival time, disease free survival indicator, time to death
+or censoring, and death indicator, respectively.}
+  \item{semiMarkov}{By default, \code{FALSE}.}
 }
 
 \value{A data frame or a list containing the following components:
@@ -22,15 +29,15 @@
 }
 
 \examples{
-  cmm1 <- coxidm(survIDM(time1, event1, Stime, event) ~ age, object = colonIDM)
+  cmm1 <- coxidm(survIDM(time1, event1, Stime, event) ~ age, data = colonIDM)
   summary(cmm1, conf.level = 0.95)
 
   cmm2 <- coxidm(survIDM(time1, event1, Stime, event) ~ rx + sex + age + nodes,
-                 object = colonIDM)
+                 data = colonIDM)
   summary(cmm2)
 
   cmm3 <- coxidm(survIDM(time1, event1, Stime, event) ~ rx + sex + age + nodes,
-                 object = colonIDM, semiMarkov = TRUE)
+                 data = colonIDM, semiMarkov = TRUE)
   summary(cmm3)
 }
 
