@@ -12,9 +12,16 @@ tpPLDM <-
 
     t1 <- object[[1]]$time1[object[[1]]$event1 == 1]
     t2 <- object[[1]]$Stime[object[[1]]$event == 1]
-    t <- c(s, t1, t2)
-    t <- t[t >= s]
-    t <- sort(unique(t))
+
+    tt <- max(t1, t2)
+    #cat("New function","\n")
+    t3 <- sort(unique(c(s, object[[1]]$time1, object[[1]]$Stime)))
+    t3 <- t3[t3 >= s & t3 <= tt]
+    t <- sort(unique(t3))
+
+   # t <- c(s, t1, t2)
+  #  t <- t[t >= s]
+   # t <- sort(unique(t))
 
     if (any(t < 0)) stop("The values of 't' must be positive")
     if (s > max(object[[1]]$time1)) stop("The value of 's' is too large")
