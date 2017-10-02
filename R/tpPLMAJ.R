@@ -1,4 +1,4 @@
-tpPLDMAJ <- function(object, s, conf = FALSE, conf.level = 0.95)
+tpPLMAJ <- function(object, s, conf = FALSE, conf.level = 0.95)
 {
   if (missing(object))
     stop("Argument 'object' is missing, with no default")
@@ -102,7 +102,7 @@ tpPLDMAJ <- function(object, s, conf = FALSE, conf.level = 0.95)
   }
 
   res$call <- match.call()
-  class(res) = "tpPLDMAJ"
+  class(res) = "tpPLMAJ"
   res
 }
 

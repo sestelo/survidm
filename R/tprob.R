@@ -11,8 +11,8 @@
 #' @param s The first time for obtaining estimates for the transition
 #' probabilities. If missing, 0 will be used.
 #' @param method The method used to compute the transition probabilities.
-#' Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LDM"}, \code{"PLDM"},
-#' \code{"LDMAJ"}, \code{"PLDMAJ"}, \code{"PAJ"} and
+#' Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LM"}, \code{"PLM"},
+#' \code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"} and
 #' \code{"IPCW"}. Defaults to \code{"AJ"}. The \code{"IPCW"} method
 #' is recommended to obtain conditional transition probabilities (i.e., with a
 #' quantitative term on the right hand side of formula).
@@ -65,10 +65,10 @@
 #' \item{\code{AJ} }{Aalen-Johansen estimator}
 #' \item{\code{PAJ} }{Presmoothed Aalen-Johansen estimator}
 #' \item{\code{LIDA} }{LIDA estimator}
-#' \item{\code{LDM} }{Landmark approach estimator}
-#' \item{\code{PLDM} }{Presmoothed Landmark approach estimator}
-#' \item{\code{LDMAJ} }{Landmark approach Aalen-Johansen estimator}
-#' \item{\code{PLDMAJ} }{Presmoothed Landmark approach Aalen-Johansen estimator}
+#' \item{\code{LM} }{Landmark approach estimator}
+#' \item{\code{PLM} }{Presmoothed Landmark approach estimator}
+#' \item{\code{LMAJ} }{Landmark approach Aalen-Johansen estimator}
+#' \item{\code{PLDAJ} }{Presmoothed Landmark approach Aalen-Johansen estimator}
 #' \item{\code{tpIPCW} }{Inverse Probability of Censoring Weighting for Transition Probabilities}
 #' \item{\code{CIF} }{Cumulative Incidence Function}
 #' \item{\code{cifIPCW} }{Inverse Probability of Censoring Weighting for the Cumulative Incidence Function}
@@ -80,8 +80,8 @@
 
 #'
 #' @return An object of class \code{"survIDM"} and one of the following
-#' five classes: \code{"AJ"}, \code{"LIDA"}, \code{"LMD"}, \code{"PLDM"},
-#' \code{"LDMAJ"}, \code{"PLDMAJ"}, \code{"PAJ"} and
+#' five classes: \code{"AJ"}, \code{"LIDA"}, \code{"LM"}, \code{"PLM"},
+#' \code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"} and
 #' \code{"tpIPCW"}. Objects are implemented as a list with elements:
 #'
 #' \item{est}{data.frame with estimates of the transition probabilities.}
@@ -139,16 +139,16 @@
 #' plot(res1)
 #' plot(res1, trans="01", ylim=c(0,0.15))
 #'
-#' # Landmark (LDM)
+#' # Landmark (LM)
 #' res2 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-#' method = "LDM", conf = FALSE, data = colonIDM)
+#' method = "LM", conf = FALSE, data = colonIDM)
 #'
 #' summary(res2, time=365*1:6)
 #' plot(res2)
 #'
-#' # Presmoothed LDM
+#' # Presmoothed LM
 #' res3 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-#' method = "PLDM", conf = FALSE, data = colonIDM)
+#' method = "PLM", conf = FALSE, data = colonIDM)
 #'
 #' summary(res3, time=365*1:6)
 #' plot(res3)
@@ -206,9 +206,9 @@ tprob <-
     if (missing(s))
       stop("argument 's' is missing, with no default")
 
-    if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM", "IPCW", "LDMAJ", "PLDMAJ", "PAJ"))) {
+    if (!(method %in% c("AJ", "LIDA", "LM", "PLM", "IPCW", "LMAJ", "PLMAJ", "PAJ"))) {
       stop(
-        "Possible methods are 'AJ', 'LIDA', 'LDM', 'PLDM', 'LDMAJ', 'PAJ', 'PLDMAJ' and 'IPCW'."
+        "Possible methods are 'AJ', 'LIDA', 'LM', 'PLM', 'LMAJ', 'PAJ', 'PLMAJ' and 'IPCW'."
       )
     }
 
@@ -252,12 +252,12 @@ tprob <-
 
     # without covariates
     if (length(attr(terms(formula), "term.labels")) == 0) {
-      #AJ, LIDA, LDM, PLDM without covariate
+      #AJ, LIDA, LM, PLM without covariate
 
-      if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM", "LDMAJ", "PAJ", "PLDMAJ"))) {
+      if (!(method %in% c("AJ", "LIDA", "LM", "PLM", "LMAJ", "PAJ", "PLMAJ"))) {
         stop(
-          "The model does not include covariates. Possible methods are 'AJ', 'LIDA', 'LDM', 'PLDM',
-          'LDMAJ', 'PAJ' and 'PLDMAJ'."
+          "The model does not include covariates. Possible methods are 'AJ', 'LIDA', 'LM', 'PLM',
+          'LMAJ', 'PAJ' and 'PLMAJ'."
         )
       }
 
@@ -308,9 +308,9 @@ tprob <-
       }
 
 
-      # LDM method
-      if (method == "LDM") {
-        res <- tpLDM(
+      # LM method
+      if (method == "LM") {
+        res <- tpLM(
           object = object,
           s = s,
           conf = conf,
@@ -320,17 +320,17 @@ tprob <-
           cluster = cluster,
           ncores = ncores
         )
-        class(res) <- c("LDM", "survIDM")
+        class(res) <- c("LM", "survIDM")
       }
 
 
-      # PLDM method
-      if (method == "PLDM") {
+      # PLM method
+      if (method == "PLM") {
         if (conf == TRUE & conf.type != "bootstrap") {
           warning("This method only allows bootstrap confidence intervals.")
         }
 
-        res <- tpPLDM(
+        res <- tpPLM(
           object = object,
           s = s,
           conf = conf,
@@ -339,20 +339,20 @@ tprob <-
           cluster = cluster,
           ncores = ncores
         )
-        class(res) <- c("PLDM", "survIDM")
+        class(res) <- c("PLM", "survIDM")
       }
 
 
 
-      # LDMAJ method
-      if (method == "LDMAJ") {
-        res <- tpLDMAJ(
+      # LMAJ method
+      if (method == "LMAJ") {
+        res <- tpLMAJ(
           object = object,
           s = s,
           conf = conf,
           conf.level = conf.level
         )
-        class(res) <- c("LDMAJ", "survIDM")
+        class(res) <- c("LMAJ", "survIDM")
       }
 
 
@@ -369,15 +369,15 @@ tprob <-
       }
 
 
-      # PLDMAJ method
-      if (method == "PLDMAJ") {
-        res <- tpPLDMAJ(
+      # PLMAJ method
+      if (method == "PLMAJ") {
+        res <- tpPLMAJ(
           object = object,
           s = s,
           conf = conf,
           conf.level = conf.level
         )
-        class(res) <- c("PLDMAJ", "survIDM")
+        class(res) <- c("PLMAJ", "survIDM")
       }
 
 
@@ -456,13 +456,13 @@ tprob <-
     # factor covariate
     if (length(attr(terms(formula), "term.labels")) > 0 &
         Class == "factor") {
-      #LDM/PLMD/KMW by levels of the covariate
+      #LM/PLMD/KMW by levels of the covariate
 
 
-      if (!(method %in% c("AJ", "LIDA", "LDM", "PLDM", "LDMAJ", "PAJ", "PLDMAJ"))) {
+      if (!(method %in% c("AJ", "LIDA", "LM", "PLM", "LMAJ", "PAJ", "PLMAJ"))) {
         stop(
-          "A factor is included in the model. Possible methods are 'AJ', 'LIDA', 'LDM', 'PLDM',
-          'LDMAJ', 'PAJ' and 'PLDMAJ'."
+          "A factor is included in the model. Possible methods are 'AJ', 'LIDA', 'LM', 'PLM',
+          'LMAJ', 'PAJ' and 'PLMAJ'."
         )
       }
 
@@ -528,9 +528,9 @@ tprob <-
         }
 
 
-        # LDM method
-        if (method == "LDM") {
-          res <- tpLDM(
+        # LM method
+        if (method == "LM") {
+          res <- tpLM(
             object = obj,
             s = s,
             conf = conf,
@@ -540,18 +540,18 @@ tprob <-
             cluster = cluster,
             ncores = ncores
           )
-          class(res) <- c("LDM", "survIDM")
+          class(res) <- c("LM", "survIDM")
         }
 
 
-        # PLDM method
-        if (method == "PLDM") {
+        # PLM method
+        if (method == "PLM") {
           if (conf == TRUE & conf.type != "bootstrap") {
             warning("This method only allows bootstrap confidence intervals.")
           }
 
 
-          res <- tpPLDM(
+          res <- tpPLM(
             object = obj,
             s = s,
             conf = conf,
@@ -560,21 +560,21 @@ tprob <-
             cluster = cluster,
             ncores = ncores
           )
-          class(res) <- c("PLDM", "survIDM")
+          class(res) <- c("PLM", "survIDM")
         }
 
 
 
-        # LDMAJ method
+        # LMAJ method
 
-        if (method == "LDMAJ") {
-          res <- tpLDMAJ(
+        if (method == "LMAJ") {
+          res <- tpLMAJ(
             object = obj,
             s = s,
             conf = conf,
             conf.level = conf.level
           )
-          class(res) <- c("LDMAJ", "survIDM")
+          class(res) <- c("LMAJ", "survIDM")
 
         }
 
@@ -591,15 +591,15 @@ tprob <-
         }
 
 
-        # PLDMAJ method
-        if (method == "PLDMAJ") {
-          res <- tpPLDMAJ(
+        # PLMAJ method
+        if (method == "PLMAJ") {
+          res <- tpPLMAJ(
             object = obj,
             s = s,
             conf = conf,
             conf.level = conf.level
           )
-          class(res) <- c("PLDMAJ", "survIDM")
+          class(res) <- c("PLMAJ", "survIDM")
         }
 
 

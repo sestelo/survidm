@@ -1,5 +1,5 @@
 sojourn_ini <- function(object, t, conf = FALSE, n.boot = 199, conf.level = 0.95,
-                    cluster = FALSE, ncores = NULL, method = "LDM",
+                    cluster = FALSE, ncores = NULL, method = "LM",
                     presmooth = FALSE)
 {
 
@@ -33,7 +33,7 @@ sojourn_ini <- function(object, t, conf = FALSE, n.boot = 199, conf.level = 0.95
 
 	soj <- rep(NA, length(t))
 
-	if (method == "LDM"){
+	if (method == "LM"){
 	p0 <- which(object[[1]]$time1 <  object[[1]]$Stime)
 	kmw <- KMW(object[[1]]$Stime[p0], object[[1]]$event[p0])
 	if (presmooth == TRUE) kmw <- PKMW(object[[1]]$Stime[p0], object[[1]]$event[p0])
@@ -42,7 +42,7 @@ sojourn_ini <- function(object, t, conf = FALSE, n.boot = 199, conf.level = 0.95
 		p <- which(object[[1]]$Stime[p0] - object[[1]]$time1[p0] <= t[k])
 		soj[k] <- sum(kmw[p])
                                      }
-				     }  #method LDM
+				     }  #method LM
 
 	if (method == "Satten-Datta"){
 		for (k in 1: length(t)) { soj[k] <- cond(object[[1]]$time1, object[[1]]$Stime, object[[1]]$event1, object[[1]]$event, t[k])}
@@ -68,12 +68,12 @@ sojourn_ini <- function(object, t, conf = FALSE, n.boot = 199, conf.level = 0.95
 	kmw <- KMW(ndata$Stime[p0], ndata$event[p0])
 	if (presmooth == TRUE) kmw <- PKMW(ndata$Stime[p0], ndata$event[p0])
 
-	if (method == "LDM"){
+	if (method == "LM"){
 	for (k in 1: length(t)) {
 		p <- which(ndata$Stime[p0] - ndata$time1[p0] <= t[k])
 		soj.ci0[k,j] <- sum(kmw[p])
                                      }
-				     } #method LDM
+				     } #method LM
 	if (method == "Satten-Datta"){
 		for (k in 1: length(t)) { soj.ci0[k,j] <- cond(ndata$time1, ndata$Stime, ndata$event1, ndata$event, t[k])}
 				                }

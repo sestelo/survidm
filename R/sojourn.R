@@ -29,10 +29,10 @@
 #' Possible options are \code{"NW"} for the Nadaraya-Watson weights and \code{"LL"}
 #' for local linear weights. Defaults to \code{"NW"}.
 #' @param method The method used to compute the sojourn estimates.
-#' Possible options are \code{"LDM"} and \code{"Satten-Datta"}.
-#' Defaults to \code{"LDM"}.
+#' Possible options are \code{"LM"} and \code{"Satten-Datta"}.
+#' Defaults to \code{"LM"}.
 #' @param presmooth - A logical value. If \code{TRUE}, the presmoothed landmark
-#' estimator of the sojourn function is computed. Only valid for \code{method = "LDM"}.
+#' estimator of the sojourn function is computed. Only valid for \code{method = "LM"}.
 #' @param cluster A logical value. If \code{TRUE} (default), the bootstrap procedure
 #' for the confidence intervals is parallelized. Note that there are
 #' cases (e.g., a low number of bootstrap repetitions) that \R will gain in
@@ -88,7 +88,7 @@
 #' plot(res)
 #'
 #' res1 <- sojourn(survIDM(time1, event1, Stime, event) ~ 1,
-#' data = colonIDM, conf = FALSE, conf.level = 0.95, method = "LDM",
+#' data = colonIDM, conf = FALSE, conf.level = 0.95, method = "LM",
 #' presmooth = TRUE)
 #' res1
 #' summary(res1, time=365*1:6)
@@ -122,7 +122,7 @@
 
 sojourn <- function(formula, data, conf = FALSE, n.boot = 199,
                 conf.level = 0.95, z.value, bw = "dpik", window = "gaussian",
-                method.weights = "NW", method = "LDM", presmooth = FALSE,
+                method.weights = "NW", method = "LM", presmooth = FALSE,
                 cluster = FALSE, ncores = NULL){
 
 

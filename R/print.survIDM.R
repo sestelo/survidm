@@ -15,15 +15,15 @@ print.survIDM <- function(x, ...){
 
       if(class(x)[1] == "AJ") method <- "Aalen-Johansen estimator"
       if(class(x)[1] == "LIDA") method <- "LIDA estimator"
-      if(class(x)[1] == "LDM") method <- "Landmark approach estimator"
-      if(class(x)[1] == "PLDM") method <- "Presmoothed Landmark approach estimator"
+      if(class(x)[1] == "LM") method <- "Landmark approach estimator"
+      if(class(x)[1] == "PLM") method <- "Presmoothed Landmark approach estimator"
       if(class(x)[1] == "tpIPCW") method <- "Inverse Probability of Censoring Weighting for Transition Probabilities"
       if(class(x)[1] == "CIF") method <- "Cumulative Incidence Function"
       if(class(x)[1] == "cifIPCW") method <- "Inverse Probability of Censoring Weighting for the Cumulative Incidence Function"
       if(class(x)[1] == "soj") method <- "Sojourn Time Distribution"
       if(class(x)[1] == "sojIPCW") method <- "Inverse Probability of Censoring Weighting for the Sojourn Time Distribution"
-      if(class(x)[1] == "LDMAJ") method <- "Landmark approach Aalen-Johansen estimator"
-      if(class(x)[1] == "PLDMAJ") method <- "Presmoothed Landmark approach Aalen-Johansen estimator"
+      if(class(x)[1] == "LMAJ") method <- "Landmark approach Aalen-Johansen estimator"
+      if(class(x)[1] == "PLMAJ") method <- "Presmoothed Landmark approach Aalen-Johansen estimator"
       if(class(x)[1] == "PAJ") method <- "Presmoothed Aalen-Johansen estimator"
       print(method)
     }

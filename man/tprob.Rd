@@ -20,8 +20,8 @@ Without covariates, the right hand side should be \code{~ 1}.}
 probabilities. If missing, 0 will be used.}
 
 \item{method}{The method used to compute the transition probabilities.
-Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LDM"}, \code{"PLDM"},
-\code{"LDMAJ"}, \code{"PLDMAJ"}, \code{"PAJ"} and
+Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LM"}, \code{"PLM"},
+\code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"} and
 \code{"IPCW"}. Defaults to \code{"AJ"}. The \code{"IPCW"} method
 is recommended to obtain conditional transition probabilities (i.e., with a
 quantitative term on the right hand side of formula).}
@@ -77,8 +77,8 @@ be stripped in the computation.}
 }
 \value{
 An object of class \code{"survIDM"} and one of the following
-five classes: \code{"AJ"}, \code{"LIDA"}, \code{"LMD"}, \code{"PLDM"},
-\code{"LDMAJ"}, \code{"PLDMAJ"}, \code{"PAJ"} and
+five classes: \code{"AJ"}, \code{"LIDA"}, \code{"LM"}, \code{"PLM"},
+\code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"} and
 \code{"tpIPCW"}. Objects are implemented as a list with elements:
 
 \item{est}{data.frame with estimates of the transition probabilities.}
@@ -112,10 +112,10 @@ Possible methods are:
 \item{\code{AJ} }{Aalen-Johansen estimator}
 \item{\code{PAJ} }{Presmoothed Aalen-Johansen estimator}
 \item{\code{LIDA} }{LIDA estimator}
-\item{\code{LDM} }{Landmark approach estimator}
-\item{\code{PLDM} }{Presmoothed Landmark approach estimator}
-\item{\code{LDMAJ} }{Landmark approach Aalen-Johansen estimator}
-\item{\code{PLDMAJ} }{Presmoothed Landmark approach Aalen-Johansen estimator}
+\item{\code{LM} }{Landmark approach estimator}
+\item{\code{PLM} }{Presmoothed Landmark approach estimator}
+\item{\code{LMAJ} }{Landmark approach Aalen-Johansen estimator}
+\item{\code{PLDAJ} }{Presmoothed Landmark approach Aalen-Johansen estimator}
 \item{\code{tpIPCW} }{Inverse Probability of Censoring Weighting for Transition Probabilities}
 \item{\code{CIF} }{Cumulative Incidence Function}
 \item{\code{cifIPCW} }{Inverse Probability of Censoring Weighting for the Cumulative Incidence Function}
@@ -146,14 +146,14 @@ plot(res1, trans="01", ylim=c(0,0.15))
 
 # Landmark (LDM)
 res2 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-method = "LDM", conf = FALSE, data = colonIDM)
+method = "LM", conf = FALSE, data = colonIDM)
 
 summary(res2, time=365*1:6)
 plot(res2)
 
-# Presmoothed LDM
+# Presmoothed LM
 res3 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-method = "PLDM", conf = FALSE, data = colonIDM)
+method = "PLM", conf = FALSE, data = colonIDM)
 
 summary(res3, time=365*1:6)
 plot(res3)

@@ -1,4 +1,4 @@
-tpLDM <-
+tpLM <-
   function(object, s, conf = FALSE, n.boot = 199, conf.level = 0.95,
            conf.type = "log", cluster = FALSE, ncores = NULL)
   {
@@ -235,7 +235,7 @@ tpLDM <-
     if(conf==TRUE)  result <- list(est=resu, CI=ci, conf.level=conf.level, s=s, t=t, conf=conf)
     else  result <- list(est=resu,  s=s, t=t, conf=conf)
 
-    class(result) <- c("LDM")
+    class(result) <- c("LM")
     return(invisible(result))
   }
 

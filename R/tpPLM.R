@@ -1,4 +1,4 @@
-tpPLDM <-
+tpPLM <-
   function(object, s, conf = FALSE, n.boot = 199, conf.level = 0.95,
            cluster = FALSE, ncores = NULL)
   {
@@ -137,7 +137,7 @@ tpPLDM <-
     if(conf==TRUE)  result <- list(est=resu, CI=ci, conf.level=conf.level, s=s, t=t, conf=conf)
     else  result <- list(est=resu,  s=s, t=t, conf=conf)
 
-    class(result) <- c("PLDM")
+    class(result) <- c("PLM")
     return(invisible(result))
   }
 
