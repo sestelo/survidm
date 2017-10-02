@@ -13,7 +13,7 @@ xlab = "Time (years)", ylab = NULL, ylim = NULL, xlim = NULL, ...)
   \item{x}{An object of class "survIDM".}
   \item{y}{\code{NULL}}
   \item{trans}{The transition probabilities plotted. It is used only when
-  the object is of class "AJ", "LIDA", "LDM",  "PLDM" or "tpIPCW". Possible options
+  the object is of class "AJ", "LIDA", "LM",  "PLM" or "tpIPCW". Possible options
   are \code{"all"} (default), \code{"00"}, \code{"01"}, \code{"02"}, \code{"11"} or \code{"12"}.}
   \item{func}{It is used only when the object is of class "soj" or "sojIPCW". The type of curve to be drawn ("distribution" or "survival").
   Default to "distribution". }
