@@ -51,8 +51,8 @@
 #' \code{"triangular"}, \code{"quartic"} or \code{"cosine"}.
 #'
 #' @return An object of class \code{"survIDM"} and one of the following
-#' two classes: \code{"CIF"}, and
-#' \code{"cifIPCW"}. Objects are implemented as a list with elements:
+#' two classes: \code{"CIF"} (Cumulative Incidence Function), and
+#' \code{"cifIPCW"} (Inverse Probability of Censoring Weighting for the Cumulative Incidence Function). Objects are implemented as a list with elements:
 #'
 #' \item{est}{data.frame with estimates of the cumulative incidence probabilities.}
 #' \item{CI}{data.frame with the confidence intervals of the cumulative
