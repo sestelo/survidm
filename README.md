@@ -3,7 +3,8 @@
 
 
 
-```survidm``` is an R package which intorduces newly developed methods for the estimation of several probabilities in an illness-death model. The package can be used to obtain nonparametric and semiparametric estimates for: transition probabilities, occupation probabilities,  cumulative incidence function and the sojourn time distributions. Several auxiliary functions are also provided which can be used for marginal estimation of the survival functions.
+```survidm``` is an R package which introduces newly developed methods for the estimation of several probabilities in an illness-death model. The package can be used to obtain nonparametric and semiparametric estimates for: transition probabilities, occupation probabilities,  cumulative incidence function and the sojourn time distributions. Additionally, it is possible to fit proportional
+hazards regression models in each transition of the Illness-Death Model. Several auxiliary functions are also provided which can be used for marginal estimation of the survival functions.
 
 
 
