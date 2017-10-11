@@ -52,8 +52,8 @@
 #' \code{"triangular"}, \code{"quartic"} or \code{"cosine"}.
 #'
 #' @return An object of class \code{"survIDM"} and one of the following
-#' two classes: \code{"soj"}, and
-#' \code{"sojIPCW"}. Objects are implemented as a list with elements:
+#' two classes: \code{"soj"} (Sojourn Time Distribution), and
+#' \code{"sojIPCW"} (Inverse Probability of Censoring Weighting for the Sojourn Time Distribution). Objects are implemented as a list with elements:
 #'
 #' \item{est}{data.frame with estimates of the sojourn probabilities.}
 #' \item{CI}{data.frame with the confidence intervals of the sojourn
