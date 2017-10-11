@@ -7,7 +7,7 @@ in the illness-death model}
 \usage{
 sojourn(formula, data, conf = FALSE, n.boot = 199, conf.level = 0.95,
   z.value, bw = "dpik", window = "gaussian", method.weights = "NW",
-  method = "LDM", presmooth = FALSE, cluster = FALSE, ncores = NULL)
+  method = "LM", presmooth = FALSE, cluster = FALSE, ncores = NULL)
 }
 \arguments{
 \item{formula}{A \code{formula} object, which must have a \code{survIDM}
@@ -44,11 +44,11 @@ Possible options are \code{"NW"} for the Nadaraya-Watson weights and \code{"LL"}
 for local linear weights. Defaults to \code{"NW"}.}
 
 \item{method}{The method used to compute the sojourn estimates.
-Possible options are \code{"LDM"} and \code{"Satten-Datta"}.
-Defaults to \code{"LDM"}.}
+Possible options are \code{"LM"} and \code{"Satten-Datta"}.
+Defaults to \code{"LM"}.}
 
 \item{presmooth}{- A logical value. If \code{TRUE}, the presmoothed landmark
-estimator of the sojourn function is computed. Only valid for \code{method = "LDM"}.}
+estimator of the sojourn function is computed. Only valid for \code{method = "LM"}.}
 
 \item{cluster}{A logical value. If \code{TRUE} (default), the bootstrap procedure
 for the confidence intervals is parallelized. Note that there are
@@ -65,8 +65,8 @@ to be used is equal to the number of cores of the machine - 1.}
 }
 \value{
 An object of class \code{"survIDM"} and one of the following
-two classes: \code{"soj"}, and
-\code{"sojIPCW"}. Objects are implemented as a list with elements:
+two classes: \code{"soj"} (Sojourn Time Distribution), and
+\code{"sojIPCW"} (Inverse Probability of Censoring Weighting for the Sojourn Time Distribution). Objects are implemented as a list with elements:
 
 \item{est}{data.frame with estimates of the sojourn probabilities.}
 \item{CI}{data.frame with the confidence intervals of the sojourn
@@ -102,7 +102,7 @@ summary(res, time=365*1:6)
 plot(res)
 
 res1 <- sojourn(survIDM(time1, event1, Stime, event) ~ 1,
-data = colonIDM, conf = FALSE, conf.level = 0.95, method = "LDM",
+data = colonIDM, conf = FALSE, conf.level = 0.95, method = "LM",
 presmooth = TRUE)
 res1
 summary(res1, time=365*1:6)

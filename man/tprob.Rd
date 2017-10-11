@@ -117,10 +117,6 @@ Possible methods are:
 \item{\code{LMAJ} }{Landmark approach Aalen-Johansen estimator}
 \item{\code{PLDAJ} }{Presmoothed Landmark approach Aalen-Johansen estimator}
 \item{\code{tpIPCW} }{Inverse Probability of Censoring Weighting for Transition Probabilities}
-\item{\code{CIF} }{Cumulative Incidence Function}
-\item{\code{cifIPCW} }{Inverse Probability of Censoring Weighting for the Cumulative Incidence Function}
-\item{\code{soj} }{Sojourn Time Distribution}
-\item{\code{sojIPCW} }{Inverse Probability of Censoring Weighting for the Sojourn Time Distribution}
 }
 }
 \examples{
@@ -144,7 +140,7 @@ summary(res1, time=365*1:6)
 plot(res1)
 plot(res1, trans="01", ylim=c(0,0.15))
 
-# Landmark (LDM)
+# Landmark (LM)
 res2 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
 method = "LM", conf = FALSE, data = colonIDM)
 
@@ -180,7 +176,7 @@ plot(res5)
 
 # Confidence intervals
 res6 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-method = "AJ", conf = TRUE, conf.level = 0.95,
+method = "AJ", conf = TRUE, n.boot = 50, conf.level = 0.95,
 conf.type = "log", data = colonIDM)
 
 summary(res6, time=365*1:7)
