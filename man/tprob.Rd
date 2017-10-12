@@ -175,12 +175,12 @@ plot(res5)
 
 
 # Confidence intervals
-res6 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-method = "AJ", conf = TRUE, n.boot = 50, conf.level = 0.95,
-conf.type = "log", data = colonIDM)
+#res6 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
+#method = "AJ", conf = TRUE, n.boot = 5, conf.level = 0.95,
+#conf.type = "log", data = colonIDM)
 
-summary(res6, time=365*1:7)
-plot(res6)
+#summary(res6, time=365*1:7)
+#plot(res6)
 }
 \references{
 Aalen O. O., Johansen S. (1978) An Empirical Transition Matrix for
