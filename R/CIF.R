@@ -32,7 +32,7 @@
 #' @param method.weights A character string specifying the desired weights method.
 #' Possible options are \code{"NW"} for the Nadaraya-Watson weights and \code{"LL"}
 #' for local linear weights. Defaults to \code{"NW"}.
-#' @param presmooth - A logical value. If \code{TRUE}, the presmoothed landmark
+#' @param presmooth A logical value. If \code{TRUE}, the presmoothed landmark
 #' estimator of the cumulative incidence function is computed.
 #' @param cluster A logical value. If \code{TRUE} (default), the bootstrap procedure
 #' for the confidence intervals is parallelized. Note that there are
