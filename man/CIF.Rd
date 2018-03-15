@@ -58,6 +58,9 @@ it does not worth parallelize.}
 \item{ncores}{An integer value specifying the number of cores to be used in
 the parallelized procedure. If \code{NULL} (default), the number of cores
 to be used is equal to the number of cores of the machine - 1.}
+
+\item{presmooth}{- A logical value. If \code{TRUE}, the presmoothed landmark
+estimator of the cumulative incidence function is computed.}
 }
 \value{
 An object of class \code{"survIDM"} and one of the following
