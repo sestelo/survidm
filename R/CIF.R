@@ -32,6 +32,8 @@
 #' @param method.weights A character string specifying the desired weights method.
 #' Possible options are \code{"NW"} for the Nadaraya-Watson weights and \code{"LL"}
 #' for local linear weights. Defaults to \code{"NW"}.
+#' @param presmooth - A logical value. If \code{TRUE}, the presmoothed landmark
+#' estimator of the cumulative incidence function is computed. Only valid for \code{method = "LM"}.
 #' @param cluster A logical value. If \code{TRUE} (default), the bootstrap procedure
 #' for the confidence intervals is parallelized. Note that there are
 #' cases (e.g., a low number of bootstrap repetitions) that \R will gain in
@@ -91,6 +93,12 @@
 #' summary(res, time=365*1:7)
 #' plot(res, ylim=c(0, 0.6))
 #'
+#' res01 <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonIDM,
+#' conf = FALSE, presmooth = TRUE)
+#' res01
+#' summary(res01, time=365*1:7)
+#' plot(res01, ylim=c(0, 0.6))
+#'
 #'
 #' # CIF for those in State 1 at time s=365, Y(s)=0
 #' res1 <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonIDM,
@@ -105,6 +113,11 @@
 #' summary(res2, time=365*1:5)
 #' plot(res2)
 #'
+#' res2.1 <- CIF(survIDM(time1, event1, Stime, event) ~ factor(sex),  #new
+#' data = colonIDM, s = 365, conf = FALSE, presmooth = TRUE)
+#' summary(res2.1, time=365*1:5)
+#' plot(res2.1)
+#'
 #'
 #' # Conditional CIF (with continuous covariate)
 #' res3 <- CIF(survIDM(time1, event1, Stime, event) ~ age, data = colonIDM,
@@ -116,123 +129,88 @@
 
 
 
-CIF <- function(formula, s, data, conf = FALSE, n.boot = 199,
-                conf.level = 0.95, z.value, bw = "dpik", window = "gaussian",
-                method.weights = "NW", cluster = FALSE, ncores = NULL){
-
-
-  if (missing(formula)) stop("A formula argument is required")
-  if (missing(s))  s <- 0  #stop("argument 's' is missing, with no default")
-
-
-  # formula
+CIF <- function (formula, s, data, conf = FALSE, n.boot = 199, conf.level = 0.95,
+                 z.value, bw = "dpik", window = "gaussian", method.weights = "NW",
+                 cluster = FALSE, ncores = NULL, presmooth = FALSE)
+{
+  if (missing(formula))
+    stop("A formula argument is required")
+  if (missing(s))
+    s <- 0
   fmla <- eval(formula, parent.frame())
   Terms <- terms(fmla)
   mf <- Terms[[2]]
   object <- with(data = data, eval(mf))
-  if (!inherits(object, "survIDM")) stop("Response must be a survIDM object")
-  object <- list(data = object) # new since survCS doesn't return a list
+  if (!inherits(object, "survIDM"))
+    stop("Response must be a survIDM object")
+  object <- list(data = object)
   obj_data <- object[[1]]
-
-  X <- Terms[[3]] #covariate
-  if(length(attr(terms(formula),"term.labels")) > 1)
+  X <- Terms[[3]]
+  if (length(attr(terms(formula), "term.labels")) > 1)
     stop("only one covariate is supported")
   Class <- class(with(data = data, eval(Terms[[3]])))
   if (Class != "numeric" & Class != "integer" & Class != "factor")
     stop("covariate must be one of the following classes 'numeric', 'integer' or 'factor'")
   xval <- with(data = data, eval(X))
   lencov <- length(xval)
-  lencov2 <- length(attr(terms(formula),"term.labels"))
-  if(lencov2 != 0) Xval <- with(data = data, eval(Terms[[3]]))
-  if(lencov != dim(obj_data)[1] & lencov2 != 0) stop("length of the covariate does not match")
-
-
-
-  # without covariates
-  if (length(attr(terms(formula), "term.labels")) == 0) {  #cif without covariate
-
-      res <- CIF_ini(object = object, s = s, conf = conf,
-                    conf.level = conf.level, n.boot = n.boot,
-                    cluster = cluster, ncores = ncores)
-      class(res) <- c("CIF", "survIDM")
-
-  } # end methods without covariate
-
-
-
-  # numeric or integer covariate (no argumento s)
-  if(length(attr(terms(formula),"term.labels")) != 0 & (Class == "numeric" | Class == "integer")) {#IPCW
-
-    if(s != 0) {warning(paste("If the formula includes a continuous covariate,
-                             's' argument will not be used "))}
-
+  lencov2 <- length(attr(terms(formula), "term.labels"))
+  if (lencov2 != 0)
+    Xval <- with(data = data, eval(Terms[[3]]))
+  if (lencov != dim(obj_data)[1] & lencov2 != 0)
+    stop("length of the covariate does not match")
+  if (length(attr(terms(formula), "term.labels")) == 0) {
+    res <- CIF_ini(object = object, s = s, conf = conf, conf.level = conf.level,
+                   n.boot = n.boot, cluster = cluster, ncores = ncores, presmooth = presmooth)
+    class(res) <- c("CIF", "survIDM")
+  }
+  if (length(attr(terms(formula), "term.labels")) != 0 & (Class ==
+                                                          "numeric" | Class == "integer")) {
+    if (s != 0) {
+      warning(paste("If the formula includes a continuous covariate,\\n                             's' argument will not be used "))
+    }
     obj1 <- object
     obj1[[1]] <- cbind(obj1[[1]], xval)
     obj1[[1]] <- na.omit(obj1[[1]])
-    colnames(obj1[[1]]) <- c(colnames(object[[1]]), attr(terms(formula),"term.labels"))
-
-    res <- cifIPCW(object = obj1,
-                  z.name = attr(terms(formula),"term.labels"),
-                  z.value = z.value, bw = bw, window = window,
-                  method.weights = method.weights, conf = conf, n.boot = n.boot,
-                  conf.level = conf.level, cluster = cluster, ncores = ncores)
-
-
+    colnames(obj1[[1]]) <- c(colnames(object[[1]]), attr(terms(formula),
+                                                         "term.labels"))
+    res <- cifIPCW(object = obj1, z.name = attr(terms(formula),
+                                                "term.labels"), z.value = z.value, bw = bw, window = window,
+                   method.weights = method.weights, conf = conf, n.boot = n.boot,
+                   conf.level = conf.level, cluster = cluster, ncores = ncores)
     class(res) <- c("cifIPCW", "survIDM")
-    #callp <- paste("CIF(s=",s,",t|", attr(terms(formula),"term.labels"), "=", z.value, ")", sep = "")
-
-  } # end method with numeric or integer covariate
-
-
-  # factor covariate
-  if (length(attr(terms(formula),"term.labels")) > 0 & Class == "factor") {  #CIF by levels of the covariate
-
-    x.nlevels <- nlevels(with(data=data, eval(formula[[3]])))
-    levels <- levels(with(data=data, eval(formula[[3]])))
-
+  }
+  if (length(attr(terms(formula), "term.labels")) > 0 & Class ==
+      "factor") {
+    x.nlevels <- nlevels(with(data = data, eval(formula[[3]])))
+    levels <- levels(with(data = data, eval(formula[[3]])))
     estim <- list()
     ci <- list()
-
-
     for (k in 1:x.nlevels) {
-      v.level <- levels(with(data=data, eval(formula[[3]])))[k]
-      p<- which(Xval == v.level)
-      obj<- object
-      obj$data <- object$data[p,]
-
-
-      #------------------------------
-
-
-
+      v.level <- levels(with(data = data, eval(formula[[3]])))[k]
+      p <- which(Xval == v.level)
+      obj <- object
+      obj$data <- object$data[p, ]
       res <- CIF_ini(object = obj, s = s, conf = conf,
-                 conf.level = conf.level, n.boot = n.boot,
-                 cluster = cluster, ncores = ncores)
+                     conf.level = conf.level, n.boot = n.boot, cluster = cluster,
+                     ncores = ncores, presmooth = presmooth)
       class(res) <- c("CIF", "survIDM")
-
-
-
       estim[[paste(levels[k])]] <- res$est
       ci[[paste(levels[k])]] <- res$CI
-
-    } # ends the level's loop
+    }
     res$est <- estim
     res$CI <- ci
-  }else{
+  }
+  else {
     x.nlevels = 1
     levels = NULL
-  } # end method with factor covariate
-
-
-  #callp <- paste("P(T>y|", text3, ")", sep = "")
-  callp <- paste("CIF(s=",s,",t)", sep = "")
+  }
+  callp <- paste("CIF(s=", s, ",t)", sep = "")
   res$callp <- callp
   res$Nlevels <- x.nlevels
   res$levels <- levels
   res$formula <- formula
   res$call <- match.call()
-
   return(invisible(res))
-
-
 }
+
+

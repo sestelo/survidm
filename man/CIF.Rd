@@ -7,7 +7,7 @@ in the illness-death model}
 \usage{
 CIF(formula, s, data, conf = FALSE, n.boot = 199, conf.level = 0.95,
   z.value, bw = "dpik", window = "gaussian", method.weights = "NW",
-  cluster = FALSE, ncores = NULL)
+  cluster = FALSE, ncores = NULL, presmooth = FALSE)
 }
 \arguments{
 \item{formula}{A \code{formula} object, which must have a \code{survIDM}
@@ -58,6 +58,9 @@ it does not worth parallelize.}
 \item{ncores}{An integer value specifying the number of cores to be used in
 the parallelized procedure. If \code{NULL} (default), the number of cores
 to be used is equal to the number of cores of the machine - 1.}
+
+\item{presmooth}{- A logical value. If \code{TRUE}, the presmoothed landmark
+estimator of the cumulative incidence function is computed. Only valid for \code{method = "LM"}.}
 }
 \value{
 An object of class \code{"survIDM"} and one of the following
@@ -102,6 +105,12 @@ res
 summary(res, time=365*1:7)
 plot(res, ylim=c(0, 0.6))
 
+res01 <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonIDM,
+conf = FALSE, presmooth = TRUE)
+res01
+summary(res01, time=365*1:7)
+plot(res01, ylim=c(0, 0.6))
+
 
 # CIF for those in State 1 at time s=365, Y(s)=0
 res1 <- CIF(survIDM(time1, event1, Stime, event) ~ 1, data = colonIDM,
@@ -115,6 +124,11 @@ res2 <- CIF(survIDM(time1, event1, Stime, event) ~ factor(sex),
 data = colonIDM, s = 365, conf = FALSE)
 summary(res2, time=365*1:5)
 plot(res2)
+
+res2.1 <- CIF(survIDM(time1, event1, Stime, event) ~ factor(sex),  #new
+data = colonIDM, s = 365, conf = FALSE, presmooth = TRUE)
+summary(res2.1, time=365*1:5)
+plot(res2.1)
 
 
 # Conditional CIF (with continuous covariate)
