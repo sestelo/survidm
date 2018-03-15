@@ -33,7 +33,7 @@
 #' Possible options are \code{"NW"} for the Nadaraya-Watson weights and \code{"LL"}
 #' for local linear weights. Defaults to \code{"NW"}.
 #' @param presmooth - A logical value. If \code{TRUE}, the presmoothed landmark
-#' estimator of the cumulative incidence function is computed. Only valid for \code{method = "LM"}.
+#' estimator of the cumulative incidence function is computed.}.
 #' @param cluster A logical value. If \code{TRUE} (default), the bootstrap procedure
 #' for the confidence intervals is parallelized. Note that there are
 #' cases (e.g., a low number of bootstrap repetitions) that \R will gain in
