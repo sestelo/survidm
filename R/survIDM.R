@@ -20,7 +20,7 @@
 #' @return An object of class "survIDM". "survIDM" objects are implemented
 #' as a single dataframe.
 #'
-#' @author Luis Meira-Machado and Marta Sestelo.
+#' @author Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 #'
 #' @examples
 #' with(colonIDM, survIDM(time1, event1, Stime, event))
@@ -36,6 +36,24 @@ survIDM <- function(time1, event1, Stime, event, ...)
     stop("Argument 'Stime' is missing, with no default")
   if (missing(event))
     stop("Argument 'event' is missing, with no default")
+  if ( !is.numeric(time1) ) stop("Argument 'time1' is not numeric")
+  if ( !( is.logical(event1) | is.numeric(event1) ) ) stop("Argument event1 must be logical or numeric")
+  if ( !is.numeric(Stime) ) stop("Argument 'Stime' is not numeric")
+  if ( !( is.logical(event) | is.numeric(event) ) ) stop("Argument event must be logical or numeric")
+  len <- length(time1)
+  if ( len != length(event1) | len != length(Stime) | len != length(event) ) stop("Arguments 'time1', 'event1', 'Stime' and 'event' must have the same length")
+
+  if ( any( (event1 != 0 & event1 != 1) | (event1 != FALSE & event1 != TRUE) ) ) stop("Argument 'event1' must be 0 or 1 if numeric and TRUE or FALSE if logical")
+  if ( any( (event != 0 & event != 1) | (event != FALSE & event != TRUE) ) ) stop("Argument 'event' must be 0 or 1 if numeric and TRUE or FALSE if logical")
+  if ( any(time1 < 0 | Stime < 0) ) stop("Arguments 'time1' and 'Stime' must be greater than 0")
+  if ( any(Stime < time1) ) stop("Argument 'Stime' must be greater or equal to argument 'time1'")
+  if ( any(!event1 & Stime != time1) ) stop("Arguments 'Stime' and 'time1' must be equal when argument 'event1' equals 0 or FALSE")
+  if ( any(!event1 & event) ) stop("Argument 'event' must be equal to 0 or FALSE when argument 'event1' equals 0 or FALSE")
+  if ( any(time1 == Stime & event1 & !event) ) {
+    pos<-which(time1==Stime & event1==1 & event==0)
+    cat("Stime=time1 and event1=event=1 for the following observations","\n")
+    print(pos)}
+  if ( any(time1 == Stime & event1 & !event) ) {stop("When arguments 'Stime' and 'time1' are equal and argument 'event1' equals 1 or TRUE, argument 'event' must equal 1 or TRUE")}
 
   data <- list(time1 = as.double(time1), event1 = as.integer(event1),
                Stime = as.double(Stime), event = as.integer(event), ...)
@@ -51,4 +69,3 @@ survIDM <- function(time1, event1, Stime, event, ...)
   attr(object, "class") <- c("data.frame", "survIDM")
   return(object)
 }
-

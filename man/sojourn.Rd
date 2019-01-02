@@ -61,7 +61,9 @@ it does not worth parallelize.}
 
 \item{ncores}{An integer value specifying the number of cores to be used in
 the parallelized procedure. If \code{NULL} (default), the number of cores
-to be used is equal to the number of cores of the machine - 1.}
+to be used is equal to the number of cores of the machine - 1.
+
+#'}
 }
 \value{
 An object of class \code{"survIDM"} and one of the following
@@ -136,5 +138,5 @@ multi-stage models: waiting time distributions and competing risks
 analyses. Statistics in Medicine, 21, 3--19.
 }
 \author{
-Luis Meira-Machado and Marta Sestelo.
+Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 }

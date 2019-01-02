@@ -33,7 +33,7 @@ summary(fit, times = c(400, 1000, 2900))
     }
 
 
-   \author{Luis Meira-Machado and Marta Sestelo.}
+   \author{Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.}
 
 
 

@@ -42,7 +42,7 @@ or censoring, and death indicator, respectively.}
 }
 
 
-\author{Luis Meira-Machado and Marta Sestelo.}
+\author{Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.}
 
 
 

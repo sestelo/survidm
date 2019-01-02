@@ -8,7 +8,7 @@ coxidm <- function (formula, data, semiMarkov = FALSE) {
     stop("Argument 'data' is missing with no default")
   if (class(formula) != "formula")
     stop("Argument 'formula' must be of class 'formula'")
- # if (all(class(colonIDM) != "survIDM"))
+  # if (all(class(colonIDM) != "survIDM"))
   #  stop("Argument 'object' must be of class 'survIDM'")
 
   ncov <- length(all.vars(formula)) - 4 #number of covariates
@@ -18,8 +18,16 @@ coxidm <- function (formula, data, semiMarkov = FALSE) {
   mydata <- object
   #print(names(mydata))
 
+  pos1 <- match(all.vars(formula)[1:4], names(data))
+  pos2 <- match(all.vars(formula)[-c(1:4)], names(data))
+
+  newdata <- data[,c(pos1,pos2)]
+  names(newdata)[1:4] <- c("time1","event1","Stime","event")
+
+  mydata <- newdata
+
   #0->2
-  p02 <- which(mydata$event1 == 1 & mydata$Stime == mydata$time1)
+  p02 <- which(mydata$event == 1 & mydata$Stime == mydata$time1)
   s02 <- rep(0, length(mydata$time1))
   s02[p02] <- 1
   fmla0 <- as.formula(paste("Surv(mydata[,1],s02)~",

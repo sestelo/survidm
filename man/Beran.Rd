@@ -24,7 +24,7 @@ R. Beran. Nonparametric regression with randomly censored survival data. Technic
 California, Berkeley, 1981.
 }
 
-\author{Luis Meira-Machado and Marta Sestelo}
+\author{Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho}
 
 \examples{
 obj <- with(colonIDM, survIDM(time1, event1, Stime, event))

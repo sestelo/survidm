@@ -3,7 +3,7 @@ tpPLMAJ <- function(object, s, conf = FALSE, conf.level = 0.95)
   if (missing(object))
     stop("Argument 'object' is missing, with no default")
 
- # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
+  # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
   if (missing(s))
     s <- 0
   data <- object[[1]]
@@ -28,7 +28,7 @@ tpPLMAJ <- function(object, s, conf = FALSE, conf.level = 0.95)
   probs[3,] <- c(0,0,1)
 
   newtimes <- sort(unique(c(resS1$time,resS2$time)))
-  newtimes <- newtimes[newtimes > s]
+  newtimes <- newtimes[newtimes >= s]  #to include s
 
   resu <- joindataTP(resS1, resS2, s=s, conf = conf)
 
@@ -110,18 +110,6 @@ tpPLMAJ <- function(object, s, conf = FALSE, conf.level = 0.95)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 joindataTP <- function(x, y, conf = FALSE, s = NULL)
 {
   newtimes <- sort(unique(c(x$time,y$time,s)))
@@ -182,10 +170,10 @@ joindataTP <- function(x, y, conf = FALSE, s = NULL)
   }
 
   #print(rn)
-  p <- which(newtimes < s)
+  p <- which(newtimes <=s)
   #print(resdata)
   #print(p)
-  #resdata <- resdata[-p,,]
+  #resdata <- rbind(c(365, 1.0000000, 0.0000000, 0.0000000, 1.0000000, 0.0000000),resdata[-p,,])
 
   resdata
 }

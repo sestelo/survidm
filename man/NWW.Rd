@@ -16,7 +16,7 @@ NWW(covariate, x, kernel = "gaussian", bw)
 \details{Possible options for argument window are "gaussian", "epanechnikov", "tricube", "boxcar", "triangular", "quartic" or "cosine". }
 \value{A vector with Nadaraya-Watson weights. }
 
-\author{Luis Meira-Machado and Marta Sestelo}
+\author{Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.}
 
 \seealso{\code{\link{LLW}}}
 

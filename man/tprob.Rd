@@ -21,8 +21,8 @@ probabilities. If missing, 0 will be used.}
 
 \item{method}{The method used to compute the transition probabilities.
 Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LM"}, \code{"PLM"},
-\code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"} and
-\code{"IPCW"}. Defaults to \code{"AJ"}. The \code{"IPCW"} method
+\code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"}, \code{"IPCW"} and \code{"breslow"}.
+Defaults to \code{"AJ"}. The \code{"IPCW"} method
 is recommended to obtain conditional transition probabilities (i.e., with a
 quantitative term on the right hand side of formula).}
 
@@ -78,8 +78,8 @@ be stripped in the computation.}
 \value{
 An object of class \code{"survIDM"} and one of the following
 five classes: \code{"AJ"}, \code{"LIDA"}, \code{"LM"}, \code{"PLM"},
-\code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"} and
-\code{"tpIPCW"}. Objects are implemented as a list with elements:
+\code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"},
+\code{"tpIPCW"} and \code{"tpBreslow"}. Objects are implemented as a list with elements:
 
 \item{est}{data.frame with estimates of the transition probabilities.}
 \item{CI}{data.frame with the confidence intervals of the transition probabilities.}
@@ -117,70 +117,84 @@ Possible methods are:
 \item{\code{LMAJ} }{Landmark approach Aalen-Johansen estimator}
 \item{\code{PLDAJ} }{Presmoothed Landmark approach Aalen-Johansen estimator}
 \item{\code{tpIPCW} }{Inverse Probability of Censoring Weighting for Transition Probabilities}
+\item{\code{tpBreslow} }{Breslow method}
 }
 }
 \examples{
 # Aalen-Johansen
-# Occupation Probabilities Pj(t)=Pij(0,t)
-
-res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0,
-method = "AJ", conf = FALSE, data = colonIDM)
-
+res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0, method = "AJ", conf = FALSE, data = colonIDM)
 summary(res, time=365*1:6)
 plot(res)
-
-
 # Transition Probabilities Pij(t)=Pij(365,t)
-
 # LIDA
 res1 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-method = "LIDA", conf = FALSE, data = colonIDM)
+             method = "LIDA", conf = FALSE, data = colonIDM)
 
 summary(res1, time=365*1:6)
 plot(res1)
 plot(res1, trans="01", ylim=c(0,0.15))
-
 # Landmark (LM)
 res2 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-method = "LM", conf = FALSE, data = colonIDM)
-
+              method = "LM", conf = FALSE, data = colonIDM)
 summary(res2, time=365*1:6)
 plot(res2)
-
 # Presmoothed LM
 res3 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-method = "PLM", conf = FALSE, data = colonIDM)
-
+              method = "PLM", conf = TRUE, data = colonIDM)
 summary(res3, time=365*1:6)
 plot(res3)
-
-
-
 # Conditional transition probabilities
-
-#with factor
+# With factor
 res4 <- tprob(survIDM(time1, event1, Stime, event) ~ factor(sex), s = 365,
-method = "AJ", conf = FALSE, data = colonIDM)
-
+              method = "AJ", conf = TRUE, data = colonIDM)
 summary(res4, time=365*1:6)
 plot(res4, trans="02", ylim=c(0,0.5))
-
-# with continuous covariate (IPCW)
-res5 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s = 365,
-method = "IPCW", z.value = 48, conf = FALSE, data = colonIDM,
-bw = "dpik", window = "gaussian", method.weights = "NW")
-
+res5 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s =365,
+              method = "breslow", z.value='Lev', conf = TRUE, data =colonIDM)
 summary(res5, time=365*1:6)
-plot(res5)
-
-
+plot(res5,trans="02", ylim=c(0,0.5))
+# with continuous covariate (IPCW and Breslow Method)
+res6 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s = 365,
+              method = "IPCW", z.value = 48, conf = FALSE, data = colonIDM,
+              bw = "dpik", window = "gaussian", method.weights = "NW")
+summary(res6, time=365*1:6)
+plot(res6)
+res7 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
+              method = "breslow", z.value=60, conf = FALSE, data =colonIDM)
+summary(res7, time=365*1:6)
+plot(res7)
+res8 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
+              method = "breslow", conf.type='bootstrap', z.value=60, conf = TRUE, data =colonIDM)
+summary(res8, time=365*1:6)
+plot(res8)
+res9 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s =365,
+              method = "breslow", conf.type='bootstrap',  conf = TRUE, data =colonIDM)
+summary(res9, time=365*1:6)
+plot(res9, trans="02", ylim=c(0,0.5))
+# more than a covariate (Breslow Method)
+res10<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
+              method = "breslow", conf = TRUE, data =colonIDM)
+summary(res10,t=365*1:5)
+plot(res10)
+res11<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
+              method = "breslow", z.value=c(10,'Obs'), conf = TRUE, data =colonIDM)
+summary(res11,t=365*1:5)
+plot(res11)
+# more than a covariate for Non Linear Models (Breslow Method)
+res12<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
+              method = "breslow", conf = TRUE, data =colonIDM)
+summary(res12,t=365*1:5)
+plot(res12)
 # Confidence intervals
-#res6 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-#method = "AJ", conf = TRUE, n.boot = 5, conf.level = 0.95,
-#conf.type = "log", data = colonIDM)
-
-#summary(res6, time=365*1:7)
-#plot(res6)
+res13 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
+               method = "AJ", conf = TRUE, n.boot = 5, conf.level = 0.95,
+               conf.type = "log", data = colonIDM)
+summary(res13, time=365*1:7)
+plot(res13)
+res14<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
+              method = "breslow", conf.type='bootstrap', conf = TRUE, conf.level =0.95,  data =colonIDM)
+summary(res14,t=365*1:5)
+plot(res14)
 }
 \references{
 Aalen O. O., Johansen S. (1978) An Empirical Transition Matrix for
@@ -196,5 +210,5 @@ of transition probabilities in a non-Markov illness-death model:
 a comparative study. Biometrics 71, 364--375.
 }
 \author{
-Luis Meira-Machado and Marta Sestelo.
+Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 }

@@ -147,5 +147,5 @@ Kalbeisch, J. D. and Prentice R. L. (1980) The statistical analysis of
 failure time data. John Wiley & Sons, New York.
 }
 \author{
-Luis Meira-Machado and Marta Sestelo.
+Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 }

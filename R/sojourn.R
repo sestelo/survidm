@@ -45,8 +45,7 @@
 #' the parallelized procedure. If \code{NULL} (default), the number of cores
 #' to be used is equal to the number of cores of the machine - 1.
 #'
-#'
-#'
+#'#'
 #' @details Possible options for argument window are \code{"gaussian"},
 #' \code{"epanechnikov"}, \code{"tricube"}, \code{"boxcar"},
 #' \code{"triangular"}, \code{"quartic"} or \code{"cosine"}.
@@ -71,7 +70,7 @@
 #' \item{formula}{A formula object.}
 #' \item{call}{A call object.}
 #'
-#' @author Luis Meira-Machado and Marta Sestelo.
+#' @author Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 #'
 #' @references
 #' Satten, G.A. and Datta, S. (2002) Marginal estimation for
@@ -121,13 +120,13 @@
 
 
 sojourn <- function(formula, data, conf = FALSE, n.boot = 199,
-                conf.level = 0.95, z.value, bw = "dpik", window = "gaussian",
-                method.weights = "NW", method = "LM", presmooth = FALSE,
-                cluster = FALSE, ncores = NULL){
+                    conf.level = 0.95, z.value, bw = "dpik", window = "gaussian",
+                    method.weights = "NW", method = "LM", presmooth = FALSE,
+                    cluster = FALSE, ncores = NULL){
 
 
   if (missing(formula)) stop("A formula argument is required")
- # if (missing(s)) stop("argument 's' is missing, with no default")
+  # if (missing(s)) stop("argument 's' is missing, with no default")
 
 
   # formula
@@ -159,9 +158,9 @@ sojourn <- function(formula, data, conf = FALSE, n.boot = 199,
   if (length(attr(terms(formula), "term.labels")) == 0) {  #sojourn without covariate
 
     res <- sojourn_ini(object = object, conf = conf,
-                   conf.level = conf.level, n.boot = n.boot,
-                   cluster = cluster, ncores = ncores, method = method,
-                   presmooth = presmooth)
+                       conf.level = conf.level, n.boot = n.boot,
+                       cluster = cluster, ncores = ncores, method = method,
+                       presmooth = presmooth)
     res$levels <- NULL
     class(res) <- c("soj", "survIDM")
 
@@ -213,9 +212,9 @@ sojourn <- function(formula, data, conf = FALSE, n.boot = 199,
 
 
       res <- sojourn_ini(object = obj, conf = conf,
-                     conf.level = conf.level, n.boot = n.boot,
-                     cluster = cluster, ncores = ncores, method = method,
-                     presmooth = presmooth)
+                         conf.level = conf.level, n.boot = n.boot,
+                         cluster = cluster, ncores = ncores, method = method,
+                         presmooth = presmooth)
       class(res) <- c("soj", "survIDM")
 
 

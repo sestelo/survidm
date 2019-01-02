@@ -74,7 +74,7 @@
 #' \item{formula}{A formula object.}
 #' \item{call}{A call object.}
 #'
-#' @author Luis Meira-Machado and Marta Sestelo.
+#' @author Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 #'
 #' @references
 #' Geskus, R.B. (2011). Cause-specific cumulative incidence estimation

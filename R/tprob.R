@@ -12,8 +12,8 @@
 #' probabilities. If missing, 0 will be used.
 #' @param method The method used to compute the transition probabilities.
 #' Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LM"}, \code{"PLM"},
-#' \code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"} and
-#' \code{"IPCW"}. Defaults to \code{"AJ"}. The \code{"IPCW"} method
+#' \code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"}, \code{"IPCW"} and \code{"breslow"}.
+#' Defaults to \code{"AJ"}. The \code{"IPCW"} method
 #' is recommended to obtain conditional transition probabilities (i.e., with a
 #' quantitative term on the right hand side of formula).
 #' @param conf Provides pointwise confidence bands. Defaults to \code{FALSE}.
@@ -70,15 +70,13 @@
 #' \item{\code{LMAJ} }{Landmark approach Aalen-Johansen estimator}
 #' \item{\code{PLDAJ} }{Presmoothed Landmark approach Aalen-Johansen estimator}
 #' \item{\code{tpIPCW} }{Inverse Probability of Censoring Weighting for Transition Probabilities}
+#' \item{\code{tpBreslow} }{Breslow method}
 #' }
-
-
-
 #'
 #' @return An object of class \code{"survIDM"} and one of the following
 #' five classes: \code{"AJ"}, \code{"LIDA"}, \code{"LM"}, \code{"PLM"},
-#' \code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"} and
-#' \code{"tpIPCW"}. Objects are implemented as a list with elements:
+#' \code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"},
+#' \code{"tpIPCW"} and \code{"tpBreslow"}. Objects are implemented as a list with elements:
 #'
 #' \item{est}{data.frame with estimates of the transition probabilities.}
 #' \item{CI}{data.frame with the confidence intervals of the transition probabilities.}
@@ -98,7 +96,7 @@
 #' \item{call}{A call object.}
 #'
 #'
-#' @author Luis Meira-Machado and Marta Sestelo.
+#' @author Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 #'
 #' @references
 #' Aalen O. O., Johansen S. (1978) An Empirical Transition Matrix for
@@ -116,136 +114,176 @@
 #'
 #' @examples
 #' # Aalen-Johansen
-#' # Occupation Probabilities Pj(t)=Pij(0,t)
-#'
-#' res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0,
-#' method = "AJ", conf = FALSE, data = colonIDM)
-#'
+# Occupation Probabilities Pj(t)=Pij(0,t)
+
+#' res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0, method = "AJ", conf = FALSE, data = colonIDM)
+
 #' summary(res, time=365*1:6)
 #' plot(res)
-#'
-#'
+
 #' # Transition Probabilities Pij(t)=Pij(365,t)
-#'
+
 #' # LIDA
 #' res1 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-#' method = "LIDA", conf = FALSE, data = colonIDM)
+#'              method = "LIDA", conf = FALSE, data = colonIDM)
 #'
 #' summary(res1, time=365*1:6)
 #' plot(res1)
 #' plot(res1, trans="01", ylim=c(0,0.15))
-#'
+
 #' # Landmark (LM)
 #' res2 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-#' method = "LM", conf = FALSE, data = colonIDM)
-#'
+#'               method = "LM", conf = FALSE, data = colonIDM)
+
 #' summary(res2, time=365*1:6)
 #' plot(res2)
-#'
+
 #' # Presmoothed LM
 #' res3 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-#' method = "PLM", conf = FALSE, data = colonIDM)
-#'
+#'               method = "PLM", conf = TRUE, data = colonIDM)
+
 #' summary(res3, time=365*1:6)
 #' plot(res3)
-#'
-#'
-#'
+
 #' # Conditional transition probabilities
-#'
-#' #with factor
+
+#' # With factor
 #' res4 <- tprob(survIDM(time1, event1, Stime, event) ~ factor(sex), s = 365,
-#' method = "AJ", conf = FALSE, data = colonIDM)
-#'
+#'               method = "AJ", conf = TRUE, data = colonIDM)
 #' summary(res4, time=365*1:6)
 #' plot(res4, trans="02", ylim=c(0,0.5))
-#'
-#' # with continuous covariate (IPCW)
-#' res5 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s = 365,
-#' method = "IPCW", z.value = 48, conf = FALSE, data = colonIDM,
-#' bw = "dpik", window = "gaussian", method.weights = "NW")
-#'
+
+#' res5 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s =365,
+#'               method = "breslow", z.value='Lev', conf = TRUE, data =colonIDM)
+
 #' summary(res5, time=365*1:6)
-#' plot(res5)
-#'
-#'
+#' plot(res5,trans="02", ylim=c(0,0.5))
+
+
+#' # with continuous covariate (IPCW and Breslow Method)
+#' res6 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s = 365,
+#'               method = "IPCW", z.value = 48, conf = FALSE, data = colonIDM,
+#'               bw = "dpik", window = "gaussian", method.weights = "NW")
+
+#' summary(res6, time=365*1:6)
+#' plot(res6)
+
+#' res7 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
+#'               method = "breslow", z.value=60, conf = FALSE, data =colonIDM)
+
+#' summary(res7, time=365*1:6)
+#' plot(res7)
+
+#' res8 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
+#'               method = "breslow", conf.type='bootstrap', z.value=60, conf = TRUE, data =colonIDM)
+
+#' summary(res8, time=365*1:6)
+#' plot(res8)
+
+#' res9 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s =365,
+#'               method = "breslow", conf.type='bootstrap',  conf = TRUE, data =colonIDM)
+
+#' summary(res9, time=365*1:6)
+#' plot(res9, trans="02", ylim=c(0,0.5))
+
+#' # more than a covariate (Breslow Method)
+#' res10<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
+#'               method = "breslow", conf = TRUE, data =colonIDM)
+
+#' summary(res10,t=365*1:5)
+#' plot(res10)
+
+#' res11<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
+#'               method = "breslow", z.value=c(10,'Obs'), conf = TRUE, data =colonIDM)
+#' summary(res11,t=365*1:5)
+#' plot(res11)
+
+#' # more than a covariate for Non Linear Models (Breslow Method)
+#' res12<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
+#'               method = "breslow", conf = TRUE, data =colonIDM)
+
+#' summary(res12,t=365*1:5)
+#' plot(res12)
+
 #' # Confidence intervals
-#' #res6 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-#' #method = "AJ", conf = TRUE, n.boot = 5, conf.level = 0.95,
-#' #conf.type = "log", data = colonIDM)
-#'
-#' #summary(res6, time=365*1:7)
-#' #plot(res6)
+#' res13 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
+#'                method = "AJ", conf = TRUE, n.boot = 5, conf.level = 0.95,
+#'                conf.type = "log", data = colonIDM)
+
+#' summary(res13, time=365*1:7)
+#' plot(res13)
+
+#' res14<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
+#'               method = "breslow", conf.type='bootstrap', conf = TRUE, conf.level =0.95,  data =colonIDM)
+
+#' summary(res14,t=365*1:5)
+#' plot(res14)
+
+tprob<-function(formula,
+                s,
+                method = "AJ",
+                conf = FALSE,
+                conf.level = 0.95,
+                conf.type = "linear",
+                n.boot = 199,
+                data,
+                z.value,
+                bw = "dpik",
+                window = "gaussian",
+                method.weights = "NW",
+                cluster = FALSE,
+                ncores = NULL,
+                na.rm = TRUE) {
 
 
+  if (missing(formula))
+    stop("A formula argument is required")
+  if (missing(s))
+    stop("argument 's' is missing, with no default")
+
+  if (!(method %in% c("AJ", "LIDA", "LM", "PLM", "IPCW", "LMAJ", "PLMAJ", "PAJ", "breslow"))) {
+    stop(
+      "Possible methods are 'AJ', 'LIDA', 'LM', 'PLM', 'LMAJ', 'PAJ', 'PLMAJ', 'breslow' and 'IPCW'."
+    )
+  }
+
+  fmla <- eval(formula, parent.frame())
+  Terms <- terms(fmla)
+
+  mf <- Terms[[2]]
+  object <- with(data = data, eval(mf))
+
+  object <-
+    list(data = object)
+  obj_data <- object[[1]]
 
 
+  if (length(attr(terms(formula), "term.labels")) <= 1 & !('pspline' %in% substr(attr(terms(formula), "term.labels"),
+                                                                                 1,7))){
 
-tprob <-
-  function(formula,
-           s,
-           method = "AJ",
-           conf = FALSE,
-           conf.level = 0.95,
-           conf.type = "linear",
-           n.boot = 199,
-           data,
-           z.value,
-           bw = "dpik",
-           window = "gaussian",
-           method.weights = "NW",
-           cluster = FALSE,
-           ncores = NULL,
-           na.rm = TRUE) {
-    if (missing(formula))
-      stop("A formula argument is required")
-    if (missing(s))
-      stop("argument 's' is missing, with no default")
+    X <- Terms[[3]]
 
-    if (!(method %in% c("AJ", "LIDA", "LM", "PLM", "IPCW", "LMAJ", "PLMAJ", "PAJ"))) {
-      stop(
-        "Possible methods are 'AJ', 'LIDA', 'LM', 'PLM', 'LMAJ', 'PAJ', 'PLMAJ' and 'IPCW'."
-      )
-    }
-
-
-
-    # formula
-    fmla <- eval(formula, parent.frame())
-    Terms <- terms(fmla)
-    mf <- Terms[[2]]
-    object <- with(data = data, eval(mf))
-    if (!inherits(object, "survIDM"))
-      stop("Response must be a survIDM object")
-    object <-
-      list(data = object) # new since survCS doesn't return a list
-    obj_data <- object[[1]]
-
-    X <- Terms[[3]] #covariate
-    if (length(attr(terms(formula), "term.labels")) > 1)
-      stop("only one covariate is supported")
     Class <- class(with(data = data, eval(Terms[[3]])))
+
+
     if (Class != "numeric" & Class != "integer" & Class != "factor")
+
       stop("covariate must be one of the following classes 'numeric', 'integer' or 'factor'")
+
     xval <- with(data = data, eval(X))
+
     lencov <- length(xval)
+
     lencov2 <- length(attr(terms(formula), "term.labels"))
+
     if (lencov2 != 0)
       Xval <- with(data = data, eval(Terms[[3]]))
+
     if (lencov != dim(obj_data)[1] &
         lencov2 != 0)
       stop("length of the covariate does not match")
 
-    #lenc <- dim(object[[1]])[2]
-    #ntimes <- lenc%/%2
-    #if (length(x) != ntimes-1) {
-    #  cat("The number of consecutive event times in 'survCS' is", ntimes, ". The length of 'x' should be", ntimes-1,"\n")
-    #    stop("The length of 'x' is not supported for the selected 'object'")
-    # }
-
-
-
-
+    #--------------------------------------------------------------------------------------------------------
     # without covariates
     if (length(attr(terms(formula), "term.labels")) == 0) {
       #AJ, LIDA, LM, PLM without covariate
@@ -253,11 +291,9 @@ tprob <-
       if (!(method %in% c("AJ", "LIDA", "LM", "PLM", "LMAJ", "PAJ", "PLMAJ"))) {
         stop(
           "The model does not include covariates. Possible methods are 'AJ', 'LIDA', 'LM', 'PLM',
-          'LMAJ', 'PAJ' and 'PLMAJ'."
+            'LMAJ', 'PAJ' and 'PLMAJ'."
         )
       }
-
-
 
       # AJ method  (no bootstrap)
       if (method == "AJ") {
@@ -339,7 +375,6 @@ tprob <-
       }
 
 
-
       # LMAJ method
       if (method == "LMAJ") {
         res <- tpLMAJ(
@@ -381,51 +416,478 @@ tprob <-
       x.nlevels <- 1
       levels <- NULL
 
-      } # end methods without covariate
+    } # end methods without covariate
 
+    #--------------------------------------------------------------------------------------------------------
 
+    # numeric or integer covariate:
 
-
-
-
-
-    # numeric or integer covariate
     if (length(attr(terms(formula), "term.labels")) != 0 &
         (Class == "numeric" | Class == "integer")) {
-      #IPCW
 
-      if (method != "IPCW") {
-        warning("With continuous covariates, the used method is 'IPCW'.")
-      }
 
-      if (conf == TRUE & conf.type != "bootstrap") {
-        warning("This method only allows bootstrap confidence intervals.")
+      if (method != c("IPCW") & method != c("breslow")) {
+        warning("With continuous covariates, the used method is 'IPCW' or 'breslow.")
       }
 
 
       obj1 <- object
+
       obj1[[1]] <- cbind(obj1[[1]], xval)
+
       obj1[[1]] <- na.omit(obj1[[1]])
+
       colnames(obj1[[1]]) <-
+
         c(colnames(object[[1]]), attr(terms(formula), "term.labels"))
 
-      res <- tpIPCW(
+
+      if (method == c("IPCW")) {
+
+
+        if (conf == TRUE & conf.type != "bootstrap") {
+          warning("This method only allows bootstrap confidence intervals.")
+        }
+
+
+        res <- tpIPCW(
+          object = obj1,
+          s = s,
+          z.name = attr(terms(formula), "term.labels"),
+          z.value = z.value,
+          bw = bw,
+          window = window,
+          method.weights = method.weights,
+          conf = conf,
+          n.boot = n.boot,
+          conf.level = conf.level,
+          cluster = cluster,
+          ncores = ncores
+        )
+
+        class(res)
+
+        class(res) <- c("tpIPCW", "survIDM")
+
+        callp <-
+          paste("pij(s=",
+                s,
+                ",t|",
+                attr(terms(formula), "term.labels"),
+                "=",
+                z.value,
+                ")",
+                sep = "")
+
+        #> callp
+        #[1] "pij(s=365,t|age=48)"
+
+        x.nlevels <- 1
+
+        levels <- NULL
+
+      } #fim method IPCW
+
+
+      if (method == c("breslow")) {
+
+
+        #if (!exists("z.value"))
+
+        if (missing(z.value))
+
+          z.value<-NULL
+
+        if (is.null(z.value))
+
+          z.value<-mean(xval)
+
+
+        if (missing(conf.type)){
+          conf.type<-'log'
+
+        }
+
+        if(conf.type == "linear"){
+
+          conf.type<-'plain'
+        }
+
+
+        res <- tpBreslow(
+
+          object = obj1,
+          s = s,
+          z.name = attr(terms(formula), "term.labels"),
+          z.value = z.value,
+          conf = conf,
+          conf.type=conf.type,
+          conf.level=conf.level,
+          parte2=''
+
+        )
+
+
+        class(res) <- c("tpBreslow", "survIDM")
+
+        callp <-
+          paste("pij(s=",
+                s,
+                ",t|",
+                attr(terms(formula), "term.labels"),
+                "=",
+                z.value,
+                ")",
+                sep = "")
+
+        # in order to have the same output
+        x.nlevels <- 1
+        levels <- NULL
+
+      }
+
+
+    }
+
+
+    #-----------------------------------------------------------------------------------------
+
+    # factor covariate
+    if (length(attr(terms(formula), "term.labels")) > 0 & Class == "factor") {
+      #LM/PLMD/KMW by levels of the covariate
+
+
+      if (!(method %in% c("AJ", "LIDA", "LM", "PLM", "LMAJ", "PAJ", "PLMAJ","breslow"))) {
+
+        stop(
+          "A factor is included in the model. Possible methods are 'AJ', 'LIDA', 'LM', 'PLM',
+            'LMAJ', 'PAJ', 'PLMAJ' and 'breslow'."
+        )
+      }
+
+
+      if (method %in% c("AJ", "LIDA", "LM", "PLM", "LMAJ", "PAJ", "PLMAJ")) {
+
+        x.nlevels <- nlevels(with(data = data, eval(formula[[3]])))
+        levels <- levels(with(data = data, eval(formula[[3]])))
+
+        estim <- list()
+        ci <- list()
+
+        for (k in 1:x.nlevels) {
+
+          v.level <- levels(with(data = data, eval(formula[[3]])))[k]
+          p <- which(Xval == v.level)
+          obj <- object
+          obj$data <- object$data[p, ]
+
+          #------------------------------
+
+          # AJ method  (no bootstrap)
+
+          if (method == "AJ") {
+            res <- tpAJ(
+              object = obj,
+              s = s,
+              conf = conf,
+              conf.level = conf.level,
+              conf.type = conf.type
+            )
+            class(res) <- c("AJ", "survIDM")
+
+            add2t <- s
+            add2est <- c(s, 1, 0, 0, 1, 0)
+            add2CI <- c(1, 1, 0, 0, 0, 0, 1, 1, 0, 0)
+            res$t <- c(add2t, res$t)
+            res$est <- rbind(add2est, res$est)
+            res$CI <- rbind(add2CI, res$CI)
+
+            if (s == 0) {
+              res$est[, 5:6] <- NA
+              res$CI[, 7:10] <- NA
+            }
+
+          }
+
+
+          # LIDA method
+          if (method == "LIDA") {
+            if (conf == TRUE & conf.type != "bootstrap") {
+              warning("This method only allows bootstrap confidence intervals.")
+            }
+
+            res <- tpLIDA(
+              object = obj,
+              s = s,
+              conf = conf,
+              conf.level = conf.level,
+              n.boot = n.boot,
+              cluster = cluster,
+              ncores = ncores
+            )
+            class(res) <- c("LIDA", "survIDM")
+          }
+
+
+          # LM method
+          if (method == "LM") {
+            res <- tpLM(
+              object = obj,
+              s = s,
+              conf = conf,
+              conf.level = conf.level,
+              conf.type = conf.type,
+              n.boot = n.boot,
+              cluster = cluster,
+              ncores = ncores
+            )
+            class(res) <- c("LM", "survIDM")
+          }
+
+
+          # PLM method
+          if (method == "PLM") {
+            if (conf == TRUE & conf.type != "bootstrap") {
+              warning("This method only allows bootstrap confidence intervals.")
+            }
+
+
+            res <- tpPLM(
+              object = obj,
+              s = s,
+              conf = conf,
+              conf.level = conf.level,
+              n.boot = n.boot,
+              cluster = cluster,
+              ncores = ncores
+            )
+            class(res) <- c("PLM", "survIDM")
+          }
+
+          # LMAJ method
+
+          if (method == "LMAJ") {
+            res <- tpLMAJ(
+              object = obj,
+              s = s,
+              conf = conf,
+              conf.level = conf.level
+            )
+            class(res) <- c("LMAJ", "survIDM")
+
+          }
+
+
+          # PAJ method
+          if (method == "PAJ") {
+            res <- tpPAJ(
+              object = obj,
+              s = s,
+              conf = conf,
+              conf.level = conf.level
+            )
+            class(res) <- c("PAJ", "survIDM")
+          }
+
+
+          # PLMAJ method
+          if (method == "PLMAJ") {
+            res <- tpPLMAJ(
+              object = obj,
+              s = s,
+              conf = conf,
+              conf.level = conf.level
+            )
+            class(res) <- c("PLMAJ", "survIDM")
+          }
+
+
+          estim[[paste(levels[k])]] <- res$est
+          ci[[paste(levels[k])]] <- res$CI
+
+        } # ends the level's loop
+
+        res$est <- estim
+
+        res$CI<-ci
+
+
+      }
+
+      if (method == c("breslow")) {
+
+        obj1 <- object
+
+        obj1[[1]] <- cbind(obj1[[1]], xval)
+
+        obj1[[1]] <- na.omit(obj1[[1]])
+
+        colnames(obj1[[1]]) <-
+
+          c(colnames(object[[1]]), attr(terms(formula), "term.labels"))
+
+        estim <- list()
+
+        ci <- list()
+
+        if (missing(conf.type)){
+          conf.type<-'log'
+        }
+
+
+
+        #if (!exists("z.value"))
+
+        if (missing(z.value))
+
+          z.value<-NULL
+
+        if (is.null(z.value))
+
+          z.value<-levels(with(data = data, eval(formula[[3]])))
+
+        if(conf.type == "linear"){
+
+          conf.type<-'plain'
+        }
+
+        for (k in 1:length(z.value)) {
+
+          #k<-1
+
+          res <- tpBreslow(
+
+            object = obj1,
+            s = s,
+            z.name = attr(terms(formula), "term.labels"),
+            z.value = z.value[k],
+            conf = conf,
+            conf.type=conf.type,
+            conf.level=conf.level,
+            parte2=''
+
+          )
+
+
+          class(res) <- c("tpBreslow", "survIDM")
+
+          estim[[paste(z.value[k])]] <- res$est
+
+          ci[[paste(z.value[k])]] <- res$CI
+
+        } # ends the level's loop
+
+        res$est <- estim
+
+        res$CI <- ci
+
+
+
+        if(length(z.value)==1){
+          res$est<-as.data.frame(res$est)
+          res$CI<-as.data.frame(res$CI)
+
+        }
+
+        callp <-
+          paste("pij(s=",
+                s,
+                ",t|",
+                attr(terms(formula), "term.labels"),
+                "=",
+                z.value,
+                ")",
+                sep = "")
+
+        # in order to have the same output
+        #x.nlevels <- length(levels(xval))
+        x.nlevels <- length(z.value)
+        levels <- levels(xval)
+        #x.nlevels <- 1
+        #levels <- NULL
+      }
+
+
+    } # end method with factor covariate
+
+
+  }else{
+
+    cov<-attr(terms(formula), "term.labels")
+
+    covF<-rep(NA, length(cov))
+
+    obj1 <- object
+
+    for(i in 1:length(cov)){
+
+      if(substr(cov[i],1,6)=='factor'){
+        covF[i]<-substr(cov[i],8,nchar(cov[i])-1)
+      }else
+
+        if(substr(cov[i],1,7)=='pspline'){
+          covF[i]<-substr(cov[i],9,nchar(cov[i])-1)
+        }else{
+
+          covF[i]<-cov[i]
+        }
+
+      xval <- with(data = data,data[,which(colnames(data)==covF[i])])
+
+      obj1[[1]] <- cbind(obj1[[1]], xval)
+
+    }
+
+    obj1[[1]] <- na.omit(obj1[[1]])
+
+    colnames(obj1[[1]])[5:(5+length(covF)-1)] <-covF
+
+    #if (!exists("z.value"))
+
+    if (missing(z.value))
+
+      z.value<-NULL
+
+
+    if (method == c("breslow")) {
+
+      if (missing(conf.type)){
+
+        conf.type<-'log'
+
+      }
+
+      if(conf.type == "linear"){
+
+        conf.type<-'plain'
+      }
+
+      res <- tpBreslow(
+
         object = obj1,
         s = s,
-        z.name = attr(terms(formula), "term.labels"),
+        z.name =colnames(obj1[[1]])[5:(5+length(covF)-1)],
         z.value = z.value,
-        bw = bw,
-        window = window,
-        method.weights = method.weights,
         conf = conf,
-        n.boot = n.boot,
-        conf.level = conf.level,
-        cluster = cluster,
-        ncores = ncores
+        conf.type=conf.type,
+        conf.level=conf.level,
+        parte2=attr(terms(formula), "term.labels")
+
       )
 
+      #dim(res$est)
+      #table(res$est$t %in% times2)
+      #times1 %in%  res$est$t
 
-      class(res) <- c("tpIPCW", "survIDM")
+      #res$est[1:20,]
+      #res$CI[1:20,1:4]
+      #res$est[(length(times2)-10):length(times2),]
+      #res$CI[(length(times2)-10):length(times2),]
+
+      class(res) <- c("tpBreslow", "survIDM")
+
+      #summary(res,times=c(365*2:6,2826))
+
       callp <-
         paste("pij(s=",
               s,
@@ -440,200 +902,21 @@ tprob <-
       x.nlevels <- 1
       levels <- NULL
 
+    }
 
-    } # end method with numeric or integer covariate
+  }#end more than a covariate
 
+  #callp <- paste("P(T>y|", text3, ")", sep = "")
+  callp <- paste("pij(s=", s, ",t)", sep = "")
+  res$callp <- callp
+  res$Nlevels <- x.nlevels
+  res$levels <- levels
+  res$formula <- formula
+  res$call <- match.call()
+  options(warn=-1)
+  suppressWarnings(res)
+  return(invisible(res))
 
-
-
-
-
-
-    # factor covariate
-    if (length(attr(terms(formula), "term.labels")) > 0 &
-        Class == "factor") {
-      #LM/PLMD/KMW by levels of the covariate
-
-
-      if (!(method %in% c("AJ", "LIDA", "LM", "PLM", "LMAJ", "PAJ", "PLMAJ"))) {
-        stop(
-          "A factor is included in the model. Possible methods are 'AJ', 'LIDA', 'LM', 'PLM',
-          'LMAJ', 'PAJ' and 'PLMAJ'."
-        )
-      }
+}
 
 
-      x.nlevels <- nlevels(with(data = data, eval(formula[[3]])))
-      levels <- levels(with(data = data, eval(formula[[3]])))
-
-      estim <- list()
-      ci <- list()
-
-
-      for (k in 1:x.nlevels) {
-        v.level <- levels(with(data = data, eval(formula[[3]])))[k]
-        p <- which(Xval == v.level)
-        obj <- object
-        obj$data <- object$data[p, ]
-
-
-        #------------------------------
-
-        # AJ method  (no bootstrap)
-        if (method == "AJ") {
-          res <- tpAJ(
-            object = obj,
-            s = s,
-            conf = conf,
-            conf.level = conf.level,
-            conf.type = conf.type
-          )
-          class(res) <- c("AJ", "survIDM")
-
-          add2t <- s
-          add2est <- c(s, 1, 0, 0, 1, 0)
-          add2CI <- c(1, 1, 0, 0, 0, 0, 1, 1, 0, 0)
-          res$t <- c(add2t, res$t)
-          res$est <- rbind(add2est, res$est)
-          res$CI <- rbind(add2CI, res$CI)
-
-          if (s == 0) {
-            res$est[, 5:6] <- NA
-            res$CI[, 7:10] <- NA
-          }
-
-        }
-
-
-        # LIDA method
-        if (method == "LIDA") {
-          if (conf == TRUE & conf.type != "bootstrap") {
-            warning("This method only allows bootstrap confidence intervals.")
-          }
-
-          res <- tpLIDA(
-            object = obj,
-            s = s,
-            conf = conf,
-            conf.level = conf.level,
-            n.boot = n.boot,
-            cluster = cluster,
-            ncores = ncores
-          )
-          class(res) <- c("LIDA", "survIDM")
-        }
-
-
-        # LM method
-        if (method == "LM") {
-          res <- tpLM(
-            object = obj,
-            s = s,
-            conf = conf,
-            conf.level = conf.level,
-            conf.type = conf.type,
-            n.boot = n.boot,
-            cluster = cluster,
-            ncores = ncores
-          )
-          class(res) <- c("LM", "survIDM")
-        }
-
-
-        # PLM method
-        if (method == "PLM") {
-          if (conf == TRUE & conf.type != "bootstrap") {
-            warning("This method only allows bootstrap confidence intervals.")
-          }
-
-
-          res <- tpPLM(
-            object = obj,
-            s = s,
-            conf = conf,
-            conf.level = conf.level,
-            n.boot = n.boot,
-            cluster = cluster,
-            ncores = ncores
-          )
-          class(res) <- c("PLM", "survIDM")
-        }
-
-
-
-        # LMAJ method
-
-        if (method == "LMAJ") {
-          res <- tpLMAJ(
-            object = obj,
-            s = s,
-            conf = conf,
-            conf.level = conf.level
-          )
-          class(res) <- c("LMAJ", "survIDM")
-
-        }
-
-
-        # PAJ method
-        if (method == "PAJ") {
-          res <- tpPAJ(
-            object = obj,
-            s = s,
-            conf = conf,
-            conf.level = conf.level
-          )
-          class(res) <- c("PAJ", "survIDM")
-        }
-
-
-        # PLMAJ method
-        if (method == "PLMAJ") {
-          res <- tpPLMAJ(
-            object = obj,
-            s = s,
-            conf = conf,
-            conf.level = conf.level
-          )
-          class(res) <- c("PLMAJ", "survIDM")
-        }
-
-
-        #------------------------------
-
-        # if (conf == TRUE) {
-        #   resu <- data.frame(cbind(res$y, res$estimate, res$LCI, res$UCI))
-        #   names(resu) <- c("y", "estimate", paste("lower ",conf.level*100,"% CI", sep=""), paste("upper ",conf.level*100,"% CI", sep=""))
-        # }
-        #
-        # if (conf == FALSE) {
-        #   resu <- data.frame(cbind(res$y, res$estimate))
-        #   names(resu) <- c("y","estimate")
-        # }
-
-        estim[[paste(levels[k])]] <- res$est
-        ci[[paste(levels[k])]] <- res$CI
-
-      } # ends the level's loop
-      res$est <- estim
-      res$CI <- ci
-
-      } # end method with factor covariate
-
-
-
-
-
-
-    #callp <- paste("P(T>y|", text3, ")", sep = "")
-    callp <- paste("pij(s=", s, ",t)", sep = "")
-    res$callp <- callp
-    res$Nlevels <- x.nlevels
-    res$levels <- levels
-    res$formula <- formula
-    res$call <- match.call()
-
-    return(invisible(res))
-
-
-  }

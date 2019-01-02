@@ -21,7 +21,7 @@ E. Kaplan and P. Meier. Nonparametric estimation from incomplete observations. J
 American Statistical Association, 53:457-481, 1958.
 }
 
-\author{Luis Meira-Machado and Marta Sestelo}
+\author{Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.}
 
 
 \seealso{\code{\link{PKM}}}

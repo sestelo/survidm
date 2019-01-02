@@ -44,7 +44,7 @@ xlab = "Time (years)", ylab = NULL, ylim = NULL, xlim = NULL, ...)
 
 \value{No value is returned.}
 
-\author{Luis Meira-Machado and Marta Sestelo}
+\author{Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.}
 
 
 \examples{

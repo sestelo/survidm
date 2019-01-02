@@ -4,7 +4,7 @@ tpPLM <-
   {
     if (missing(object))
       stop("Argument 'object' is missing, with no default")
-   # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
+    # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
     if (missing(s))
       s <- 0
 
@@ -19,9 +19,9 @@ tpPLM <-
     t3 <- t3[t3 >= s & t3 <= tt]
     t <- sort(unique(t3))
 
-   # t <- c(s, t1, t2)
-  #  t <- t[t >= s]
-   # t <- sort(unique(t))
+    # t <- c(s, t1, t2)
+    #  t <- t[t >= s]
+    # t <- sort(unique(t))
 
     if (any(t < 0)) stop("The values of 't' must be positive")
     if (s > max(object[[1]]$time1)) stop("The value of 's' is too large")

@@ -36,7 +36,7 @@ hazards regression model in each transition of the Illness-Death Model.}
   summary(cmm3)
 }
 
-\author{Luis Meira-Machado and Marta Sestelo.}
+\author{Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.}
 
 
 

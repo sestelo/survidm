@@ -12,7 +12,7 @@ Illness-Death Model. Several auxiliary functions are also provided which can be 
 
 
 \author{
-Luis Meira-Machado and Marta Sestelo.
+Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 
 Maintainer: Marta Sestelo, sestelo@uvigo.es
 }

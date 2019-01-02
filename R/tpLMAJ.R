@@ -5,7 +5,7 @@ tpLMAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log"
   if (missing(object))
     stop("Argument 'object' is missing, with no default")
 
- # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
+  # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
   if (missing(s))
     s <- 0
   data <- object[[1]]
@@ -17,26 +17,51 @@ tpLMAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log"
   dataS1 <- with(data1, survIDM(time1, event1, Stime, event))
   dataS2 <- with(data2, survIDM(time1, event1, Stime, event))
 
+
   resS1 <- tpAJ.aux(object=dataS1, s = 0, conf = conf, conf.level = conf.level,
                     conf.type = conf.type)
   resS2 <- tpAJ.aux(object=dataS2, s = s+0.000001, conf = conf,
                     conf.level = conf.level, conf.type = conf.type)
 
-
-
   if(conf == FALSE) {
     resS.probs <- resS2$probs
     resS.probs[1,] <- resS1$probs
     resS.all.probs <- joindata(resS1, resS2)
-    }
+
+    #class(resS.all.probs)
+    #resS.all.probs[1:3,1,1:5]
+    #dim(resS.all.probs[1:3,,1:5])
+
+    resS.all.probs <-rbind(c(1,0,0,NA,NA),resS.all.probs[,1,1:5])
+
+  }
 
   if(conf == TRUE) {
     resS.probs <- resS2$probs
     resS.probs[1:3,] <- resS1$probs
     resS.all.probs <- joindata(resS1, resS2, conf=TRUE)
-    }
 
-  newtimes <- sort(unique(c(resS1$times, resS2$times)))
+    class(resS.all.probs)
+
+    head(resS.all.probs[,1:3,1])
+
+    resS.all.probs_f<-array(NA, c((nrow(resS.all.probs[,2:3,1])+1),3,5))
+
+    resS.all.probs_f[,1,1]<-c(1,resS.all.probs[,1,1])
+    resS.all.probs_f[,1,2]<-c(0,resS.all.probs[,1,2])
+    resS.all.probs_f[,1,3]<-c(0,resS.all.probs[,1,3])
+    resS.all.probs_f[,1,4]<-c(1,resS.all.probs[,1,4])
+    resS.all.probs_f[,1,5]<-c(0,resS.all.probs[,1,5])
+
+    resS.all.probs_f[,2:3,1]<-rbind(c(1,1),resS.all.probs[,2:3,1])
+    resS.all.probs_f[,2:3,2]<-rbind(c(0,0),resS.all.probs[,2:3,2])
+    resS.all.probs_f[,2:3,3]<-rbind(c(0,0),resS.all.probs[,2:3,3])
+    resS.all.probs_f[,2:3,4]<-rbind(c(1,1),resS.all.probs[,2:3,4])
+    resS.all.probs_f[,2:3,5]<-rbind(c(0,0),resS.all.probs[,2:3,5])
+    resS.all.prob<-resS.all.probs_f
+  }
+
+  newtimes <- c(s,sort(unique(c(resS1$times, resS2$times))))
 
   if(conf == TRUE) {
 
@@ -47,7 +72,7 @@ tpLMAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log"
       conf.type = conf.type,
       # event times:
       times = newtimes,
-      probs = resS.probs, all.probs = resS.all.probs,
+      probs = resS.probs, all.probs = resS.all.probs_f,
       # posible transitions:
       p.trans = resS1$p.trans, conf = conf)
 
@@ -64,12 +89,8 @@ tpLMAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log"
                       "p12.li.ci", "p12.ls.ci")
 
 
-
-
     res <- list(est = aux,  CI = auxci, conf.level = conf.level,
                 s = res$s, t = res$times, conf = conf, conf.type = res$conf.type)
-
-
 
 
   } #end if
@@ -97,7 +118,7 @@ tpLMAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log"
 
   }
 
- # res$call <- match.call()   #Change this?
+  # res$call <- match.call()   #Change this?
   class(res) = "tpLMAJ"
   res
 }
@@ -130,8 +151,8 @@ tpAJ.aux <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "lo
   if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
   if (missing(s))
     s <- 0
-  #	data <- object[[1]]
-  data <- object
+  #data <- object[[1]]  #correr um a um
+  data <- object  #correr tudo de uma vez
   t <- max(data$Stime)
   n <- length(data[, 1])
 
@@ -161,14 +182,14 @@ tpAJ.aux <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "lo
   i.state <- factor(i.state, levels = states, labels = states)
   initial.probs <- prop.table(table(i.state))
 
-  # prepare data set to compute AJ method:
+  # prepare data set to compute AJ method: (carregadas em tpAJ)
   ds.prep.AJ <- prepare.aj.data(data, states, tr.states)
 
   # reduces to event times:
   ds.event.AJ <- prepare.aj.event(ds.prep.AJ$dNs, ds.prep.AJ$Ys, ds.prep.AJ$sum_dNs, states, tr.states)
   event.times <- as.numeric(as.character(rownames(ds.event.AJ$dNs)))
 
-  # Estimates for the AJ estimator:
+  # Estimates for the AJ estimator:  (carregadas em tpAJ)
   AJ.est <- fun.AJ(ns,states, ds.event.AJ$dNs, ds.event.AJ$Ys, ds.event.AJ$sum_dNs, s, t,  event.times, initial.probs)
 
   if(conf == TRUE) {
@@ -284,5 +305,3 @@ joindata <- function(x, y, conf = FALSE)
   }
   resdata
 }
-
-####

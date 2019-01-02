@@ -37,5 +37,5 @@ order: \code{time1}, \code{event1}, \code{Stime} and \code{event}, where
 with(colonIDM, survIDM(time1, event1, Stime, event))
 }
 \author{
-Luis Meira-Machado and Marta Sestelo.
+Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 }

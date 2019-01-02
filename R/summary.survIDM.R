@@ -1,9 +1,9 @@
 
-
-
-
 summary.survIDM <- function(object, times = NULL, ...){
 
+  #object<-res #vem de tprob
+  #times<-c(2*365,3*365,4*365)
+  #object$conf<- FALSE
 
   if (inherits(object, "survIDM")) {
 
@@ -11,12 +11,8 @@ summary.survIDM <- function(object, times = NULL, ...){
       summary(object)
     }else{
 
-
-
-
-
-
-      # para sojourn
+      #---------------------------------------------------------
+      #1      # para sojourn
       #------------------
       if (class(object)[1] %in%  c("soj", "sojIPCW")) {
 
@@ -87,7 +83,6 @@ summary.survIDM <- function(object, times = NULL, ...){
               res$UCI[[v.level]] <- uci
               cat("\n")
             }
-            #--
 
           }
         }else{ # starts with no levels
@@ -104,9 +99,6 @@ summary.survIDM <- function(object, times = NULL, ...){
           if (any(is.na(ii))) {
             warning(paste("'times' must be between",min(object$t), "and", max(object$t)))
           }
-
-
-
 
 
           cat("\n")
@@ -126,6 +118,9 @@ summary.survIDM <- function(object, times = NULL, ...){
               names(res$est) <- c("t", "sojourn")
 
             }
+
+
+
             print(res$est, row.names = FALSE)
           }else{
 
@@ -172,16 +167,8 @@ summary.survIDM <- function(object, times = NULL, ...){
       } # ends sojourn
 
 
-
-
-
-
-
-
-
-
-
-      # para CIF
+      #---------------------------------------------------------
+      #2    # para CIF
       #------------------
       if (class(object)[1] %in%  c("CIF", "cifIPCW")) {
 
@@ -296,9 +283,6 @@ summary.survIDM <- function(object, times = NULL, ...){
           }
 
 
-
-
-
           cat("\n")
 
           if (object$s == 0) {
@@ -386,11 +370,13 @@ summary.survIDM <- function(object, times = NULL, ...){
       #----------------------
 
 
+      #---------------------------------------------------------
+      #3
 
-      # para tprob
+      # tprob
       #------------------
       if (class(object)[1] %in% c("AJ", "LIDA", "LM", "PLM", "tpIPCW",
-                                  "LMAJ", "PLMAJ", "PAJ")) {
+                                  "LMAJ", "PLMAJ", "PAJ","tpBreslow")) {
 
         if (is.null(times)) { #the whole of the times
 
@@ -411,6 +397,9 @@ summary.survIDM <- function(object, times = NULL, ...){
                 lci <- data.frame(t = object$est[[v.level]][,1], object$CI[[v.level]][,c(1,3,5,7,9)])
                 names(lci) <- c("t", "00", "01", "02", "11", "12")
                 uci <- data.frame(t = object$est[[v.level]][,1], object$CI[[v.level]][,c(2,4,6,8,10)])
+
+                lci[,-1][lci[,-1]<0]<-0
+                uci[,-1][uci[,-1]>1]<-1
                 names(uci) <- c("t", "00", "01", "02", "11", "12")
                 cat("\n")
                 cat((1-object$conf.level)/2*100,"%", "\n", sep="")
@@ -432,9 +421,16 @@ summary.survIDM <- function(object, times = NULL, ...){
               names(res$est) <- c("t", "00", "01", "02", "11", "12")
               print(res$est, row.names = FALSE)
             }else{
+
+
               res <- list(est = object$est,
                           LCI = data.frame(t = object$t, object$CI[,c(1,3,5,7,9)]),
                           UCI = data.frame(t = object$t, object$CI[,c(2,4,6,8,10)]))
+
+
+              res$LCI[,-1][res$LCI[,-1]<0]<-0
+              res$UCI[,-1][res$UCI[,-1]>1]<-1
+
               names(res$est) <- c("t", "00", "01", "02", "11", "12")
               names(res$LCI) <- c("t", "00", "01", "02", "11", "12")
               names(res$UCI) <- c("t", "00", "01", "02", "11", "12")
@@ -442,6 +438,7 @@ summary.survIDM <- function(object, times = NULL, ...){
               cat("\n")
               cat((1-object$conf.level)/2*100,"%", "\n", sep="")
               cat("\n")
+
               print(res$LCI, row.names = FALSE)
               cat("\n")
               cat((1-(1-object$conf.level)/2)*100,"%", "\n", sep="")
@@ -452,13 +449,23 @@ summary.survIDM <- function(object, times = NULL, ...){
 
           }
         }else{ #times no null
-          if (object$Nlevels > 1) {
+          if (object$Nlevels > 1) {  #rx varia de 1 a 3
 
             # to control the times argument
             # -----------------------------
             pp <- list()
+
+            #dim(object$est)
+
             for (i in 1:object$Nlevels) {
-              pp[[i]] <- sapply(times, function(x)ifelse(x >= min(object$est[[i]][,1]) & x <= max(object$est[[i]][,1]), 1, NA))
+              #i<-1
+              #length(object$est[[i]])
+              #[,1][,1]
+
+              object$est
+              class(object$est[[i]])
+              pp[[i]] <- sapply(times, function(x)
+                ifelse(x >= min(object$est[[i]]) & x <= max(object$est[[i]]), 1, NA))
             }
 
             if (all(is.na(unlist(pp)))) {
@@ -495,6 +502,10 @@ summary.survIDM <- function(object, times = NULL, ...){
                 }else{
                   lci <- data.frame(t = times, object$CI[[v.level]][ii, c(1,3,5,7,9)])
                   uci <- data.frame(t = times, object$CI[[v.level]][ii, c(2,4,6,8,10)])
+
+                  lci[,-1][lci[,-1]<0]<-0
+                  uci[,-1][uci[,-1]>1]<-1
+
                 }
                 names(lci) <- c("t", "00", "01", "02", "11", "12")
                 names(uci) <- c("t", "00", "01", "02", "11", "12")
@@ -514,6 +525,9 @@ summary.survIDM <- function(object, times = NULL, ...){
 
             }
           }else{ # starts with no levels
+
+            #error due to $Obs
+
             ii <- sapply(times, function(x)ifelse( x >= min(object$est[,1]) & x <= max(object$est[,1]),
                                                    which.max(object$est[,1][object$est[,1] <= x]), NA))
             if (all(is.na(ii))) {
@@ -537,6 +551,10 @@ summary.survIDM <- function(object, times = NULL, ...){
               res <- list(est = data.frame(times, object$est[ii, -1]),
                           LCI = data.frame(t = times, object$CI[ii, c(1,3,5,7,9)]),
                           UCI = data.frame(t = times, object$CI[ii, c(2,4,6,8,10)]))
+
+              res$LCI[,-1][res$LCI[,-1]<0]<-0
+              res$UCI[,-1][res$UCI[,-1]>1]<-1
+
               names(res$est) <- c("t", "00", "01", "02", "11", "12")
               names(res$LCI) <- c("t", "00", "01", "02", "11", "12")
               names(res$UCI) <- c("t", "00", "01", "02", "11", "12")
@@ -552,12 +570,11 @@ summary.survIDM <- function(object, times = NULL, ...){
               cat("\n")
             }
 
-
-
-
             #res <- data.frame(times, object$est[ii, -1])
             #names(res) <- names(object$est)
             #print(res, row.names = FALSE)
+
+
           }
         }
       }
@@ -567,12 +584,6 @@ summary.survIDM <- function(object, times = NULL, ...){
       class(res) <- c("summary.surv")
       return(invisible(res))
     }
-
-
-
-
-
-
 
   }else{
     stop("Argument x must be either survIDM object.")

@@ -17,7 +17,7 @@ LLW(x, kernel = "gaussian", bw, t1)
 \details{Possible options for argument window are "gaussian", "epanechnikov", "tricube", "boxcar", "triangular", "quartic" or "cosine". }
 \value{A vector with local linear weights. }
 
-\author{Luis Meira-Machado and Marta Sestelo}
+\author{Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.}
 
 
 \seealso{\code{\link{NWW}}}

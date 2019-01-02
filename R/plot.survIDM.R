@@ -3,69 +3,100 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distributi
                          confcol = 1:6, lty = 1, conflty = 2, xlab = "Time (years)",
                          ylab = NULL, ylim = NULL, xlim = NULL, ...) {
 
+
+  #x<-mk
   object <- x
 
-  if (inherits(x, "survIDM")) {
+  par(mfrow=c(1,1))
+
+  if(inherits(x, "survIDM") & class(x)[1] =='markov'){
+
+    #object<-mk
+    #class(object)[1] #markov
+
+    est <- object$TPestimates
+    if(missing(xlab))  xlab <- paste(object$nm.method, "estimator")
+    if(missing(ylab))  ylab <- paste("AJ estimator")
+
+    layout(matrix(c(1, 2, 3, 4, 4, 4), ncol = 3, nrow = 2, byrow = TRUE))
+    #0->1
+    plot(est$aj01, est$nm01, main= "p01", xlab=xlab, ylab=ylab)
+    abline(0,1, col = 2)
+    #0->2
+    plot(est$aj02, est$nm02, main= "p02", xlab=xlab, ylab=ylab)
+    abline(0,1, col = 2)
+    #1->2
+    plot(est$aj12, est$nm12, main= "p12", xlab=xlab, ylab=ylab)
+    abline(0,1, col = 2)
+    #1->2 NM with CI and AJ
+    y <- cbind(est$nm12, est$nm12LCI, est$nm12UCI, est$aj12)
+    x <- est$times
+    matplot(x, y , col = c(1, 1, 1, 2), xlab = "Time",
+            ylab = "P12", lty = c(1, 2, 2, 1), type="s")
+
+  }else{
+
+    if (inherits(x, "survIDM")) {
 
 
-    if (class(x)[1] == "data.frame") {
-      plot(x)
-    }
+      if (class(x)[1] == "data.frame") {
 
-
-    if (!class(object)[1] %in% c("AJ", "LIDA", "LM", "PLM", "tpIPCW", "CIF",
-                                 "cifIPCW", "soj", "sojIPCW", "LMAJ",
-                                 "PLMAJ", "PAJ")) {
-      stop("The argumment 'Object' must be of one of the following classes
-           'AJ', 'LIDA', 'LM', 'PLM', 'LMAJ', 'PLMAJ', 'PAJ', 'tpIPCW',
-           'CIF', 'cifIPCW', 'soj' or 'sojIPCW'")
-    }
-
-
-
-    # for all
-    #-----------------------------------------------
-
-    object <- x
-
-    if (object$Nlevels != length(col))
-      col <- rep(col, times = object$Nlevels)
-    if (object$Nlevels != length(confcol))
-      confcol <- rep(confcol, times = object$Nlevels)
-
-
-    if (is.null(type))
-      type <- "s"
-    if (is.null(conftype))
-      conftype <- "s"
-
-
-    if (is.null(conf)) {
-      ci <- object$conf
-    } else {
-      if (conf == TRUE & object$conf == FALSE) {
-        stop("The surv object does not contain confidence intervals")
-      }
-      if (conf == TRUE & object$conf == TRUE)
-        ci <- TRUE
-      if (conf == FALSE)
-        ci <- FALSE
+        plot(x)
       }
 
 
-
-    if (is.null(ylim)) ylim <- c(0, 1)
-
-    ob <- object$est
-    obCI <- object$CI
-
-    if (is.null(xlim) & object$Nlevels > 1) {
-      xlim <- c(min(sapply(ob, function(x) min(x[, 1]), simplify = TRUE)),
-                max(sapply(ob, function(x) max(x[, 1]), simplify = TRUE)))
-    }
+      if (!class(object)[1] %in% c("AJ", "LIDA", "LM", "PLM", "tpIPCW", "CIF",
+                                   "cifIPCW", "soj", "sojIPCW", "LMAJ",
+                                   "PLMAJ", "PAJ",'tpBreslow','markov')) {
+        stop("The argumment 'Object' must be of one of the following classes
+              'AJ', 'LIDA', 'LM', 'PLM', 'LMAJ', 'PLMAJ', 'PAJ', 'tpIPCW',
+              'CIF', 'cifIPCW', 'soj', 'sojIPCW','tpBreslow' or 'markov'")
+      }
 
 
-    #---------------------------
+      # for all
+      #-----------------------------------------------
+
+      object <- x
+
+      if (object$Nlevels != length(col))
+        col <- rep(col, times = object$Nlevels)
+      if (object$Nlevels != length(confcol))
+        confcol <- rep(confcol, times = object$Nlevels)
+
+
+      if (is.null(type))
+        type <- "s"
+      if (is.null(conftype))
+        conftype <- "s"
+
+
+      if (is.null(conf)) {
+        ci <- object$conf
+      } else {
+        if (conf == TRUE & object$conf == FALSE) {
+          stop("The surv object does not contain confidence intervals")
+        }
+        if (conf == TRUE & object$conf == TRUE)
+          ci <- TRUE
+        if (conf == FALSE)
+          ci <- FALSE
+      }
+
+
+
+      if (is.null(ylim)) ylim <- c(0, 1)
+
+      ob <- object$est
+      obCI <- object$CI
+
+      if (is.null(xlim) & object$Nlevels > 1) {
+        xlim <- c(min(sapply(ob, function(x) min(x[, 1]), simplify = TRUE)),
+                  max(sapply(ob, function(x) max(x[, 1]), simplify = TRUE)))
+      }
+
+
+      #---------------------------
 
 
 
@@ -76,7 +107,7 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distributi
       #----------------------
 
       if (class(object)[1] %in% c("AJ", "LIDA", "LM", "PLM", "tpIPCW",
-                                  "LMAJ", "PLMAJ", "PAJ")) {
+                                  "LMAJ", "PLMAJ", "PAJ",'tpBreslow')) {
 
         if(is.null(ylab) & class(object)[1] != "tpIPCW")
           ylab <- bquote(paste(p[ij], "(", .(x$s), ",t)"))
@@ -131,13 +162,15 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distributi
 
             }
           }
-          legend("topright", object$levels, col = col, lty = lty)
+          if (trans=='02'| trans=='12') legend("bottomright", object$levels, col = col, lty = lty)
+          else  legend("topright", object$levels, col = col, lty = lty)
+
         }
       } #end plot for tp
 
 
 
-    #cif
+      #cif
       #---------------------
 
       if (class(object)[1] %in%  c("CIF", "cifIPCW")) {
@@ -189,7 +222,7 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distributi
 
             if(object$s != 0){
               ob [[i]]<- ob[[i]][, -2]
-             # obCI[[i]] <- obCI[[i]][, -c(1:2)]
+              # obCI[[i]] <- obCI[[i]][, -c(1:2)]
             }
 
             lines(ob[[i]][, 1], ob[[i]][, 2], type = type, col = col[i],
@@ -204,7 +237,7 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distributi
                     lty = conflty, col = confcol[i], ...)
               lines(x = ob[[i]][, 1], y = obCI[[i]][, 2], type = conftype,
                     lty = conflty, col = confcol[i], ...)
-              }
+            }
           }
           legend("bottomright", object$levels, col = col, lty = lty)
 
@@ -218,7 +251,7 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distributi
 
 
 
-    # soj
+      # soj
       #--------------------------------
 
       if (class(object)[1] %in%  c("soj", "sojIPCW")) {
@@ -234,7 +267,7 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distributi
         if (object$Nlevels == 1) {
 
 
-       #   if(class(object)[1] == "cifIPCW") obCI <- ob[, 3:4] # in order to corerct the out of cifIPCW
+          #   if(class(object)[1] == "cifIPCW") obCI <- ob[, 3:4] # in order to corerct the out of cifIPCW
           if(func == "survival"){ob[, 2] <- 1 - ob[, 2]}
           if(func == "survival" & ci == TRUE){obCI <- 1 - obCI}
 
@@ -286,9 +319,15 @@ plot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distributi
 
 
 
-  }else{
-    stop("Argument x must be either survIDM object.")
+    }else{
+      stop("Argument x must be either survIDM object.")
+    }
+
   }
+
+
+
+
 }
 
 

@@ -2,7 +2,7 @@ tpAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log")
 {
   if (missing(object))
     stop("Argument 'object' is missing, with no default")
- # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
+  # if (!inherits(object, "survIDM")) stop("'object' must be of class 'survIDM'")
   if (missing(s))
     s <- 0
   data <- object[[1]]
@@ -108,7 +108,7 @@ tpAJ <- function(object, s, conf = FALSE, conf.level = 0.95, conf.type = "log")
 
 
     res <- list(est = aux,  s = res$s, t = res$times, conf = conf,
-                   conf.type = res$conf.type)
+                conf.type = res$conf.type)
   }
 
 

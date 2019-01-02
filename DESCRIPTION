@@ -1,9 +1,9 @@
 Package: survidm
 Type: Package
 Title: Inference and Prediction in an Illness-Death Model
-Version: 1.1.0
-Date: 2018-03-14
-Author: Luis Meira-Machado and Marta Sestelo
+Version: 1.2.0
+Date: 2019-01-02
+Author: Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho
 Maintainer: Marta Sestelo <sestelo@uvigo.es>
 Description: Newly developed methods for the estimation of several probabilities
       in an illness-death model. The package can be used to obtain nonparametric and 
@@ -28,3 +28,4 @@ Imports:
     foreach,
     TPmsm
 RoxygenNote: 6.0.1
+
