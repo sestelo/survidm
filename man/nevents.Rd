@@ -4,7 +4,7 @@
 \alias{nevents}
 \title{Count number of observed transitions.}
 \usage{
-nevents(msdata, state.names=NULL)
+nevents(dataidm, state.names=NULL)
 }
 \arguments{
 \item{dataidm}{A dataframe including at least four columns named

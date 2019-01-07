@@ -20,7 +20,7 @@
 #'
 #' nevents(colonIDM, c('State1','State2', 'State3'))
 #'
-#' @usage nevents(msdata, state.names=NULL)
+#' @usage nevents(dataidm, state.names=NULL)
 #'
 #' @author Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 #'

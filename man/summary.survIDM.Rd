@@ -25,7 +25,7 @@ for each time. Missing values are not allowed.}
     \examples{
 fit <- tprob(survIDM(time1,event1,Stime, event) ~ 1, s = 365,
 method = "AJ", conf = TRUE, conf.level = 0.95,
-conf.type = "linear", n.boot = 100, data = colonIDM)
+conf.type = "linear", n.boot = 50, data = colonIDM)
 
 summary(fit)
 summary(fit, times = c(400, 1000, 2900))

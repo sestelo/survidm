@@ -35,7 +35,8 @@ comparison of the estimates for transition probabilities.}
 
 \examples{
 
-mk <- markov.test(survIDM(time1,event1,Stime,event)~1, s=365, nm.method = "LM", data=colonIDM)
+mk <- markov.test(survIDM(time1, event1, Stime, event) ~ 1, s = 365*4,
+nm.method = "LM", data = colonIDM)
 mk$cox.markov.test
 mk$TPestimates
 mk$nm.method
