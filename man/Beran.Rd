@@ -28,7 +28,7 @@ California, Berkeley, 1981.
 
 \examples{
 obj <- with(colonIDM, survIDM(time1, event1, Stime, event))
-obj0 <- obj$data
+obj0 <- obj
 
 #P(T>y|age=45)
 library(KernSmooth)
