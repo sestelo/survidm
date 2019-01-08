@@ -2,14 +2,13 @@ Beran <-
   function(time, status, covariate, delta, x, y, kernel = "gaussian", bw,
            lower.tail = FALSE) {
 
-
+    # control
     if (missing(time)|is.null(time)) {
       stop("Argument \"time\" is missing, with no default")
     }
     if (missing(status)|is.null(time)) {
       stop("Argument \"status\" is missing, with no default")
     }
-
 
     spa <- NULL
     len <- length(time)
