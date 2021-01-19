@@ -65,11 +65,21 @@ coxidm <- function (formula, data, semiMarkov = FALSE) {
   }
 
   fit12 <- survival::coxph(fmla2, data = mydata12)
+
+
+  term01<-termplot(fit01,  se = T, col.term = 1, col.se = 2, plot=FALSE)
+  term02<-termplot(fit02,  se = T, col.term = 1, col.se = 2, plot=FALSE)
+  term12<-termplot(fit12,  se = T, col.term = 1, col.se = 2, plot=FALSE)
+
+
   res <-
     list(
       coxmm01 = fit01,
       coxmm02 = fit02,
       coxmm12 = fit12,
+      term01=term01,
+      term02=term02,
+      term12=term12,
       ncov = ncov,
       fmla = formula,
       npar = npar,

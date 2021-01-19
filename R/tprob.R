@@ -116,8 +116,7 @@
 #' # Aalen-Johansen
 # Occupation Probabilities Pj(t)=Pij(0,t)
 
-#' res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0, method = "AJ",
-#' conf = FALSE, data = colonIDM)
+#' res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0, method = "AJ", conf = FALSE, data = colonIDM)
 
 #' summary(res, time=365*1:6)
 #' plot(res)
@@ -128,86 +127,82 @@
 #' res1 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
 #'              method = "LIDA", conf = FALSE, data = colonIDM)
 #'
-#' summary(res1, time = 365*1:6)
+#' summary(res1, time=365*1:6)
 #' plot(res1)
-#' plot(res1, trans = "01", ylim = c(0,0.15))
+#' plot(res1, trans="01", ylim=c(0,0.15))
 
 #' # Landmark (LM)
 #' res2 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
 #'               method = "LM", conf = FALSE, data = colonIDM)
 
-#' summary(res2, time = 365*1:6)
+#' summary(res2, time=365*1:6)
 #' plot(res2)
 
 #' # Presmoothed LM
 #' res3 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-#'               method = "PLM", conf = FALSE, data = colonIDM)
+#'               method = "PLM", conf = TRUE, data = colonIDM)
 
-#' summary(res3, time = 365*1:6)
+#' summary(res3, time=365*1:6)
 #' plot(res3)
 
 #' # Conditional transition probabilities
 
 #' # With factor
 #' res4 <- tprob(survIDM(time1, event1, Stime, event) ~ factor(sex), s = 365,
-#'               method = "AJ", conf = FALSE, data = colonIDM)
-#' summary(res4, time = 365*1:6)
-#' plot(res4, trans = "02", ylim = c(0,0.5))
+#'               method = "AJ", conf = TRUE, data = colonIDM)
+#' summary(res4, time=365*1:6)
+#' plot(res4, trans="02", ylim=c(0,0.5))
 
-#' res5 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s = 365,
-#'               method = "breslow", z.value = 'Lev', conf = FALSE, data = colonIDM)
+#' res5 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s =365,
+#'               method = "breslow", z.value='Lev', conf = TRUE, data =colonIDM)
 
-#' summary(res5, time = 365*1:6)
-#' plot(res5,trans = "02", ylim = c(0,0.5))
+#' summary(res5, time=365*1:6)
+#' plot(res5,trans="02", ylim=c(0,0.5))
 
 
-#' \dontrun{# with continuous covariate (IPCW and Breslow Method)
+#' # with continuous covariate (IPCW and Breslow Method)
 #' res6 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s = 365,
 #'               method = "IPCW", z.value = 48, conf = FALSE, data = colonIDM,
-#'              bw = "dpik", window = "gaussian", method.weights = "NW")
+#'               bw = "dpik", window = "gaussian", method.weights = "NW")
 
-#' summary(res6, time = 365*1:6)
+#' summary(res6, time=365*1:6)
 #' plot(res6)
 
-#' #res7 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
-#' #             method = "breslow", z.value = 60, conf = FALSE,
-#' #               data = colonIDM)
+#' res7 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
+#'               method = "breslow", z.value=60, conf = FALSE, data =colonIDM)
 
-#' summary(res7, time = 365*1:6)
+#' summary(res7, time=365*1:6)
 #' plot(res7)
 
 #' res8 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
-#'               method = "breslow", conf.type = 'bootstrap', n.boot = 2,
-#'               z.value = 60, conf = TRUE, data = colonIDM)
+#'               method = "breslow", conf.type='bootstrap', z.value=60, conf = TRUE, data =colonIDM)
 
-#' summary(res8, time = 365*1:6)
+#' summary(res8, time=365*1:6)
 #' plot(res8)
 
 #' res9 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s =365,
-#'               method = "breslow", conf.type='bootstrap',
-#'               conf = TRUE, data =colonIDM)
+#'               method = "breslow", conf.type='bootstrap',  conf = TRUE, data =colonIDM)
 
-#' summary(res9, time = 365*1:6)
-#' plot(res9, trans = "02", ylim = c(0,0.5))
+#' summary(res9, time=365*1:6)
+#' plot(res9, trans="02", ylim=c(0,0.5))
 
 #' # more than a covariate (Breslow Method)
-#' res10 <- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx),
-#' s = 365, method = "breslow", conf = TRUE, data =colonIDM)
+#' res10<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
+#'               method = "breslow", conf = TRUE, data =colonIDM)
 
-#' summary(res10,t = 365*1:5)
+#' summary(res10,t=365*1:5)
 #' plot(res10)
 
-#' res11 <- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx),
-#' s = 365, method = "breslow", z.value = c(10,'Obs'), conf = TRUE,
-#' data = colonIDM)
-#' summary(res11,t = 365*1:5)
+#' res11<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
+#'               method = "breslow", z.value=c(10,'Obs'), conf = TRUE, data =colonIDM)
+#' summary(res11,t=365*1:5)
 #' plot(res11)
 
 #' # more than a covariate for Non Linear Models (Breslow Method)
-#' res12 <- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age) + nodes +
-#' factor(rx), s =365, method = "breslow", conf = TRUE, data = colonIDM)
+#' res12<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
+#'               method = "breslow", conf = TRUE, data =colonIDM)
 
-#' summary(res12,t = 365*1:5)
+#' summary(res12,t=365*1:5)
 #' plot(res12)
 
 #' # Confidence intervals
@@ -218,13 +213,11 @@
 #' summary(res13, time=365*1:7)
 #' plot(res13)
 
-#' res14 <- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age) + nodes +
-#' factor(rx), s =365, method = "breslow", conf.type = 'bootstrap', conf = TRUE,
-#' conf.level = 0.95,  data = colonIDM)
+#' res14<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
+#'               method = "breslow", conf.type='bootstrap', conf = TRUE, conf.level =0.95,  data =colonIDM)
 
-#' summary(res14,t = 365*1:5)
+#' summary(res14,t=365*1:5)
 #' plot(res14)
-#' }
 
 tprob<-function(formula,
                 s,
@@ -246,7 +239,8 @@ tprob<-function(formula,
   if (missing(formula))
     stop("A formula argument is required")
   if (missing(s))
-    stop("argument 's' is missing, with no default")
+    #stop("argument 's' is missing, with no default")
+    s<-0
 
   if (!(method %in% c("AJ", "LIDA", "LM", "PLM", "IPCW", "LMAJ", "PLMAJ", "PAJ", "breslow"))) {
     stop(

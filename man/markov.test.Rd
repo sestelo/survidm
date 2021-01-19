@@ -10,7 +10,7 @@ the sojourn time in the initial state, "times1", and other covariates in the Cox
 \arguments{
 \item{formula}{A \code{formula} object, which must have a \code{survIDM}.}
 \item{s}{The first time for obtaining a graphical test of markovianity by
-comparison of the estimates for transition probabilities.}
+comparison of the estimates for transition probabilities.  If missing, first quartile of the sojourn time in the initial state has been considered for the graphical test.}
 \item{nm.method}{The non-markov method used to compute the transition probabilities. Defaults to \code{"LM"}.}
 \item{data}{A data.frame including at least four columns named
 \code{time1}, \code{event1}, \code{Stime} and \code{event}, which correspond
@@ -35,8 +35,7 @@ comparison of the estimates for transition probabilities.}
 
 \examples{
 
-mk <- markov.test(survIDM(time1, event1, Stime, event) ~ 1, s = 365*4,
-nm.method = "LM", data = colonIDM)
+mk <- markov.test(survIDM(time1,event1,Stime,event)~1, s=365, nm.method = "LM", data=colonIDM)
 mk$cox.markov.test
 mk$TPestimates
 mk$nm.method
