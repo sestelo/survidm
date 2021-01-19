@@ -26,6 +26,8 @@ Imports:
     parallel,
     doRNG,
     foreach,
-    TPmsm
-RoxygenNote: 6.0.1
-
+    TPmsm,
+    Rcpp
+RoxygenNote: 7.1.1
+LinkingTo: 
+    Rcpp
