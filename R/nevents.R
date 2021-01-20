@@ -20,7 +20,7 @@
 #'
 #' nevents(colonIDM, c('State1','State2', 'State3'))
 #'
-#' @usage nevents(dataidm, state.names=NULL)
+#' @usage nevents(msdata, state.names=NULL)
 #'
 #' @author Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.
 #'
@@ -60,7 +60,9 @@ nevents <- function (dataidm, state.names=NULL)
 
   colnames(tmat2) <- c(state.names)
   rownames(tmat2) <- state.names
-  tmat2[1, ] <- c(n00,     n01, n02)
+
+  #tmat2[1, ] <- c(n00,     n01, n02)
+  tmat2[1, ] <- c(n00,     n01-length(which(dataidm$event1 == 1 & dataidm$time1==0)), n02) #retirar casos em que time1=0 e event1=1
   tmat2[2, ] <- c(0,        n01-n12, n12)
   tmat2[3, ] <- c(0,        0,   n02+n12)
 

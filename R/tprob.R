@@ -15,7 +15,9 @@
 #' \code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"}, \code{"IPCW"} and \code{"breslow"}.
 #' Defaults to \code{"AJ"}. The \code{"IPCW"} method
 #' is recommended to obtain conditional transition probabilities (i.e., with a
-#' quantitative term on the right hand side of formula).
+#' quantitative term on the right hand side of formula). The \code{"breslow"} method
+#' is based on a Cox's regression model fitted marginally to each allowed transition,
+#' with the corresponding baseline hazard function estimated by the Breslow's method.
 #' @param conf Provides pointwise confidence bands. Defaults to \code{FALSE}.
 #' @param conf.level Level of confidence. Defaults to 0.95 (corresponding to 95\%).
 #' @param conf.type Method to compute the confidence intervals.
