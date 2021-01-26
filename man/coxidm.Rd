@@ -21,7 +21,8 @@ or censoring, and death indicator, respectively.}
 }
 
 \value{A data frame or a list containing the following components:
-    \item{coef}{Estimated coeficients.}
+  \item{coef}{Estimated coeficients.}
+  \item{term}{Predicted values of splines and partial residual for the terms of the model.}
   \item{exp(coef)}{Exponent of the estimated coefficients.}
   \item{lower 0.95}{Lower limit of the confidence interval.}
   \item{upper 0.95}{Upper limit of the confidence interval.}

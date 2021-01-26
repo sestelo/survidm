@@ -16,14 +16,19 @@
 #' Defaults to \code{"AJ"}. The \code{"IPCW"} method
 #' is recommended to obtain conditional transition probabilities (i.e., with a
 #' quantitative term on the right hand side of formula). The \code{"breslow"} method
-#' is based on a Cox's regression model fitted marginally to each allowed transition,
-#' with the corresponding baseline hazard function estimated by the Breslow's method.
+#' is based on a Cox's regression model (Cox, 1972) fitted marginally to each allowed
+#' transition, with the corresponding baseline hazard function estimated by the
+#' Breslow's method (Breslow, 1972).
 #' @param conf Provides pointwise confidence bands. Defaults to \code{FALSE}.
 #' @param conf.level Level of confidence. Defaults to 0.95 (corresponding to 95\%).
 #' @param conf.type Method to compute the confidence intervals.
 #' Transformation applied to compute confidence intervals. Possible choices
 #' are \code{"linear"}, \code{"log"}, \code{"log-log"} and \code{"bootstrap"}.
-#' Default is \code{"linear"}.
+#' Default is \code{"linear"}. Default is \code{"linear"}. The  \code{"linear"} option
+#' provides the standard intervals curve +-k *se(curve), where k is determined from
+#' \code{"conf.int"}. The \code{"log"} option calculates the intervals based on the
+#' cumulative hazard or log(survival).  The \code{"log-log"} option uses the log hazard
+#' function or log(-log(survival))}
 #' @param n.boot The number of bootstrap replicates to compute the variance
 #' of the non-Markovian estimator. Default is 199.
 #' @param data A data.frame including at least four columns named
@@ -113,6 +118,12 @@
 #' of transition probabilities in a non-Markov illness-death model:
 #' a comparative study. Biometrics 71, 364--375.
 #'
+#' Cox, DR (1972). Regression models and life tables (with discussion). Journal
+#' of the Royal Statistical Society, Series B 34, 187-200.
+#'
+#' Breslow, N. (1972). Discussion of paper by dr cox. Journal of Royal Statistical
+#' Society, Series B 34, 216-217.
+#'
 #'
 #' @examples
 #' # Aalen-Johansen
@@ -145,7 +156,7 @@
 #'               method = "PLM", conf = TRUE, data = colonIDM)
 
 #' summary(res3, time=365*1:6)
-#' plot(res3)
+#' autoplot(res3, interactive = TRUE)
 
 #' # Conditional transition probabilities
 
@@ -174,7 +185,7 @@
 #'               method = "breslow", z.value=60, conf = FALSE, data =colonIDM)
 
 #' summary(res7, time=365*1:6)
-#' plot(res7)
+#' autoplot.survIDM(res,interactive = TRUE)
 
 #' res8 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
 #'               method = "breslow", conf.type='bootstrap', z.value=60, conf = TRUE, data =colonIDM)
@@ -198,14 +209,14 @@
 #' res11<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
 #'               method = "breslow", z.value=c(10,'Obs'), conf = TRUE, data =colonIDM)
 #' summary(res11,t=365*1:5)
-#' plot(res11)
+#' autoplot(res11, interactive=TRUE)
 
 #' # more than a covariate for Non Linear Models (Breslow Method)
 #' res12<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
 #'               method = "breslow", conf = TRUE, data =colonIDM)
 
 #' summary(res12,t=365*1:5)
-#' plot(res12)
+#' autoplot(res12)
 
 #' # Confidence intervals
 #' res13 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
@@ -219,7 +230,7 @@
 #'               method = "breslow", conf.type='bootstrap', conf = TRUE, conf.level =0.95,  data =colonIDM)
 
 #' summary(res14,t=365*1:5)
-#' plot(res14)
+#' autoplot(res14, interactive=TRUE)
 
 tprob<-function(formula,
                 s,

@@ -16,6 +16,13 @@
 #' order: \code{time1}, \code{event1}, \code{Stime} and \code{event}, where
 #' \code{time1} and \code{Stime} are ordered event times and
 #' \code{event1} and \code{event} their corresponding indicator statuses.
+#' The arguments 'time1' and 'Stime' must be numeric. 'Event1' and 'Event'
+#' must be 0 or 1 if numeric and TRUE or FALSE if logical. Stime' must be
+#' greater or equal to argument 'time1. Arguments 'Stime' and 'time1' must
+#' be equal when argument 'event1' equals 0 or FALSE. Argument 'event' must
+#' be equal to 0 or FALSE when argument 'event1' equals 0 or FALSE. When
+#' arguments 'Stime' and 'time1' are equal and argument 'event1' equals 1 or
+#' TRUE, argument 'event' must equal 1 or TRUE.
 #'
 #' @return An object of class "survIDM". "survIDM" objects are implemented
 #' as a single dataframe.

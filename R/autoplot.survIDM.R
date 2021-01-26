@@ -3,7 +3,7 @@ ggplot2::autoplot
 autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distribution",
                              conf = NULL, type = NULL,conftype = NULL, col = 1:6,
                              confcol = 1:6, lty = 1, conflty = 2, xlab = "Time (years)",
-                             ylab = NULL, ylim = NULL, xlim = NULL, ...) {
+                             ylab = NULL, ylim = NULL, xlim = NULL, interactive = FALSE,...) {
 
 
   object <- x
@@ -122,10 +122,10 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
                                   "LMAJ", "PLMAJ", "PAJ",'tpBreslow')) {
 
         if(is.null(ylab) & class(object)[1] != "tpIPCW")
-          ylab <- bquote(paste(p[ij], "(", .(x$s), ",t)"))
+          ylab <- paste("p[ij](", (x$s), ",t)") #ylab <- bquote(paste('p[ij]', "(", .(x$s), ",t)"))
 
         if(is.null(ylab) & class(object)[1] == "tpIPCW")
-          ylab <- bquote(paste(p[ij], "(", .(x$s), ",t|", .(x$z.name),")"))
+          ylab <- paste("p[ij]", (x$s), ",t|", (x$z.name),")")#ylab <- bquote(paste(p[ij], "(", .(x$s), ",t|", .(x$z.name),")"))
 
         #-----------------------
         trans2 = trans
@@ -176,8 +176,9 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
             names(ob4.2)<-c('tp_max','type')
 
+
             p1<-ggplot(ob2, aes(x=as.numeric(ob2$time), y=as.numeric(ob2$TP), group=factor(ob2$type),
-                                fill=factor(ob2$type)))+theme_bw()+labs(x = xlab,y = ylab)
+                                fill=factor(ob2$type)))+theme_bw()+labs(x = xlab)+labs(y = ylab)
 
 
             p2<-p1+geom_ribbon(aes(ymin=as.numeric(ob3.2$tp_min),ymax=as.numeric(ob4.2$tp_max)),alpha=.4)
@@ -186,7 +187,13 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
             p3<-p2+geom_line(aes(x=as.numeric(ob2$time), y=as.numeric(ob2$TP), color=ob2$type), size=1.1)+
               theme(legend.title=element_blank())
 
-            grid.arrange(p3)
+
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p3))}
+            }else{
+              return(p3)
+            }
+
 
 
           }else{
@@ -208,9 +215,14 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
 
 
-            p4<-p3+theme_bw()+labs(x = xlab,y = ylab)+geom_line(size=1)+ theme(legend.title=element_blank())
+            p4<-p3+theme_bw()+labs(x = xlab)+labs(y = ylab)+geom_line(size=1)+ theme(legend.title=element_blank())
 
-            grid.arrange(p4)
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p4))}
+            }else{
+              return(p4)
+            }
+
 
           }
 
@@ -303,7 +315,7 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
 
             p1<-ggplot(ob2f, aes(x=as.numeric(ob2f$time), y=as.numeric(ob2f$TP), group=factor(ob2f$type),
-                                 fill=factor(ob2f$type)))+theme_bw()+labs(x = xlab,y = ylab)
+                                 fill=factor(ob2f$type)))+theme_bw()+labs(x = xlab)+labs(y = ylab)
 
 
 
@@ -312,10 +324,11 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
             p3<-p2+geom_line(aes(x=as.numeric(ob2f$time), y=as.numeric(ob2f$TP), color=ob2f$type), size=1.1)+
               theme(legend.title=element_blank())
 
-
-            fig<-ggplotly(p3)
-
-            return(fig)
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p3))}
+            }else{
+              return(p3)
+            }
 
 
 
@@ -326,12 +339,16 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
 
 
-            p4<-p3+theme_bw()+labs(x = xlab,y = ylab)+geom_line(size=1)+ theme(legend.title=element_blank())
+            p4<-p3+theme_bw()+labs(x = xlab)+labs(y = ylab)+geom_line(size=1)+ theme(legend.title=element_blank())
 
 
-            fig<-ggplotly(p4)
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p4))}
+            }else{
+              return(p4)
+            }
 
-            return(fig)
+
 
           }
 
@@ -381,13 +398,14 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
             p2<-p1+geom_ribbon(aes(ymin=as.numeric(obCI[, 1]), ymax=as.numeric(obCI[, 2]),alpha=0.7),fill='gray')
 
-            p3<-p2+geom_line(aes(ob[,1],ob[,2]))+geom_line(color='black',size=1)+theme(legend.position="none")
+            p3<-p2+geom_line(aes(ob[,1],ob[,2]))+geom_line(color='black',size=1)+#theme(legend.position="none")
+              theme(legend.title=element_blank())
 
-
-            fig<-ggplotly(p3)
-
-            return(fig)
-
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p3))}
+            }else{
+              return(p3)
+            }
 
           }else{
 
@@ -397,9 +415,15 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
             p2<-p1+geom_line(aes(ob[,1],ob[,2]))+geom_line(color='red',size=1)
 
-            fig<-ggplotly(p2)
 
-            return(fig)
+
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p2))}
+            }else{
+              p2
+            }
+
+
 
           }
 
@@ -460,10 +484,12 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
             p3<-p2+geom_line(aes(x=as.numeric(time), y=as.numeric(cif), color=ob2$type), size=1.1)+
               theme(legend.title=element_blank())
 
-            fig<-ggplotly(p3)
 
-            return(fig)
-
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p3))}
+            }else{
+              return(p3)
+            }
 
 
 
@@ -475,12 +501,12 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
             p4<-p3+theme_bw()+labs(x = xlab,y = ylab)+geom_line(size=1)+ theme(legend.title=element_blank())
 
-            p4
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p4))}
+            }else{
+              return(p4)
+            }
 
-
-            fig<-ggplotly(p4)
-
-            return(fig)
 
 
           }
@@ -522,9 +548,12 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
             p3<-p2+geom_line(aes(ob[,1],ob[,2]))+geom_line(color='black',size=1)+theme(legend.position="none")
 
 
-            fig<-ggplotly(p3)
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p3))}
+            }else{
+              return(p3)
+            }
 
-            return(fig)
 
 
           }else{
@@ -534,10 +563,12 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
             p2<-p1+geom_line(aes(ob[,1],ob[,2]))+geom_line(color='red',size=1)
 
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p2))}
+            }else{
+              return(p2)
+            }
 
-            fig<-ggplotly(p2)
-
-            return(fig)
 
           }
 
@@ -594,7 +625,12 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
               theme(legend.title=element_blank())
 
 
-            p3
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p3))}
+            }else{
+              return(p3)
+            }
+
 
 
           }else{
@@ -605,7 +641,11 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
             p4<-p3+theme_bw()+labs(x = xlab,y = ylab)+geom_line(size=1)+ theme(legend.title=element_blank())
 
-            p4
+            if(isTRUE(interactive)){
+              if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p4))}
+            }else{
+              return(p4)
+            }
 
 
 
@@ -627,4 +667,5 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
   }
 
 }
+
 
