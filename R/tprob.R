@@ -21,14 +21,17 @@
 #' Breslow's method (Breslow, 1972).
 #' @param conf Provides pointwise confidence bands. Defaults to \code{FALSE}.
 #' @param conf.level Level of confidence. Defaults to 0.95 (corresponding to 95\%).
-#' @param conf.type Method to compute the confidence intervals.
-#' Transformation applied to compute confidence intervals. Possible choices
-#' are \code{"linear"}, \code{"log"}, \code{"log-log"} and \code{"bootstrap"}.
-#' Default is \code{"linear"}. Default is \code{"linear"}. The  \code{"linear"} option
-#' provides the standard intervals curve +-k *se(curve), where k is determined from
-#' \code{"conf.int"}. The \code{"log"} option calculates the intervals based on the
-#' cumulative hazard or log(survival).  The \code{"log-log"} option uses the log hazard
-#' function or log(-log(survival))}
+#' @param conf.type Method to compute the confidence intervals. Depends on the
+#' choice of the estimation method of the transition probabilities. For
+#' Aalen-Johansen type estimators (\code{"AJ"}, \code{"LMAJ"}, \code{"PAJ"} and
+#' \code{"PLMAJ"}) possible choices are \code{"linear"}, \code{"log"} and
+#' \code{"log-log"}. Default is \code{"linear"}, providing the standard intervals
+#' curve +-k *se(curve), where k is determined from \code{"conf.int"}. The
+#' \code{"log"} option calculates the intervals based on the cumulative hazard or
+#' -log(survival). The \code{"log-log"} option uses the log hazard function or
+#' log(-log(survival))}. For the remaining estimation methods (\code{"LIDA"},
+#' \code{"LM"}, \code{"PLM"}, \code{"IPCW"} and \code{"breslow"}) the percentile
+#' bootstrap which resamples each datum with probability 1/n is used.
 #' @param n.boot The number of bootstrap replicates to compute the variance
 #' of the non-Markovian estimator. Default is 199.
 #' @param data A data.frame including at least four columns named
@@ -64,7 +67,10 @@
 #'
 #' @details Possible options for argument window are \code{"gaussian"},
 #' \code{"epanechnikov"}, \code{"tricube"}, \code{"boxcar"},
-#' \code{"triangular"}, \code{"quartic"} or \code{"cosine"}.
+#' \code{"triangular"}, \code{"quartic"} or \code{"cosine"}. The LIDA estimator
+#' was labelled according to the acronym of the Lifetime Data Analysis journal
+#' in which the estimator was described for the first time (Meira-Machado,
+#' U?a-?lvarez and Cadarso-Su?rez, 2006).
 #'
 
 #' Possible methods are:
