@@ -1,5 +1,6 @@
 ggplot2::autoplot
 
+
 autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distribution",
                              conf = NULL, type = NULL,conftype = NULL, col = 1:6,
                              confcol = 1:6, lty = 1, conflty = 2, xlab = "Time (years)",
@@ -46,6 +47,7 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
       geom_ribbon(aes(ymin=est$nm12LCI,ymax=est$nm12UCI),fill='gray60',alpha=0.7)+
       geom_line(aes(est$times,est$nm12),color='black',size=1)+
       geom_line(aes(est$times,est$aj12),color='red',size=1)
+
 
     grid.arrange(p1, p2, p3,p4,  layout_matrix = rbind(c(1, 2, 3), c(4, 4, 4)))
 
@@ -141,50 +143,62 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
           if (ci == TRUE) {
 
 
-            ob2<-as.data.frame(rbind(cbind(ob[,1],ob[,2],rep('00', length(ob[,1]))),
-                                     cbind(ob[,1],ob[,3],rep('01', length(ob[,3]))),
-                                     cbind(ob[,1],ob[,4],rep('02', length(ob[,4]))),
-                                     cbind(ob[,1],ob[,5],rep('11', length(ob[,5]))),
-                                     cbind(ob[,1],ob[,6],rep('12', length(ob[,6])))))
+            ob2<-as.data.frame(rbind(cbind(time=ob[,1],TP=ob[,2],rep('00', length(ob[,1]))),
+                                     cbind(time=ob[,1],TP=ob[,3],rep('01', length(ob[,3]))),
+                                     cbind(time=ob[,1],TP=ob[,4],rep('02', length(ob[,4]))),
+                                     cbind(time=ob[,1],TP=ob[,5],rep('11', length(ob[,5]))),
+                                     cbind(time=ob[,1],TP=ob[,6],rep('12', length(ob[,6])))))
 
 
 
             names(ob2)<-c('time','TP','type')
 
+            ob2$time<-as.numeric( ob2$time)
+            ob2$TP<-as.numeric(ob2$TP)
+            ob2$type<-as.factor(ob2$type)
 
             ob3<-obCI[itpCI[ii]]
 
 
 
-            ob3.2<-as.data.frame(rbind(cbind(ob3[,1],rep('00', length(ob3[,1]))),
-                                       cbind(ob3[,2],rep('01', length(ob3[,2]))),
-                                       cbind(ob3[,3],rep('02', length(ob3[,3]))),
-                                       cbind(ob3[,4],rep('11', length(ob3[,4]))),
-                                       cbind(ob3[,5],rep('12', length(ob3[,5])))))
+            ob3.2<-as.data.frame(rbind(cbind(tp_min=ob3[,1],rep('00', length(ob3[,1]))),
+                                       cbind(tp_min=ob3[,2],rep('01', length(ob3[,2]))),
+                                       cbind(tp_min=ob3[,3],rep('02', length(ob3[,3]))),
+                                       cbind(tp_min=ob3[,4],rep('11', length(ob3[,4]))),
+                                       cbind(tp_min=ob3[,5],rep('12', length(ob3[,5])))))
 
 
             names(ob3.2)<-c('tp_min','type')
 
 
+            tp_min<-as.numeric(ob3.2$tp_min)
+            type<-as.factor(ob3.2$type)
+
+
+
             ob4<-obCI[itpCI[ii]+1]
 
-            ob4.2<-as.data.frame(rbind(cbind(ob4[,1],rep('00', length(ob4[,1]))),
-                                       cbind(ob4[,2],rep('01', length(ob4[,2]))),
-                                       cbind(ob4[,3],rep('02', length(ob4[,3]))),
-                                       cbind(ob4[,4],rep('11', length(ob4[,4]))),
-                                       cbind(ob4[,5],rep('12', length(ob4[,5])))))
+            ob4.2<-as.data.frame(rbind(cbind(tp_max=ob4[,1],rep('00', length(ob4[,1]))),
+                                       cbind(tp_max=ob4[,2],rep('01', length(ob4[,2]))),
+                                       cbind(tp_max=ob4[,3],rep('02', length(ob4[,3]))),
+                                       cbind(tp_max=ob4[,4],rep('11', length(ob4[,4]))),
+                                       cbind(tp_max=ob4[,5],rep('12', length(ob4[,5])))))
 
             names(ob4.2)<-c('tp_max','type')
 
-
-            p1<-ggplot(ob2, aes(x=as.numeric(ob2$time), y=as.numeric(ob2$TP), group=factor(ob2$type),
-                                fill=factor(ob2$type)))+theme_bw()+labs(x = xlab)+labs(y = ylab)
-
-
-            p2<-p1+geom_ribbon(aes(ymin=as.numeric(ob3.2$tp_min),ymax=as.numeric(ob4.2$tp_max)),alpha=.4)
+            tp_max<-as.numeric(ob4.2$tp_max)
+            type<-as.factor(ob4.2$type)
 
 
-            p3<-p2+geom_line(aes(x=as.numeric(ob2$time), y=as.numeric(ob2$TP), color=ob2$type), size=1.1)+
+
+            p1<-ggplot(ob2, aes(x=time, y=TP, group=type,
+                                fill=type))+theme_bw()+labs(x = xlab)+labs(y = ylab)
+
+
+            p2<-p1+geom_ribbon(aes(ymin=tp_min,ymax=tp_max),alpha=.5)
+
+
+            p3<-p2+geom_line(aes(x=time, y=TP, color=type))+
               theme(legend.title=element_blank())
 
 
@@ -198,20 +212,21 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
           }else{
 
-
-            ob2<-as.data.frame(rbind(
-              cbind(ob[,1],ob[,2],rep('00', length(ob[,2]))),
-              cbind(ob[,1],ob[,3],rep('01', length(ob[,3]))),
-              cbind(ob[,1],ob[,4],rep('02', length(ob[,4]))),
-              cbind(ob[,1],ob[,5],rep('11', length(ob[,5]))),
-              cbind(ob[,1],ob[,6],rep('12', length(ob[,6])))))
+            ob2<-as.data.frame(rbind(cbind(time=ob[,1],TP=ob[,2],rep('00', length(ob[,1]))),
+                                     cbind(time=ob[,1],TP=ob[,3],rep('01', length(ob[,3]))),
+                                     cbind(time=ob[,1],TP=ob[,4],rep('02', length(ob[,4]))),
+                                     cbind(time=ob[,1],TP=ob[,5],rep('11', length(ob[,5]))),
+                                     cbind(time=ob[,1],TP=ob[,6],rep('12', length(ob[,6])))))
 
 
             names(ob2)<-c('time','TP','type')
 
+            ob2$time<-as.numeric(ob2$time)
+            ob2$TP<-as.numeric(ob2$TP)
+            ob2$type<-factor(ob2$type)
 
-            p3<-ggplot(ob2, aes(x=as.numeric(ob2$time), y=as.numeric(ob2$TP),group=factor(ob2$type),
-                                color=factor(ob2$type)))
+            p3<-ggplot(ob2, aes(x=time, y=TP,group=type,
+                                color=type))
 
 
 
@@ -300,7 +315,6 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
           ob2f<-ob2[ob2$trans==trans,]
 
 
-
           if (ci == TRUE) {
 
             ob3.2f<-ob3.2[ob3.2$trans==trans,]
@@ -309,19 +323,26 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
             ob4.2f<-ob4.2[ob4.2$trans==trans,]
 
 
+
+
           }
 
           if (ci == TRUE) {
 
 
-            p1<-ggplot(ob2f, aes(x=as.numeric(ob2f$time), y=as.numeric(ob2f$TP), group=factor(ob2f$type),
+            Time<-as.numeric(ob2f$time)
+            tp<-as.numeric(ob2f$TP)
+            tp_minCI<-as.numeric(ob3.2f$tp_min)
+            tp_maxCI<-as.numeric(ob4.2f$tp_max)
+            Type<-factor(ob2f$type)
+            p1<-ggplot(ob2f, aes(x=Time, y=tp, group=Type,
                                  fill=factor(ob2f$type)))+theme_bw()+labs(x = xlab)+labs(y = ylab)
 
 
 
-            p2<-p1+geom_ribbon(aes(ymin=as.numeric(ob3.2f$tp_min),ymax=as.numeric(ob4.2f$tp_max)),alpha=.3)
+            p2<-p1+geom_ribbon(aes(ymin=tp_minCI,ymax=tp_maxCI),alpha=.3)
 
-            p3<-p2+geom_line(aes(x=as.numeric(ob2f$time), y=as.numeric(ob2f$TP), color=ob2f$type), size=1.1)+
+            p3<-p2+geom_line(aes(x=Time, y=tp, color=Type), size=1.1)+
               theme(legend.title=element_blank())
 
             if(isTRUE(interactive)){
@@ -334,8 +355,12 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
           }else{
 
-            p3<-ggplot(ob2f, aes(x=as.numeric(ob2f$time), y=as.numeric(ob2f$TP),group=factor(ob2f$type),
-                                 color=factor(ob2f$type)))
+            Time<-as.numeric(ob2f$time)
+            tp<-as.numeric(ob2f$TP)
+            Type<-factor(ob2f$type)
+
+            p3<-ggplot(ob2f, aes(x=Time, y=tp,group=Type,
+                                 color=Type))
 
 
 
@@ -393,13 +418,18 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
             }
 
 
+            time<-ob[,1]
+            cif<-ob[,2]
+            cif_min<-as.numeric(obCI[, 1])
+            cif_max<-as.numeric(obCI[, 2])
 
-            p1<-ggplot(ob,aes(ob[,1],ob[,2]))+theme_bw()+labs(x=xlab,y = ylab)
+            p1<-ggplot(ob,aes(time,cif))+theme_bw()+labs(x=xlab,y = ylab)
 
-            p2<-p1+geom_ribbon(aes(ymin=as.numeric(obCI[, 1]), ymax=as.numeric(obCI[, 2]),alpha=0.7),fill='gray')
+            p2<-p1+geom_ribbon(aes(ymin=cif_min, ymax=cif_max,alpha=0.7),fill='gray')
 
-            p3<-p2+geom_line(aes(ob[,1],ob[,2]))+geom_line(color='black',size=1)+#theme(legend.position="none")
-              theme(legend.title=element_blank())
+            p3<-p2+geom_line(aes(time,cif))+geom_line(color='black',size=1)+
+              theme(legend.position="none")
+            #theme(legend.title=element_blank())
 
             if(isTRUE(interactive)){
               if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p3))}
@@ -409,18 +439,19 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
           }else{
 
+            time<-ob[,1]
+            cif<-ob[,2]
 
+            p1<-ggplot(ob,aes(time,cif))+theme_bw()+labs(x=xlab)+labs(y = ylab)
 
-            p1<-ggplot(ob,aes(ob[,1],ob[,2]))+theme_bw()+labs(x=xlab)+labs(y = ylab)
-
-            p2<-p1+geom_line(aes(ob[,1],ob[,2]))+geom_line(color='red',size=1)
+            p2<-p1+geom_line(aes(time,cif))+geom_line(color='red',size=1)
 
 
 
             if(isTRUE(interactive)){
               if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p2))}
             }else{
-              p2
+              return(p2)
             }
 
 
@@ -475,13 +506,19 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
             names(ob4.2)<-c('cif_max','type')
 
 
-            p1<-ggplot(ob2, aes(x=as.numeric(time), y=as.numeric(cif), group=factor(type),
-                                fill=factor(type)))+theme_bw()+labs(x = xlab,y = ylab)
+            timeCIF<-as.numeric(ob2$time)
+            CIF<-as.numeric(ob2$cif)
+            Factor<-factor(ob2$type)
+            CIF_min<-as.numeric(ob3.2$cif_min)
+            CIF_max<-as.numeric(ob4.2$cif_max)
 
-            p2<-p1+geom_ribbon(aes(ymin=as.numeric(ob3.2$cif_min),ymax=as.numeric(ob4.2$cif_max)),alpha=.3)
+            p1<-ggplot(ob2, aes(x=timeCIF, y=CIF, group=Factor,
+                                fill=Factor))+theme_bw()+labs(x = xlab,y = ylab)
+
+            p2<-p1+geom_ribbon(aes(ymin=CIF_min,ymax=CIF_max),alpha=.3)
 
 
-            p3<-p2+geom_line(aes(x=as.numeric(time), y=as.numeric(cif), color=ob2$type), size=1.1)+
+            p3<-p2+geom_line(aes(x=timeCIF, y=CIF, color=Factor), size=1.1)+
               theme(legend.title=element_blank())
 
 
@@ -495,8 +532,12 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
           }else{
 
-            p3<-ggplot(ob2, aes(x=as.numeric(time), y=as.numeric(cif),group=factor(type),
-                                color=factor(type)))
+            timeCIF<-as.numeric(ob2$time)
+            CIF<-as.numeric(ob2$cif)
+            Factor<-factor(ob2$type)
+
+            p3<-ggplot(ob2, aes(x=timeCIF, y=CIF,group=Factor,
+                                color=Factor))
 
 
             p4<-p3+theme_bw()+labs(x = xlab,y = ylab)+geom_line(size=1)+ theme(legend.title=element_blank())
@@ -539,13 +580,17 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
           if (ci == TRUE) {
 
+            timeSoj<-ob[,1]
+            soj<-ob[,2]
+            soj_inf<-as.numeric(obCI[, 1])
+            soj_max<-as.numeric(obCI[, 2])
 
-            p1<-ggplot(ob,aes(ob[,1],ob[,2]))+theme_bw()+labs(x=xlab,y = ylab)
+            p1<-ggplot(ob,aes(timeSoj,soj))+theme_bw()+labs(x=xlab,y = ylab)
 
 
-            p2<-p1+geom_ribbon(aes(ymin=as.numeric(obCI[, 1]), ymax=as.numeric(obCI[, 2]),alpha=0.8),fill='gray')
+            p2<-p1+geom_ribbon(aes(ymin=soj_inf, ymax=soj_max,alpha=0.8),fill='gray')
 
-            p3<-p2+geom_line(aes(ob[,1],ob[,2]))+geom_line(color='black',size=1)+theme(legend.position="none")
+            p3<-p2+geom_line(aes(timeSoj,soj))+geom_line(color='black',size=1)+theme(legend.position="none")
 
 
             if(isTRUE(interactive)){
@@ -558,10 +603,12 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
           }else{
 
+            timeSoj<-ob[,1]
+            soj<-ob[,2]
 
-            p1<-ggplot(ob,aes(ob[,1],ob[,2]))+theme_bw()+labs(x=xlab)+labs(y = ylab)
+            p1<-ggplot(ob,aes(timeSoj,soj))+theme_bw()+labs(x=xlab)+labs(y = ylab)
 
-            p2<-p1+geom_line(aes(ob[,1],ob[,2]))+geom_line(color='red',size=1)
+            p2<-p1+geom_line(aes(timeSoj,soj))+geom_line(color='red',size=1)
 
             if(isTRUE(interactive)){
               if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p2))}
@@ -615,13 +662,20 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
             names(ob4.2)<-c('sojourn_max','type')
 
-            p1<-ggplot(ob2, aes(x=as.numeric(time), y=as.numeric(sojourn), group=factor(type),
-                                fill=factor(type)))+theme_bw()+labs(x = xlab,y = ylab)
+            timeSOJ<-as.numeric(ob2$time)
+            SOJ<-as.numeric(ob2$sojourn)
+            FactorSOJ<-factor(ob2$type)
+            SOJ_min<-as.numeric(ob3.2$sojourn_min)
+            SOJ_max<-as.numeric(ob4.2$sojourn_max)
 
-            p2<-p1+geom_ribbon(aes(ymin=as.numeric(ob3.2$sojourn_min),ymax=as.numeric(ob4.2$sojourn_max)),alpha=.3)
+
+            p1<-ggplot(ob2, aes(x=timeSOJ, y=SOJ, group=FactorSOJ,
+                                fill=FactorSOJ))+theme_bw()+labs(x = xlab,y = ylab)
+
+            p2<-p1+geom_ribbon(aes(ymin=SOJ_min,ymax=SOJ_max),alpha=.3)
 
 
-            p3<-p2+geom_line(aes(x=as.numeric(time), y=as.numeric(sojourn), color=type), size=1.1)+
+            p3<-p2+geom_line(aes(x=timeSOJ, y=SOJ, color=FactorSOJ), size=1.1)+
               theme(legend.title=element_blank())
 
 
@@ -635,8 +689,12 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
 
           }else{
 
-            p3<-ggplot(ob2, aes(x=as.numeric(time), y=as.numeric(sojourn),group=factor(type),
-                                color=factor(type)))
+
+            timeSOJ<-as.numeric(ob2$time)
+            SOJ<-as.numeric(ob2$sojourn)
+            FactorSOJ<-factor(ob2$type)
+            p3<-ggplot(ob2, aes(x=timeSOJ, y=SOJ,group=FactorSOJ,
+                                color=FactorSOJ))
 
 
             p4<-p3+theme_bw()+labs(x = xlab,y = ylab)+geom_line(size=1)+ theme(legend.title=element_blank())
@@ -667,5 +725,4 @@ autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distri
   }
 
 }
-
 

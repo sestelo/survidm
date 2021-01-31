@@ -14,15 +14,18 @@
 #'
 #' @details Arguments in this function must be introduced in the following
 #' order: \code{time1}, \code{event1}, \code{Stime} and \code{event}, where
-#' \code{time1} and \code{Stime} are ordered event times and
-#' \code{event1} and \code{event} their corresponding indicator statuses.
-#' The arguments 'time1' and 'Stime' must be numeric. 'Event1' and 'Event'
-#' must be 0 or 1 if numeric and TRUE or FALSE if logical. Stime' must be
-#' greater or equal to argument 'time1. Arguments 'Stime' and 'time1' must
-#' be equal when argument 'event1' equals 0 or FALSE. Argument 'event' must
-#' be equal to 0 or FALSE when argument 'event1' equals 0 or FALSE. When
-#' arguments 'Stime' and 'time1' are equal and argument 'event1' equals 1 or
-#' TRUE, argument 'event' must equal 1 or TRUE.
+#' \code{time1} and \code{Stime} are the sojourn time in the initial state and
+#' the total time, respectively. \code{event1} and \code{event} denote their
+#' corresponding indicator statuses. This function checks the following
+#' conditions: (i) the arguments \code{time1} and \code{Stime} must be numeric
+#' and nonnegative; \code{event1} and \code{event} must be 0 or 1 if numeric
+#' and TRUE or FALSE if logical. \code{Stime} must be greater or equal to
+#' argument arguments \code{time1}. \code{Stime} and \code{time1} must be
+#' equal when argument \code{event1} equals 0 or FALSE. Argument \code{event}
+#' must be equal to 0 or FALSE when argument \code{event1} equals 0 or FALSE.
+#' When arguments \code{Stime} and \code{time1} are equal and argument
+#' \code{event1} equals 1 or TRUE, argument \code{event} must be equal to
+#' 1 or TRUE.
 #'
 #' @return An object of class "survIDM". "survIDM" objects are implemented
 #' as a single dataframe.
@@ -52,7 +55,7 @@ survIDM <- function(time1, event1, Stime, event, ...)
 
   if ( any( (event1 != 0 & event1 != 1) | (event1 != FALSE & event1 != TRUE) ) ) stop("Argument 'event1' must be 0 or 1 if numeric and TRUE or FALSE if logical")
   if ( any( (event != 0 & event != 1) | (event != FALSE & event != TRUE) ) ) stop("Argument 'event' must be 0 or 1 if numeric and TRUE or FALSE if logical")
-  if ( any(time1 < 0 | Stime < 0) ) stop("Arguments 'time1' and 'Stime' must be greater than 0")
+  if ( any(time1 < 0 | Stime < 0) ) stop("Arguments 'time1' and 'Stime' must be greater or equal 0")
   if ( any(Stime < time1) ) stop("Argument 'Stime' must be greater or equal to argument 'time1'")
   if ( any(!event1 & Stime != time1) ) stop("Arguments 'Stime' and 'time1' must be equal when argument 'event1' equals 0 or FALSE")
   if ( any(!event1 & event) ) stop("Argument 'event' must be equal to 0 or FALSE when argument 'event1' equals 0 or FALSE")

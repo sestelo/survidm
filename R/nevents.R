@@ -11,12 +11,14 @@
 #' transition states are named by \code{"healthy"}, \code{"illness"} and \code{"death"}.
 #'
 #' @details The colums of the dataset needs to have the format of class "survIDM", which holds
-#' the transition matrix of the multi-state model. The attributes of variables 'time1' and 'Stime'
-#' must be numeric and granter than 0; 'Stime' must be greater or equal to argument 'time1';
-#' 'Stime' and 'time1' have to be equal when argument 'event1' equals 0 or FALSE. 'event1' and 'event'
-#' take only the values 0 and 1. The argument 'event' must be equal to 0 or FALSE when argument 'event1'
-#' equals 0 or FALSE. 'Stime' and 'time1' are equal when the 'event1' equals 1 or TRUE, andargument 'event'
-#' must equal 1 or TRUE.
+#' the transition matrix of the multi-state model. The arguments \code{time1} and
+#' \code{Stime} must be numeric and nonnegative; \code{event1} and \code{event} must be 0 or
+#' 1 if numeric and TRUE or FALSE if logical. \code{Stime} must be greater or equal to
+#' argument arguments \code{time1}. \code{Stime} and \code{time1} must be equal when
+#' argument \code{event1} equals 0 or FALSE. Argument \code{event} must be equalto 0 or
+#' FALSE when argument \code{event1} equals 0 or FALSE. When arguments \code{Stime} and
+#' \code{time1} are equal and argument \code{event1} equals 1 or TRUE, argument
+#' \code{event} must be equal to 1 or TRUE
 #'
 #'
 #' @examples

@@ -191,7 +191,7 @@
 #'               method = "breslow", z.value=60, conf = FALSE, data =colonIDM)
 
 #' summary(res7, time=365*1:6)
-#' autoplot.survIDM(res,interactive = TRUE)
+#' autoplot(res7, interactive=TRUE)
 
 #' res8 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
 #'               method = "breslow", conf.type='bootstrap', z.value=60, conf = TRUE, data =colonIDM)
@@ -210,12 +210,12 @@
 #'               method = "breslow", conf = TRUE, data =colonIDM)
 
 #' summary(res10,t=365*1:5)
-#' plot(res10)
+#' autoplot(res10)
 
 #' res11<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
 #'               method = "breslow", z.value=c(10,'Obs'), conf = TRUE, data =colonIDM)
 #' summary(res11,t=365*1:5)
-#' autoplot(res11, interactive=TRUE)
+#' autoplot(res11)
 
 #' # more than a covariate for Non Linear Models (Breslow Method)
 #' res12<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
@@ -230,13 +230,8 @@
 #'                conf.type = "log", data = colonIDM)
 
 #' summary(res13, time=365*1:7)
-#' plot(res13)
+#' autoplot(res13)
 
-#' res14<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
-#'               method = "breslow", conf.type='bootstrap', conf = TRUE, conf.level =0.95,  data =colonIDM)
-
-#' summary(res14,t=365*1:5)
-#' autoplot(res14, interactive=TRUE)
 
 tprob<-function(formula,
                 s,
