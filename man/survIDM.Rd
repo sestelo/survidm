@@ -30,8 +30,18 @@ variable in a model formula.
 \details{
 Arguments in this function must be introduced in the following
 order: \code{time1}, \code{event1}, \code{Stime} and \code{event}, where
-\code{time1} and \code{Stime} are ordered event times and
-\code{event1} and \code{event} their corresponding indicator statuses.
+\code{time1} and \code{Stime} are the sojourn time in the initial state and
+the total time, respectively. \code{event1} and \code{event} denote their
+corresponding indicator statuses. This function checks the following
+conditions: (i) the arguments \code{time1} and \code{Stime} must be numeric
+and nonnegative; \code{event1} and \code{event} must be 0 or 1 if numeric
+and TRUE or FALSE if logical. \code{Stime} must be greater or equal to
+argument arguments \code{time1}. \code{Stime} and \code{time1} must be
+equal when argument \code{event1} equals 0 or FALSE. Argument \code{event}
+must be equal to 0 or FALSE when argument \code{event1} equals 0 or FALSE.
+When arguments \code{Stime} and \code{time1} are equal and argument
+\code{event1} equals 1 or TRUE, argument \code{event} must be equal to
+1 or TRUE.
 }
 \examples{
 with(colonIDM, survIDM(time1, event1, Stime, event))

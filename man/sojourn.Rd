@@ -5,9 +5,21 @@
 \title{Nonparametric estimation of the Sojourn time distributions
 in the illness-death model}
 \usage{
-sojourn(formula, data, conf = FALSE, n.boot = 199, conf.level = 0.95,
-  z.value, bw = "dpik", window = "gaussian", method.weights = "NW",
-  method = "LM", presmooth = FALSE, cluster = FALSE, ncores = NULL)
+sojourn(
+  formula,
+  data,
+  conf = FALSE,
+  n.boot = 199,
+  conf.level = 0.95,
+  z.value,
+  bw = "dpik",
+  window = "gaussian",
+  method.weights = "NW",
+  method = "LM",
+  presmooth = FALSE,
+  cluster = FALSE,
+  ncores = NULL
+)
 }
 \arguments{
 \item{formula}{A \code{formula} object, which must have a \code{survIDM}

@@ -5,9 +5,21 @@
 \title{Nonparametric estimation of the Cumulative Incident Functions
 in the illness-death model}
 \usage{
-CIF(formula, s, data, conf = FALSE, n.boot = 199, conf.level = 0.95,
-  z.value, bw = "dpik", window = "gaussian", method.weights = "NW",
-  cluster = FALSE, ncores = NULL, presmooth = FALSE)
+CIF(
+  formula,
+  s,
+  data,
+  conf = FALSE,
+  n.boot = 199,
+  conf.level = 0.95,
+  z.value,
+  bw = "dpik",
+  window = "gaussian",
+  method.weights = "NW",
+  cluster = FALSE,
+  ncores = NULL,
+  presmooth = FALSE
+)
 }
 \arguments{
 \item{formula}{A \code{formula} object, which must have a \code{survIDM}

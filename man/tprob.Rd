@@ -5,10 +5,23 @@
 \title{Nonparametric estimation of transition probabilities in
 the illness-death model}
 \usage{
-tprob(formula, s, method = "AJ", conf = FALSE, conf.level = 0.95,
-  conf.type = "linear", n.boot = 199, data, z.value, bw = "dpik",
-  window = "gaussian", method.weights = "NW", cluster = FALSE,
-  ncores = NULL, na.rm = TRUE)
+tprob(
+  formula,
+  s,
+  method = "AJ",
+  conf = FALSE,
+  conf.level = 0.95,
+  conf.type = "linear",
+  n.boot = 199,
+  data,
+  z.value,
+  bw = "dpik",
+  window = "gaussian",
+  method.weights = "NW",
+  cluster = FALSE,
+  ncores = NULL,
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{formula}{A \code{formula} object, which must have a \code{survIDM}
@@ -24,16 +37,14 @@ Possible options are \code{"AJ"}, \code{"LIDA"} \code{"LM"}, \code{"PLM"},
 \code{"LMAJ"}, \code{"PLMAJ"}, \code{"PAJ"}, \code{"IPCW"} and \code{"breslow"}.
 Defaults to \code{"AJ"}. The \code{"IPCW"} method
 is recommended to obtain conditional transition probabilities (i.e., with a
-quantitative term on the right hand side of formula).}
+quantitative term on the right hand side of formula). The \code{"breslow"} method
+is based on a Cox's regression model (Cox, 1972) fitted marginally to each allowed
+transition, with the corresponding baseline hazard function estimated by the
+Breslow's method (Breslow, 1972).}
 
 \item{conf}{Provides pointwise confidence bands. Defaults to \code{FALSE}.}
 
 \item{conf.level}{Level of confidence. Defaults to 0.95 (corresponding to 95\%).}
-
-\item{conf.type}{Method to compute the confidence intervals.
-Transformation applied to compute confidence intervals. Possible choices
-are \code{"linear"}, \code{"log"}, \code{"log-log"} and \code{"bootstrap"}.
-Default is \code{"linear"}.}
 
 \item{n.boot}{The number of bootstrap replicates to compute the variance
 of the non-Markovian estimator. Default is 199.}
@@ -105,7 +116,10 @@ the transition probabilities in the illness-death model.
 \details{
 Possible options for argument window are \code{"gaussian"},
 \code{"epanechnikov"}, \code{"tricube"}, \code{"boxcar"},
-\code{"triangular"}, \code{"quartic"} or \code{"cosine"}.
+\code{"triangular"}, \code{"quartic"} or \code{"cosine"}. The LIDA estimator
+was labelled according to the acronym of the Lifetime Data Analysis journal
+in which the estimator was described for the first time (Meira-Machado,
+Uña-Álvarez and Cadarso-Suárez, 2006).
 
 Possible methods are:
 \itemize{
@@ -122,8 +136,7 @@ Possible methods are:
 }
 \examples{
 # Aalen-Johansen
-res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0, method = "AJ",
-conf = FALSE, data = colonIDM)
+res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0, method = "AJ", conf = FALSE, data = colonIDM)
 summary(res, time=365*1:6)
 plot(res)
 # Transition Probabilities Pij(t)=Pij(365,t)
@@ -131,77 +144,67 @@ plot(res)
 res1 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
              method = "LIDA", conf = FALSE, data = colonIDM)
 
-summary(res1, time = 365*1:6)
+summary(res1, time=365*1:6)
 plot(res1)
-plot(res1, trans = "01", ylim = c(0,0.15))
+plot(res1, trans="01", ylim=c(0,0.15))
 # Landmark (LM)
 res2 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
               method = "LM", conf = FALSE, data = colonIDM)
-summary(res2, time = 365*1:6)
+summary(res2, time=365*1:6)
 plot(res2)
 # Presmoothed LM
 res3 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
-              method = "PLM", conf = FALSE, data = colonIDM)
-summary(res3, time = 365*1:6)
-plot(res3)
+              method = "PLM", conf = TRUE, data = colonIDM)
+summary(res3, time=365*1:6)
+autoplot(res3, interactive = TRUE)
 # Conditional transition probabilities
 # With factor
 res4 <- tprob(survIDM(time1, event1, Stime, event) ~ factor(sex), s = 365,
-              method = "AJ", conf = FALSE, data = colonIDM)
-summary(res4, time = 365*1:6)
-plot(res4, trans = "02", ylim = c(0,0.5))
-res5 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s = 365,
-              method = "breslow", z.value = 'Lev', conf = FALSE, data = colonIDM)
-summary(res5, time = 365*1:6)
-plot(res5,trans = "02", ylim = c(0,0.5))
-\dontrun{# with continuous covariate (IPCW and Breslow Method)
+              method = "AJ", conf = TRUE, data = colonIDM)
+summary(res4, time=365*1:6)
+plot(res4, trans="02", ylim=c(0,0.5))
+res5 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s =365,
+              method = "breslow", z.value='Lev', conf = TRUE, data =colonIDM)
+summary(res5, time=365*1:6)
+plot(res5,trans="02", ylim=c(0,0.5))
+# with continuous covariate (IPCW and Breslow Method)
 res6 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s = 365,
               method = "IPCW", z.value = 48, conf = FALSE, data = colonIDM,
-             bw = "dpik", window = "gaussian", method.weights = "NW")
-summary(res6, time = 365*1:6)
+              bw = "dpik", window = "gaussian", method.weights = "NW")
+summary(res6, time=365*1:6)
 plot(res6)
-#res7 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
-#             method = "breslow", z.value = 60, conf = FALSE,
-#               data = colonIDM)
-summary(res7, time = 365*1:6)
-plot(res7)
+res7 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
+              method = "breslow", z.value=60, conf = FALSE, data =colonIDM)
+summary(res7, time=365*1:6)
+autoplot(res7, interactive=TRUE)
 res8 <- tprob(survIDM(time1, event1, Stime, event) ~ age, s =365,
-              method = "breslow", conf.type = 'bootstrap', n.boot = 2,
-              z.value = 60, conf = TRUE, data = colonIDM)
-summary(res8, time = 365*1:6)
+              method = "breslow", conf.type='bootstrap', z.value=60, conf = TRUE, data =colonIDM)
+summary(res8, time=365*1:6)
 plot(res8)
 res9 <- tprob(survIDM(time1, event1, Stime, event) ~ rx, s =365,
-              method = "breslow", conf.type='bootstrap',
-              conf = TRUE, data =colonIDM)
-summary(res9, time = 365*1:6)
-plot(res9, trans = "02", ylim = c(0,0.5))
+              method = "breslow", conf.type='bootstrap',  conf = TRUE, data =colonIDM)
+summary(res9, time=365*1:6)
+plot(res9, trans="02", ylim=c(0,0.5))
 # more than a covariate (Breslow Method)
-res10 <- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx),
-s = 365, method = "breslow", conf = TRUE, data =colonIDM)
-summary(res10,t = 365*1:5)
-plot(res10)
-res11 <- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx),
-s = 365, method = "breslow", z.value = c(10,'Obs'), conf = TRUE,
-data = colonIDM)
-summary(res11,t = 365*1:5)
-plot(res11)
+res10<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
+              method = "breslow", conf = TRUE, data =colonIDM)
+summary(res10,t=365*1:5)
+autoplot(res10)
+res11<- tprob(survIDM(time1, event1, Stime, event) ~ nodes + factor(rx), s =365,
+              method = "breslow", z.value=c(10,'Obs'), conf = TRUE, data =colonIDM)
+summary(res11,t=365*1:5)
+autoplot(res11)
 # more than a covariate for Non Linear Models (Breslow Method)
-res12 <- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age) + nodes +
-factor(rx), s =365, method = "breslow", conf = TRUE, data = colonIDM)
-summary(res12,t = 365*1:5)
-plot(res12)
+res12<- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age)+ nodes + factor(rx), s =365,
+              method = "breslow", conf = TRUE, data =colonIDM)
+summary(res12,t=365*1:5)
+autoplot(res12)
 # Confidence intervals
 res13 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
                method = "AJ", conf = TRUE, n.boot = 5, conf.level = 0.95,
                conf.type = "log", data = colonIDM)
 summary(res13, time=365*1:7)
-plot(res13)
-res14 <- tprob(survIDM(time1, event1, Stime, event) ~ pspline(age) + nodes +
-factor(rx), s =365, method = "breslow", conf.type = 'bootstrap', conf = TRUE,
-conf.level = 0.95,  data = colonIDM)
-summary(res14,t = 365*1:5)
-plot(res14)
-}
+autoplot(res13)
 }
 \references{
 Aalen O. O., Johansen S. (1978) An Empirical Transition Matrix for
@@ -215,6 +218,12 @@ illness-death model. Lifetime Data Anal 12(3), 325--344.
 de Una-Alvarez J. and Meira-Machado L. (2015). Nonparametric estimation
 of transition probabilities in a non-Markov illness-death model:
 a comparative study. Biometrics 71, 364--375.
+
+Cox, DR (1972). Regression models and life tables (with discussion). Journal
+of the Royal Statistical Society, Series B 34, 187-200.
+
+Breslow, N. (1972). Discussion of paper by dr cox. Journal of Royal Statistical
+Society, Series B 34, 216-217.
 }
 \author{
 Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.

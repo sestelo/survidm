@@ -1,6 +1,7 @@
 ggplot2::autoplot
 
 
+
 autoplot.survIDM <- function(x = object, y = NULL, trans = "all", func = "distribution",
                              conf = NULL, type = NULL,conftype = NULL, col = 1:6,
                              confcol = 1:6, lty = 1, conflty = 2, xlab = "Time (years)",

@@ -70,7 +70,7 @@
 #' \code{"triangular"}, \code{"quartic"} or \code{"cosine"}. The LIDA estimator
 #' was labelled according to the acronym of the Lifetime Data Analysis journal
 #' in which the estimator was described for the first time (Meira-Machado,
-#' U?a-?lvarez and Cadarso-Su?rez, 2006).
+#' Uña-Álvarez and Cadarso-Suárez, 2006).
 #'
 
 #' Possible methods are:
