@@ -29,7 +29,7 @@
 #' curve +-k *se(curve), where k is determined from \code{"conf.int"}. The
 #' \code{"log"} option calculates the intervals based on the cumulative hazard or
 #' -log(survival). The \code{"log-log"} option uses the log hazard function or
-#' log(-log(survival))}. For the remaining estimation methods (\code{"LIDA"},
+#' log(-log(survival)). For the remaining estimation methods (\code{"LIDA"},
 #' \code{"LM"}, \code{"PLM"}, \code{"IPCW"} and \code{"breslow"}) the percentile
 #' bootstrap which resamples each datum with probability 1/n is used.
 #' @param n.boot The number of bootstrap replicates to compute the variance

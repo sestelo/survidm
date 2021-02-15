@@ -46,6 +46,18 @@ Breslow's method (Breslow, 1972).}
 
 \item{conf.level}{Level of confidence. Defaults to 0.95 (corresponding to 95\%).}
 
+\item{conf.type}{Method to compute the confidence intervals. Depends on the
+choice of the estimation method of the transition probabilities. For
+Aalen-Johansen type estimators (\code{"AJ"}, \code{"LMAJ"}, \code{"PAJ"} and
+\code{"PLMAJ"}) possible choices are \code{"linear"}, \code{"log"} and
+\code{"log-log"}. Default is \code{"linear"}, providing the standard intervals
+curve +-k *se(curve), where k is determined from \code{"conf.int"}. The
+\code{"log"} option calculates the intervals based on the cumulative hazard or
+-log(survival). The \code{"log-log"} option uses the log hazard function or
+log(-log(survival)). For the remaining estimation methods (\code{"LIDA"},
+\code{"LM"}, \code{"PLM"}, \code{"IPCW"} and \code{"breslow"}) the percentile
+bootstrap which resamples each datum with probability 1/n is used.}
+
 \item{n.boot}{The number of bootstrap replicates to compute the variance
 of the non-Markovian estimator. Default is 199.}
 
