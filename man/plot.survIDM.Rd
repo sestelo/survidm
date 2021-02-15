@@ -54,7 +54,7 @@ method = "AJ", conf = FALSE, data = colonIDM)
 plot(res)
 plot(res, trans = "02")
 
-
+\donttest{
 res1 <- tprob(survIDM(time1, event1, Stime, event) ~ factor(sex), s = 365,
 method = "AJ", conf = FALSE, data = colonIDM)
 
@@ -71,6 +71,6 @@ res3 <- sojourn(survIDM(time1, event1, Stime, event) ~ factor(sex),
 data = colonIDM, conf = FALSE, conf.level = 0.95)
 
 plot(res3)
-
+}
 }
 

@@ -132,10 +132,12 @@
 #'
 #'
 #' @examples
+#' \donttest{
 #' # Aalen-Johansen
 # Occupation Probabilities Pj(t)=Pij(0,t)
 
-#' res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0, method = "AJ", conf = FALSE, data = colonIDM)
+#' res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0,
+#' method = "AJ", conf = FALSE, data = colonIDM)
 
 #' summary(res, time=365*1:6)
 #' plot(res)
@@ -230,7 +232,7 @@
 #'                conf.type = "log", data = colonIDM)
 
 #' summary(res13, time=365*1:7)
-#' autoplot(res13)
+#' autoplot(res13)}
 
 
 tprob<-function(formula,

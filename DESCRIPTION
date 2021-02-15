@@ -27,7 +27,10 @@ Imports:
     doRNG,
     foreach,
     TPmsm,
-    Rcpp
+    Rcpp,
+    ggplot2,
+    gridExtra, 
+    plotly
 RoxygenNote: 7.1.1
 LinkingTo: 
     Rcpp
