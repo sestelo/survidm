@@ -76,9 +76,12 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
                              confcol = 1:6, lty = 1, conflty = 2, xlab = "Time (years)",
                              ylab = NULL, ylim = NULL, xlim = NULL, interactive = FALSE,...) {
 
-  TP <- NULL
+
   #object <- x
   x <- object
+  TP <- NULL
+
+
 
   if(inherits(x, "survIDM") & class(x)[1] =='markov'){
 
@@ -144,7 +147,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
       # for all
       #-----------------------------------------------
 
-      #object <- x
+      object <- x
 
       object$Nlevels
       if (object$Nlevels != length(col))
@@ -202,7 +205,8 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
         #-----------------------
         trans2 = trans
         tp <- c("00", "01", "02", "11", "12")
-        if(trans == "all") {trans2 = tp}
+        #if(trans == "all") {trans2 = tp} inicialmente tinha isto
+        trans2 = tp
         ii <- trans2 == tp
         itp <- 2:6
         itpCI <- c(1, 3, 5, 7, 9)
@@ -227,9 +231,13 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
             ob2$TP<-as.numeric(ob2$TP)
             ob2$type<-as.factor(ob2$type)
 
+            if(trans!="all"){
+              ob2<-ob2[ob2$type==trans,]
+
+            }
+
+
             ob3<-obCI[itpCI[ii]]
-
-
 
             ob3.2<-as.data.frame(rbind(cbind(tp_min=ob3[,1],rep('00', length(ob3[,1]))),
                                        cbind(tp_min=ob3[,2],rep('01', length(ob3[,2]))),
@@ -240,6 +248,11 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
 
             names(ob3.2)<-c('tp_min','type')
 
+            if(trans!="all"){
+
+              ob3.2<-ob3.2[ob3.2$type==trans,]
+
+            }
 
             tp_min<-as.numeric(ob3.2$tp_min)
             type<-as.factor(ob3.2$type)
@@ -256,9 +269,14 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
 
             names(ob4.2)<-c('tp_max','type')
 
+
+            if(trans!="all"){
+
+              ob4.2<-ob4.2[ob4.2$type==trans,]
+            }
+
             tp_max<-as.numeric(ob4.2$tp_max)
             type<-as.factor(ob4.2$type)
-
 
 
             p1<-ggplot(ob2, aes(x=time, y=TP, group=type,
@@ -294,6 +312,9 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
             ob2$time<-as.numeric(ob2$time)
             ob2$TP<-as.numeric(ob2$TP)
             ob2$type<-factor(ob2$type)
+
+
+            if(trans!="all"){ob2<-ob2[ob2$type==trans,]}
 
             p3<-ggplot(ob2, aes(x=time, y=TP,group=type,
                                 color=type))
@@ -795,4 +816,5 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
   }
 
 }
+
 
