@@ -118,8 +118,8 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
 
     p4<-ggplot(est, aes(est$times,est$nm12))+theme_bw()+labs(x = xlab) +labs(y = ylab)+
       geom_ribbon(aes(ymin=est$nm12LCI,ymax=est$nm12UCI),fill='gray60',alpha=0.7)+
-      geom_line(aes(est$times,est$nm12),color='black',size=1)+
-      geom_line(aes(est$times,est$aj12),color='red',size=1)
+      geom_step(aes(est$times,est$nm12),color='black',size=1)+
+      geom_step(aes(est$times,est$aj12),color='red',size=1)
 
 
     grid.arrange(p1, p2, p3,p4,  layout_matrix = rbind(c(1, 2, 3), c(4, 4, 4)))
@@ -157,7 +157,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
 
 
       if (is.null(type))
-        type <- "s"
+        type2 <- "s"
       if (is.null(conftype))
         conftype <- "s"
 
@@ -286,7 +286,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
             p2<-p1+geom_ribbon(aes(ymin=tp_min,ymax=tp_max),alpha=.5)
 
 
-            p3<-p2+geom_line(aes(x=time, y=TP, color=type))+
+            p3<-p2+geom_step(aes(x=time, y=TP, color=type))+
               theme(legend.title=element_blank())
 
 
@@ -433,7 +433,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
 
             p2<-p1+geom_ribbon(aes(ymin=tp_minCI,ymax=tp_maxCI),alpha=.3)
 
-            p3<-p2+geom_line(aes(x=Time, y=tp, color=Type), size=1.1)+
+            p3<-p2+geom_step(aes(x=Time, y=tp, color=Type), size=1.1)+
               theme(legend.title=element_blank())
 
             if(isTRUE(interactive)){
@@ -518,7 +518,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
 
             p2<-p1+geom_ribbon(aes(ymin=cif_min, ymax=cif_max,alpha=0.7),fill='gray')
 
-            p3<-p2+geom_line(aes(time,cif))+geom_line(color='black',size=1)+
+            p3<-p2+geom_step(aes(time,cif))+geom_step(color='black',size=1)+
               theme(legend.position="none")
             #theme(legend.title=element_blank())
 
@@ -535,7 +535,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
 
             p1<-ggplot(ob,aes(time,cif))+theme_bw()+labs(x=xlab)+labs(y = ylab)
 
-            p2<-p1+geom_line(aes(time,cif))+geom_line(color='red',size=1)
+            p2<-p1+geom_step(aes(time,cif))+geom_step(color='red',size=1)
 
 
 
@@ -609,7 +609,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
             p2<-p1+geom_ribbon(aes(ymin=CIF_min,ymax=CIF_max),alpha=.3)
 
 
-            p3<-p2+geom_line(aes(x=timeCIF, y=CIF, color=Factor), size=1.1)+
+            p3<-p2+geom_step(aes(x=timeCIF, y=CIF, color=Factor), size=1.1)+
               theme(legend.title=element_blank())
 
 
@@ -681,7 +681,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
 
             p2<-p1+geom_ribbon(aes(ymin=soj_inf, ymax=soj_max,alpha=0.8),fill='gray')
 
-            p3<-p2+geom_line(aes(timeSoj,soj))+geom_line(color='black',size=1)+theme(legend.position="none")
+            p3<-p2+geom_step(aes(timeSoj,soj))+geom_line(color='black',size=1)+theme(legend.position="none")
 
 
             if(isTRUE(interactive)){
@@ -699,7 +699,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
 
             p1<-ggplot(ob,aes(timeSoj,soj))+theme_bw()+labs(x=xlab)+labs(y = ylab)
 
-            p2<-p1+geom_line(aes(timeSoj,soj))+geom_line(color='red',size=1)
+            p2<-p1+geom_step(aes(timeSoj,soj))+geom_line(color='red',size=1)
 
             if(isTRUE(interactive)){
               if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p2))}
@@ -766,7 +766,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
             p2<-p1+geom_ribbon(aes(ymin=SOJ_min,ymax=SOJ_max),alpha=.3)
 
 
-            p3<-p2+geom_line(aes(x=timeSOJ, y=SOJ, color=FactorSOJ), size=1.1)+
+            p3<-p2+geom_step(aes(x=timeSOJ, y=SOJ, color=FactorSOJ), size=1.1)+
               theme(legend.title=element_blank())
 
 
@@ -788,7 +788,7 @@ autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "d
                                 color=FactorSOJ))
 
 
-            p4<-p3+theme_bw()+labs(x = xlab,y = ylab)+geom_line(size=1)+ theme(legend.title=element_blank())
+            p4<-p3+theme_bw()+labs(x = xlab,y = ylab)+geom_step(size=1)+ theme(legend.title=element_blank())
 
             if(isTRUE(interactive)){
               if (requireNamespace("plotly", quietly=TRUE)) {return(plotly::ggplotly(p4))}
