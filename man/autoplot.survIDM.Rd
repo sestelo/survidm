@@ -17,7 +17,7 @@
   confcol = 1:6,
   lty = 1,
   conflty = 2,
-  xlab = "Time (years)",
+  xlab = "Time",
   ylab = NULL,
   ylim = NULL,
   xlim = NULL,

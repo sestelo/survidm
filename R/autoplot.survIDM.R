@@ -73,7 +73,7 @@ ggplot2::autoplot
 
 autoplot.survIDM <- function(object = object, y = NULL, trans = "all", func = "distribution",
                              conf = NULL, type = NULL,conftype = NULL, col = 1:6,
-                             confcol = 1:6, lty = 1, conflty = 2, xlab = "Time (years)",
+                             confcol = 1:6, lty = 1, conflty = 2, xlab = "Time",
                              ylab = NULL, ylim = NULL, xlim = NULL, interactive = FALSE,...) {
 
 
