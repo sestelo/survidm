@@ -1,8 +1,8 @@
-#' @title Nonparametric estimation of the Sojourn time distributions
-#' in the illness-death model
+#' @title Nonparametric estimation of the Sojourn time distributions in the
+#' recurrence state in the illness-death model
 #'
 #' @description This function is used to obtain nonparametric estimates of
-#' the sojourn probabilities in the illness-death model.
+#' in the recurrence statethe sojourn probabilities in the illness-death model.
 #'
 #' @param formula A \code{formula} object, which must have a \code{survIDM}
 #' object as the response on the left of the \code{~} operator and, if desired,
@@ -115,10 +115,6 @@
 #' plot(res4)
 #'
 
-
-
-
-
 sojourn <- function(formula, data, conf = FALSE, n.boot = 199,
                     conf.level = 0.95, z.value, bw = "dpik", window = "gaussian",
                     method.weights = "NW", method = "LM", presmooth = FALSE,
@@ -151,9 +147,6 @@ sojourn <- function(formula, data, conf = FALSE, n.boot = 199,
   if(lencov != dim(obj_data)[1] & lencov2 != 0) stop("length of the covariate does not match")
 
 
-
-
-
   # without covariates
   if (length(attr(terms(formula), "term.labels")) == 0) {  #sojourn without covariate
 
@@ -165,8 +158,6 @@ sojourn <- function(formula, data, conf = FALSE, n.boot = 199,
     class(res) <- c("soj", "survIDM")
 
   } # end methods without covariate
-
-
 
 
   # numeric or integer covariate
@@ -240,11 +231,5 @@ sojourn <- function(formula, data, conf = FALSE, n.boot = 199,
   res$call <- match.call()
 
   return(invisible(res))
-
-
-
-
-
-
 
 }

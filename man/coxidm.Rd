@@ -22,11 +22,14 @@ or censoring, and death indicator, respectively.}
 
 \value{A data frame or a list containing the following components:
   \item{coef}{Estimated coeficients.}
-  \item{term}{Predicted values of splines and partial residual for the terms of the model.}
   \item{exp(coef)}{Exponent of the estimated coefficients.}
   \item{lower 0.95}{Lower limit of the confidence interval.}
   \item{upper 0.95}{Upper limit of the confidence interval.}
   \item{pvalue}{obtained pvalue testing that the coefficient is equals to zero.}
+  Other data frames or lists:
+  \item{anova}{Analysis of Deviance for the Cox Regression models.}
+  \item{zph}{Test the Proportional Hazards Assumption of the Cox Regression models.}
+  \item{term}{Predicted values of splines and partial residual for the terms of the model.}
 }
 
 \examples{

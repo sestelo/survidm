@@ -35,6 +35,15 @@ coxidm <- function (formula, data, semiMarkov = FALSE) {
 
   fit02 <- survival::coxph(fmla0, data = mydata)
 
+
+  #fit02.anova <- survival::anova(fit02)
+  fit02.anova <- anova(fit02)
+
+
+  #fit02.zph <- survival::cox.zph(fit02)
+  fit02.zph <- cox.zph(fit02)
+
+
   #0->1
   p01 <- which(mydata$Stime > mydata$time1)
   s01 <- rep(0, length(mydata$time1))
@@ -44,6 +53,14 @@ coxidm <- function (formula, data, semiMarkov = FALSE) {
                                                       "+")))
 
   fit01 <- survival::coxph(fmla1, data = mydata)
+
+  #fit01.anova <- survival::anova(fit01)
+  fit01.anova <- anova(fit01)
+
+
+  #fit01.zph <- survival::cox.zph(fit01)
+  fit01.zph <- cox.zph(fit01)
+
 
   npar <- length(fit01$coef)
 
@@ -67,6 +84,13 @@ coxidm <- function (formula, data, semiMarkov = FALSE) {
   fit12 <- survival::coxph(fmla2, data = mydata12)
 
 
+  #fit12.anova <- survival::anova(fit12)
+  fit12.anova <- anova(fit12)
+
+  #fit12.zph <- survival::cox.zph(fit12)
+  fit12.zph <- cox.zph(fit12)
+
+
   term01<-termplot(fit01,  se = T, col.term = 1, col.se = 2, plot=FALSE)
   term02<-termplot(fit02,  se = T, col.term = 1, col.se = 2, plot=FALSE)
   term12<-termplot(fit12,  se = T, col.term = 1, col.se = 2, plot=FALSE)
@@ -77,9 +101,19 @@ coxidm <- function (formula, data, semiMarkov = FALSE) {
       coxmm01 = fit01,
       coxmm02 = fit02,
       coxmm12 = fit12,
+
+      coxmm01.anova = fit01.anova,
+      coxmm02.anova = fit02.anova,
+      coxmm12.anova = fit12.anova,
+
+      coxmm01.zph = fit01.zph,
+      coxmm02.zph = fit02.zph,
+      coxmm12.zph = fit12.zph,
+
       term01=term01,
       term02=term02,
       term12=term12,
+
       ncov = ncov,
       fmla = formula,
       npar = npar,

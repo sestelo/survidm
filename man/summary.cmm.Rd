@@ -16,11 +16,13 @@ hazards regression model in each transition of the Illness-Death Model.}
 }
 
 \value{A data frame or a list containing the following components:
-    \item{coef}{Estimated coeficients.}
+  \item{coef}{Estimated coeficients.}
   \item{exp(coef)}{Exponent of the estimated coefficients.}
   \item{lower 0.95}{Lower limit of the confidence interval.}
   \item{upper 0.95}{Upper limit of the confidence interval.}
   \item{pvalue}{obtained pvalue testing that the coefficient is equals to zero.}
+  Other data frames with the Analysis of Deviance or the tests of the Proportional Hazards Assumption
+  of the Cox Regression models.
 }
 
 \examples{
@@ -31,9 +33,16 @@ hazards regression model in each transition of the Illness-Death Model.}
                  data = colonIDM)
   summary(cmm2)
 
+  summary(fcmm2,type = 'anova')
+
   cmm3 <- coxidm(survIDM(time1, event1, Stime, event) ~ rx + sex + age + nodes,
                  data = colonIDM, semiMarkov = TRUE)
   summary(cmm3)
+
+  cmm4 <- coxidm(survIDM(time1, event1, Stime, event) ~ rx + sex + age +
+                pspline(nodes) + surg + adhere, data = colonIDM)
+
+  summary(cmm4, type = 'ph')
 }
 
 \author{Luis Meira-Machado, Marta Sestelo and Gustavo Soutinho.}
