@@ -2,7 +2,6 @@
 % Please edit documentation in R/autoplot.survIDM.R
 \name{autoplot.survIDM}
 \alias{autoplot.survIDM}
-\alias{autoplot}
 \title{Visualization of  objects of class \code{survIDM} with ggplot2 graphics.}
 \usage{
 \method{autoplot}{survIDM}(

@@ -2,8 +2,8 @@
 % Please edit documentation in R/sojourn.R
 \name{sojourn}
 \alias{sojourn}
-\title{Nonparametric estimation of the Sojourn time distributions
-in the illness-death model}
+\title{Nonparametric estimation of the Sojourn time distributions in the
+recurrence state in the illness-death model}
 \usage{
 sojourn(
   formula,
@@ -100,7 +100,7 @@ is of class factor.}
 }
 \description{
 This function is used to obtain nonparametric estimates of
-the sojourn probabilities in the illness-death model.
+in the recurrence statethe sojourn probabilities in the illness-death model.
 }
 \details{
 Possible options for argument window are \code{"gaussian"},

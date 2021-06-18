@@ -6,7 +6,6 @@ ggplot2::autoplot
 #' Visualization of  objects of class \code{survIDM} with ggplot2 graphics.
 #'
 #' @description It draws the estimated probabilities.
-#' @aliases autoplot
 #'
 #' @param object Object of \code{survIDM} class.
 #' @param y \code{NULL}

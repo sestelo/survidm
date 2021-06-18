@@ -11,7 +11,7 @@ tprob(
   method = "AJ",
   conf = FALSE,
   conf.level = 0.95,
-  conf.type = "linear",
+  conf.type = "log",
   n.boot = 199,
   data,
   z.value,
@@ -50,9 +50,9 @@ Breslow's method (Breslow, 1972).}
 choice of the estimation method of the transition probabilities. For
 Aalen-Johansen type estimators (\code{"AJ"}, \code{"LMAJ"}, \code{"PAJ"} and
 \code{"PLMAJ"}) possible choices are \code{"linear"}, \code{"log"} and
-\code{"log-log"}. Default is \code{"linear"}, providing the standard intervals
-curve +-k *se(curve), where k is determined from \code{"conf.int"}. The
-\code{"log"} option calculates the intervals based on the cumulative hazard or
+\code{"log-log"}. Default method is \code{"log"}. The \code{"linear"} option provides
+the standard intervals curve +-k *se(curve), where k is determined from \code{"conf.int"}.
+The \code{"log"} option calculates the intervals based on the cumulative hazard or
 -log(survival). The \code{"log-log"} option uses the log hazard function or
 log(-log(survival)). For the remaining estimation methods (\code{"LIDA"},
 \code{"LM"}, \code{"PLM"}, \code{"IPCW"} and \code{"breslow"}) the percentile
@@ -131,7 +131,7 @@ Possible options for argument window are \code{"gaussian"},
 \code{"triangular"}, \code{"quartic"} or \code{"cosine"}. The LIDA estimator
 was labelled according to the acronym of the Lifetime Data Analysis journal
 in which the estimator was described for the first time (Meira-Machado,
-Uña-Álvarez and Cadarso-Suárez, 2006).
+U?a-?lvarez and Cadarso-Su?rez, 2006).
 
 Possible methods are:
 \itemize{
@@ -147,10 +147,8 @@ Possible methods are:
 }
 }
 \examples{
-\donttest{
 # Aalen-Johansen
-res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0,
-method = "AJ", conf = FALSE, data = colonIDM)
+res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0, method = "AJ", conf = FALSE, data = colonIDM)
 summary(res, time=365*1:6)
 plot(res)
 # Transition Probabilities Pij(t)=Pij(365,t)
@@ -218,7 +216,7 @@ res13 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
                method = "AJ", conf = TRUE, n.boot = 5, conf.level = 0.95,
                conf.type = "log", data = colonIDM)
 summary(res13, time=365*1:7)
-autoplot(res13)}
+autoplot(res13)
 }
 \references{
 Aalen O. O., Johansen S. (1978) An Empirical Transition Matrix for
