@@ -100,7 +100,8 @@ is of class factor.}
 }
 \description{
 This function is used to obtain nonparametric estimates of
-in the recurrence statethe sojourn probabilities in the illness-death model.
+of the sojourn probabilities in the recurrence state in the illness-death
+model.
 }
 \details{
 Possible options for argument window are \code{"gaussian"},

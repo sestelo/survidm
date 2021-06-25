@@ -1,4 +1,4 @@
-summary.cmm <- function(object, conf.level = 0.95, type=NULL, ...){
+summary.cmm <- function(object, type=NULL, conf.level = 0.95, ...){
 
   if(is.null(type)){
 

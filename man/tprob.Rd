@@ -147,8 +147,10 @@ Possible methods are:
 }
 }
 \examples{
+\dontrun{
 # Aalen-Johansen
-res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0, method = "AJ", conf = FALSE, data = colonIDM)
+res <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 0,
+method = "AJ", conf = FALSE, data = colonIDM)
 summary(res, time=365*1:6)
 plot(res)
 # Transition Probabilities Pij(t)=Pij(365,t)
@@ -217,6 +219,7 @@ res13 <- tprob(survIDM(time1, event1, Stime, event) ~ 1, s = 365,
                conf.type = "log", data = colonIDM)
 summary(res13, time=365*1:7)
 autoplot(res13)
+}
 }
 \references{
 Aalen O. O., Johansen S. (1978) An Empirical Transition Matrix for
