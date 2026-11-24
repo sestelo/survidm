@@ -1,17 +1,13 @@
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
 
-/* FIXME:
- Check these declarations against the C/Fortran source code.
- */
-
 /* .C calls */
-extern void KaplanMeierValueSort(void *, void *, void *, void *, void *);
-extern void LLWeightsKernel(void *, void *, void *, void *, void *, void *);
-extern void NWWeightsKernel(void *, void *, void *, void *, void *, void *);
-extern void SurvBeranKernel(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
-extern void WeightsKaplanMeierSort(void *, void *, void *, void *, void *);
-extern void WeightsKaplanMeierSortEx(void *, void *, void *, void *, void *);
+extern void KaplanMeierValueSort(double *, int *, const int *, const double *, double *);
+extern void LLWeightsKernel(const double *, const int *, const double *, const double *, const char *const *, double *);
+extern void NWWeightsKernel(const double *, const int *, const double *, const double *, const char *const *, double *);
+extern void SurvBeranKernel(double *, int *, double *, int *, const int *, const double *, const double *, const double *, const char *const *, double *);
+extern void WeightsKaplanMeierSort(double *, int *, const int *, const double *, double *);
+extern void WeightsKaplanMeierSortEx(double *, double *, const int *, const double *, double *);
 
 static const R_CMethodDef CEntries[] = {
     {"KaplanMeierValueSort",     (DL_FUNC) &KaplanMeierValueSort,      5},
